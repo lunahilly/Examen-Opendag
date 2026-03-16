@@ -1,2 +1,2 @@
 # Examen-Opendag
-Het examen project van groepje 4A (Bente, Sara, Luna, Ken &amp; Sem). 
+Het examen project van groepje 4A (Bente, Sara, Luna, Rocko, Ken &amp; Sem). 
