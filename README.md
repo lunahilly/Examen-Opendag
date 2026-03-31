@@ -2,6 +2,12 @@
 > [!IMPORTANT]
 > Vergeet niet om ```npm run dev``` te runnen voor je begint met programmeren. En als het niet werkt check dan of je wel in de juiste map zit.
 
+
+Als je bezig bent met styling run dan het volgende command voor de scss
+```
+
+```
+
 als je wat met git wilt doen zorg dat je altijd eerst alles pulled en dat je op development zit
 ```
 git pull
