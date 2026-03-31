@@ -5,7 +5,7 @@
 
 Als je bezig bent met styling run dan het volgende command voor de scss
 ```
-
+sass resources/scss/style.scss resources/css/app.css --watch
 ```
 
 als je wat met git wilt doen zorg dat je altijd eerst alles pulled en dat je op development zit
