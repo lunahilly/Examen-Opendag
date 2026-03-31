@@ -4,6 +4,8 @@
 body{
     min-height: 100vh;
     font-family: map-get(variables.$baseVars, "font");
+    background: map-get(variables.$colors, "black");
+    color: map-get(variables.$colors, "white");
 }
 
 // hier staat de base code dus van de body en main bijvoorbeeld

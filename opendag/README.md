@@ -6,6 +6,7 @@
 - [Classes](#classes)
 - [Variables](#variables)
 - [Mixins](#mixins)
+- [EM](#em)
 - [Mediaqueries](#mediaqueries)
 
 <br/>
@@ -16,7 +17,7 @@
 ## Installatie
 Zet Docker alvast aan en clone dan het project door het volgende command te draaien:
 
- ```git
+```git
  git clone "https://github.com/lunahilly/Examen-Opendag"
 ```
 
@@ -230,6 +231,24 @@ Je kunt dit dan oproepen en een variable meegeven op deze manier:
 
 <br/>
 
+### EM
+Em is gebaseerd op de fontsize. Als de fontsize op 16px staat dan is 1em 16px.
+Als je op een element de fontsize veranderd dan veranderd em ook voor alleen dat element.
+
+Voorbeeld:
+```html
+<div class=”test”></div>
+```
+```scss
+.test {
+	font-size: 20px;
+	margin-block-end: 1em; //hier is 1em dus 20px
+}
+```
+
+We gebruiken em omdat het meeschaalt met de fontsize die de gebruiker heeft ingesteld op hun browset of device. Als een gebruiker die moeite heeft met lezen zijn of haar fontsize standaard op 32px heeft staan dan zal de afstanden (die met em zijn gedaan) automatisch meeschalen waardoor je geen kleine 4px afstanden heb bij fontsize van 30px. Hierdoor blijft de originele styling hetzelfde.
+
+
 ### Mediaqueries
 
 Alle mediaqueries gaan in de ```_mediaqueries.scss``` file. Deze moet altijd onderaan in de ```style.scss``` staan anders kan de code overschreven worden wat er voor kan zorgen dat de mediaqueries niet meer gaan werken of niet correct meer werken.
@@ -271,6 +290,20 @@ js/
 |- app.jsx
 ```
 
+### Data ophalen/gebruiken
+Data ophalen (als er data is) kan door usePage te gebruiken.
+
+```javascript
+const data = usePage().props.{waar je heen moet};
+```
+
+Als je niet weet waar je heen moet kan je dit zien door gewoon dit te loggen.
+
+```javascript
+console.log(usePage().props);
+```
+
+Dan zie je waar de data staat en kan je ernaar toe navigeren 
 
 ### Routing
 nog mee bezig

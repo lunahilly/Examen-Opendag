@@ -7,6 +7,35 @@
 body {
   min-height: 100vh;
   font-family: aeonik;
+  background: black;
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.1em 1em;
+}
+.header__logo {
+  width: 5em;
+}
+.header__logo--image {
+  width: 100%;
+  object-fit: cover;
+}
+.header__navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.header__navigation--link {
+  text-decoration: none;
+  color: white;
+}
+.header__navigation--link-active {
+  color: #FF00E6;
 }
 
 /*# sourceMappingURL=app.css.map */

@@ -1,6 +1,32 @@
 @use "../abstracts/variables";
 @use "../abstracts/mixins";
 
-.navigation{
-    
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.1em 1em;
+
+    &__logo{
+        width: 5em;
+
+        &--image{
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__navigation{
+        @include mixins.flexBox;
+        gap: 1rem;
+
+        &--link{
+            text-decoration: none;
+            color: map-get(variables.$colors, "white");
+
+            &-active{
+                color: map-get(variables.$colors, "magenta");
+            }
+        }
+    }
 }
