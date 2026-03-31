@@ -1,0 +1,12 @@
+@mixin flexBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin changeColor($color){
+    background: $color;
+    color: red;
+} // voorbeeld van de mixin met parameters
+
+// hier doe je styling code die vaak samen wordt gebruikt, zoals bijvoorbeeld bij de flexBox mixin
