@@ -8,7 +8,5 @@ git pull
 git switch development
 ```
 
-als je main wilt mergen met development moet je eerst zorgen dat je op development zit en dan voer je het volgende commando uit:
-```
-git merge main
-```
+Als er changes op main staan ga niet ``git merge main`` doen. Laat het Luna weten en zij maakt een pull request aan.
+Maar zorg dat je niet op main werkt tenzij echt nodig.
