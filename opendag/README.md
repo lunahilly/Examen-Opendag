@@ -1,4 +1,6 @@
 ## Lijst
+[Installatie](#installatie)
+
 [SCSS](#scss)
 - [Structuur](#structuur)
 - [Classes](#classes)
@@ -12,14 +14,34 @@
 - [Structuur](#structuur-1)
 
 ## Installatie
-Zet Docker alvast aan en ```git clone "https://github.com/lunahilly/Examen-Opendag"``` in een folder en open dit in Visual Studio Code.
+Zet Docker alvast aan en clone dan het project door het volgende command te draaien:
 
+ ```git
+ git clone "https://github.com/lunahilly/Examen-Opendag"
+```
+
+> [!IMPORTANT]
+> Zorg er altijd voor dat je dit niet in je OneDrive doet. Als je dit wel doet dan krijg je dezelfde problemen die we de vorige keer ook hadden.
+
+Open dit in je Visual Studio Code en open je cmd (Command Prompt) terminal. Navigeer naar de juiste map als je dit nog niet gedaan had en run dan het volgende command: ```composer require laravel/installer --dev```. Het kan best een tijdje duren voor het klaar is met dit command, afhankelijk van je laptop. 
+
+Het kan zijn dat er allemaal teksten met gele achtergrond wordt getoont maar dat is oke. Wanneer dit command klaar is en geen errors terug geeft (naast de gele teksten dan), runnen we het volgende command in dezelfde temrinal: ```composer update```. 
+
+Ook deze kan even duren maar als alles goed gaat dan moeten er nu geen warnings meer zijn (de gele teksten). Check of er een nieuwe map is verschenen met de naam ```vendor```. Als dit zo is dan zijn de eerste stappen gelukt.
+Als het goed is staat er nog geen ```.env``` file tussen je bestanden dus deze moet je zelf aanmaken. Wat er in moet staan staat in de WhatsApp groep.
+
+Zodra je dit hebt aangemaakt en de inhoud hebt toegevoegd, kan je nu de ```Ubuntu WSL``` terminal openen. Controleer eerst of je in de juiste map zit, als dit zo is kan je het volgende command runnen in de terminal: ```./vendor/bin/sail up```.
+
+Als alles goed is gegaan dan hoort nu in Docker het project te draaien.
+
+Nu terug in je VSCode ga je weer naar de cmd terminal en run je nu het volgende command: ```npm install```. Nadat dit succesvol is voltooid kun je ```npm run dev``` runnen en is alles aan de React kant geinstalleerd.
+
+Als je localhost hebt geopent kan het zijn dat er een error wordt weergegeven. Dit is omdat er nog niets in de database staat maar de localhost verwacht dit wel. Om dit op te lossen moet je naar je Docker gaan, het project uitklappen en op ```laravel.test-1``` drukken. Ga dan naar ```Exec``` en daar moet een terminal te zien zijn.
+
+Run daar het volgende command: ```php artisan migrate```. Zodra je dit hebt gedaan kun je je localhost refreshen en als het goed is, is de error verdwenen. Om zeker te weten dat de migratie is gelukt kun je naar ```localhost:1088``` gaan en daar kijken of tabellen zijn aangemaakt bij ```laravel```.
 
 
 ## SCSS
-
-> [!IMPORTANT]
-> We gebruiken geen pixels of rem maar em, we gebruiken vh alleen voor de screen height
 
 Om de SCSS te runnen moet je eerst het volgende command in je cmd (Command Prompt) draaien.
 
@@ -220,6 +242,11 @@ Alle mediaqueries gaan in de ```_mediaqueries.scss``` file. Deze moet altijd ond
 > [!IMPORTANT]
 > Vergeet niet om ```npm run dev``` te runnen voor je begint met programmeren. En als het niet werkt check dan of je wel in de juiste map zit.
 
+```
+/usr/bin/env: ‘bash\r’: No such file or directory 
+/usr/bin/env: use -[v]S to pass options in shebang lines composer
+```
+
 ### Structuur
 In de ```js``` map staan een aantal mappen:
 
@@ -244,3 +271,6 @@ js/
 |- app.jsx
 ```
 
+
+### Routing
+nog mee bezig

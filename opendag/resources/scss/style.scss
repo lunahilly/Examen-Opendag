@@ -7,6 +7,9 @@
 
 @use "layout/navigation";
 
+@use "pages/welcome";
+@use "pages/information";
+
 @use "abstracts/mediaqueries"; // deze moet altijd onderaan staan
 
 // hier worden alle bestanden gelinkt

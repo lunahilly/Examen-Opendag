@@ -1,12 +1,18 @@
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Error: expected ";".
+ *   ,
+ * 1 | @use "../pages/information"
+ *   |                            ^
+ *   '
+ *   resources\scss\pages\_information.scss 1:28  @use
+ *   resources\scss\style.scss 10:1               root stylesheet */
 
-body {
-  min-height: 100vh;
-  font-family: aeonik;
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: 'Error: expected ";".\a   \2577 \a 1 \2502  @use "../pages/information"\d\a   \2502                             ^\a   \2575 \a   resources\\scss\\pages\\_information.scss 1:28  @use\a   resources\\scss\\style.scss 10:1               root stylesheet';
 }
-
-/*# sourceMappingURL=style.css.map */
