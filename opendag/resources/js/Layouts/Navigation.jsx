@@ -9,7 +9,7 @@ function Navigation(){
             </a>
             <nav className="header__navigation">
                 <a href="" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
-                <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
+                <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
                 <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                 <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
                 <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Contact</a>

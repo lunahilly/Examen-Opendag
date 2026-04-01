@@ -1,0 +1,36 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.auth{
+    @include mixins.flexBox;
+    flex-direction: column;
+    gap: 1rem;
+}
+.input{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 0.25em;
+
+    &__label{
+        // font-size: 0.85em;
+    }
+
+    &__field{
+        padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+        font-size: 1em;
+        background: red;
+        border-radius: map-get(variables.$borders, "border-radius-s");
+
+        &:focus{
+            outline: none;
+            background: map-get(variables.$colors, "white");
+        }
+    }
+
+    &__error{
+        font-size: 0.75em;
+        color: map-get(variables.$colors, "error-red");
+    }
+}
