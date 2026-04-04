@@ -1,7 +1,7 @@
-@mixin flexBox{
+@mixin flexBox($justifyContent, $alignItems){
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
 }
 
 @mixin changeColor($color){

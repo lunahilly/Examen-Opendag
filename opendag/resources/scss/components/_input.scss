@@ -2,7 +2,7 @@
 @use "../abstracts/mixins";
 
 .auth{
-    @include mixins.flexBox;
+    @include mixins.flexBox(center, center);
     flex-direction: column;
     gap: 1rem;
 }
@@ -12,20 +12,52 @@
     justify-content: center;
     align-items: start;
     gap: 0.25em;
+    // width: 15em;
 
-    &__label{
-        // font-size: 0.85em;
+    // &__label{
+    //     // font-size: 0.85em;
+    // }
+
+    &__wrapper{
+        position: relative;
     }
-
     &__field{
         padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
         font-size: 1em;
-        background: red;
         border-radius: map-get(variables.$borders, "border-radius-s");
+        width: 100%;
 
         &:focus{
             outline: none;
             background: map-get(variables.$colors, "white");
+        }
+    }
+
+    &__button{
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 1.3em;
+        padding: 0 map-get(variables.$padding, "padding-m");
+        border: none;
+        background: none;
+
+        &:focus{
+            outline: none;
+        }
+    }
+
+    &__data{
+        @include mixins.flexBox(start, start);
+        gap: 0.125em;
+
+        &--item{
+            background: map-get(variables.$colors, "magenta");
+            border: none;
+            color: map-get(variables.$colors, "white");
+            font-family: inherit;
+            padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+            border-radius: map-get(variables.$borders, "border-radius-s");
         }
     }
 

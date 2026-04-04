@@ -9,7 +9,8 @@
 @use "layout/navigation";
 
 @use "pages/welcome";
-@use "pages/information";
+@use "pages/information/information";
+@use "pages/information/course";
 
 @use "abstracts/mediaqueries"; // deze moet altijd onderaan staan
 

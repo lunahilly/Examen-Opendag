@@ -13,7 +13,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Information/Information');
+        $courses = Course::all();
+        return Inertia::render('Information/Information', [
+            'courses' => $courses
+        ]);
     }
 
     /**
@@ -21,7 +24,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Information/Form');
     }
 
     /**

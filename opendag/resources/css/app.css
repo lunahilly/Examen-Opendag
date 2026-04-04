@@ -33,15 +33,44 @@ body {
   align-items: start;
   gap: 0.25em;
 }
+.input__wrapper {
+  position: relative;
+}
 .input__field {
   padding: 0.125em 0.25em;
   font-size: 1em;
-  background: red;
   border-radius: 0.25em;
+  width: 100%;
 }
 .input__field:focus {
   outline: none;
   background: white;
+}
+.input__button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.3em;
+  padding: 0 0.5em;
+  border: none;
+  background: none;
+}
+.input__button:focus {
+  outline: none;
+}
+.input__data {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 0.125em;
+}
+.input__data--item {
+  background: #FF00E6;
+  border: none;
+  color: white;
+  font-family: inherit;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
 }
 .input__error {
   font-size: 0.75em;
@@ -73,6 +102,91 @@ body {
 }
 .header__navigation--link-active {
   color: #FF00E6;
+}
+
+.courses {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.courses__item {
+  width: 50%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.75em;
+}
+.courses__item--dropdown {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1.2em;
+  padding: 0.125em 0.25em;
+}
+.courses__item--dropdown:focus {
+  outline: none;
+}
+.courses__item--dropdown-active {
+  border: 0.125em solid #FF00E6;
+  color: #FF00E6;
+}
+
+.course {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  padding: 0.25em 0.5em;
+  border-left: 0.025em solid #FF00E6;
+  gap: 1em;
+}
+.course__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 2em;
+}
+.course__details {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.course__details--career {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.course__details--career-list {
+  padding: 0 1em;
+  list-style: circle;
+}
+.course__details--career-item::marker {
+  color: #FF00E6;
+}
+.course__details--item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.course__details--item-text {
+  text-align: start;
+  min-width: 4em;
+}
+.course__image {
+  width: 20em;
+  height: 10em;
+  object-fit: cover;
 }
 
 /*# sourceMappingURL=app.css.map */

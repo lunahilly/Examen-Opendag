@@ -1,0 +1,55 @@
+@use "../../abstracts/variables";
+@use "../../abstracts/mixins";
+
+.course{
+    @include mixins.flexBox(start, start);
+    flex-direction: column;
+    padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+    border-left: 0.025em solid map-get(variables.$colors, "magenta");
+    gap: 1em;
+
+    &__wrapper{
+        @include mixins.flexBox(center, start);
+        gap: 2em;
+    }
+
+    &__details{
+        @include mixins.flexBox(start, start);
+        flex-direction: column;
+        gap: 1em;
+
+        &--career{
+            @include mixins.flexBox(start, start);
+            flex-direction: column;
+            gap: 0.5em;
+
+            &-list{
+                padding: 0 map-get(variables.$padding, "padding-l");
+                list-style: circle;
+            }
+
+            &-item{
+
+                &::marker{
+                    color: map-get(variables.$colors, "magenta");
+                }
+            }
+        }
+
+        &--item{
+            @include mixins.flexBox(start, center);
+            // gap: 1em;
+
+            &-text{
+                text-align: start;
+                min-width: 4em;
+            }
+        }
+    }
+
+    &__image{
+        width: 20em;
+        height: 10em;
+        object-fit: cover;
+    }
+}
