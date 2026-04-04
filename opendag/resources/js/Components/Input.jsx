@@ -1,5 +1,4 @@
 const InputField = ({label, value, onChange, type, error, onClick, children}) => {
-    console.log(onClick);
     return(
         <div className="input">
             <label className="input__label">{label}</label>

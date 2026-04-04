@@ -10,7 +10,7 @@ function Navigation(){
             <nav className="header__navigation">
                 <a href="" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                 <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
-                <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
+                <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                 <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
                 <a href="" className={`header__navigation--link ${url == '' ? 'header__navigation--link-active' : null} `}>Contact</a>
             </nav>

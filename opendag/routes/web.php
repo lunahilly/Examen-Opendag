@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,9 +31,11 @@ Route::middleware('auth')->group(function () {
     // Route::patch('/course/{id}', [CourseController::class, 'update'])->named('course.update');
 
     Route::resource('course', CourseController::class)->except('index', 'show');
+    Route::resource('story', StoryController::class)->except('index', 'show');
 });
 
 
 Route::get('/information', [CourseController::class, 'index'])->name('information.index');
+Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 
 require __DIR__.'/auth.php';
