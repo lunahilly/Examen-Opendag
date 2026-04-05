@@ -11,4 +11,8 @@ class Course extends Model
     protected $casts = [
         'careers' => 'array'
     ];
+
+    public function stories(){
+        return $this->hasMany(Story::class);
+    }
 }

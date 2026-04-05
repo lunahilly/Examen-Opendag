@@ -1,0 +1,42 @@
+@use "../../abstracts/variables";
+@use "../../abstracts/mixins";
+
+.student{
+    @include mixins.flexBox(start, start);
+    gap: 1em;
+    width: 48%;
+    height: 7em;
+
+    &__image{
+        height: 100%;
+        // width: 12em;
+        aspect-ratio: 2.5/2;
+        object-fit: cover;
+    }
+
+    &__details{
+        @include mixins.flexBox(start, start);
+        flex-direction: column;
+        gap: 0.25em;
+        height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+
+        &--name{
+            font-weight: 400;
+        }
+
+        &--course{
+            color: map-get(variables.$colors, "magenta");
+            font-weight: 400;
+        }
+
+        &--story{
+            // overflow: hidden;
+            // word-wrap: break-word;
+            // text-overflow: ellipsis;
+            // height: 100%;
+        }
+    }
+}

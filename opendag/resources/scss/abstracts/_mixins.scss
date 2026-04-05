@@ -1,7 +1,25 @@
+@use "variables";
+
 @mixin flexBox($justifyContent, $alignItems){
     display: flex;
     justify-content: $justifyContent;
     align-items: $alignItems;
+}
+
+@mixin selectBox($width, $fontSize, $borderColor){
+    width: $width;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border: 0.125em solid $borderColor;
+    color: map-get(variables.$colors, "white");
+    font-size: $fontSize;
+    padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+
+    &:focus{
+        outline: none;
+    }
 }
 
 @mixin changeColor($color){

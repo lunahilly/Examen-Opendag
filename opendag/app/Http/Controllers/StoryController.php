@@ -14,9 +14,11 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Story::with('courses')->all();
+        $stories = Story::with('course')->latest()->get();
+        $courses = Course::all();
         return Inertia::render('Stories/Stories', [
-            'stories' => $stories
+            'stories' => $stories,
+            'courses' => $courses
         ]);
     }
 
@@ -80,7 +82,7 @@ class StoryController extends Controller
     protected function validateData(Request $request){
         $data = $request->validate([
             'name' => 'required',
-            'course' => 'required',
+            'course_id' => 'required',
             'image' => '',
             'story' => 'required' 
         ]);

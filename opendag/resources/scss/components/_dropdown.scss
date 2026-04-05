@@ -2,5 +2,34 @@
 @use "../abstracts/mixins";
 
 .dropdown{
-    
+    @include mixins.selectBox(auto, 1em, map-get(variables.$colors, "white"));
+
+    &__option{
+        border: none;
+        font-family: inherit;
+        background: map-get(variables.$colors, "black");
+
+        &:hover{
+            cursor: pointer;
+            background: map-get(variables.$colors, "magenta");
+        }
+    }
+    // width: 100%;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    // background: none;
+    // border: 0.125em solid map-get(variables.$colors, "white");
+    // color: map-get(variables.$colors, "white");
+    // font-size: 1.2em;
+    // padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+
+    // &:focus{
+    //     outline: none;
+    // }
+
+    // &__active{
+    //     border-color: map-get(variables.$colors, "magenta");
+    //     color: map-get(variables.$colors, "magenta");
+    // }
 }

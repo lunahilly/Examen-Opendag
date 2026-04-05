@@ -18,6 +18,30 @@ body {
   gap: 1em;
 }
 
+.dropdown {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1em;
+  padding: 0.125em 0.25em;
+}
+.dropdown:focus {
+  outline: none;
+}
+.dropdown__option {
+  border: none;
+  font-family: inherit;
+  background: black;
+}
+.dropdown__option:hover {
+  cursor: pointer;
+  background: #FF00E6;
+}
+
 .auth {
   display: flex;
   justify-content: center;
@@ -187,6 +211,52 @@ body {
   width: 20em;
   height: 10em;
   object-fit: cover;
+}
+
+.stories {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.stories__students {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.student {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 1em;
+  width: 48%;
+  height: 7em;
+}
+.student__image {
+  height: 100%;
+  aspect-ratio: 2.5/2;
+  object-fit: cover;
+}
+.student__details {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 0.25em;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.student__details--name {
+  font-weight: 400;
+}
+.student__details--course {
+  color: #FF00E6;
+  font-weight: 400;
 }
 
 /*# sourceMappingURL=app.css.map */

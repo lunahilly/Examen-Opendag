@@ -5,7 +5,7 @@ import { Head, useForm, usePage } from "@inertiajs/react";
 function StoryForm(){
     const {data, setData, post, processing, errors} = useForm({
         name: '',
-        course: '',
+        course_id: '',
         image: '',
         story: ''
     });
@@ -23,10 +23,10 @@ function StoryForm(){
             <Head title="New story"/>
             <form onSubmit={submit} className="form">
                 <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name}/>
-                <select value={data.course} onChange={(event) => setData('course', event.target.value)} className="form__dropdown">
+                <select value={data.course_id} onChange={(event) => setData('course_id', event.target.value)} className="dropdown">
                     {
                         courses.map((item, index) => 
-                            <option value={item.id} key={index} className="form__dropdown--item">{item.name}</option>
+                            <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }
                 </select>

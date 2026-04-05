@@ -13,19 +13,20 @@
         gap: 0.75em;
 
         &--dropdown{
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: none;
-            border: 0.125em solid map-get(variables.$colors, "white");
-            color: map-get(variables.$colors, "white");
-            font-size: 1.2em;
-            padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+            @include mixins.selectBox(100%, 1.2em, map-get(variables.$colors, "white"));
+            // width: 100%;
+            // display: flex;
+            // justify-content: space-between;
+            // align-items: center;
+            // background: none;
+            // border: 0.125em solid map-get(variables.$colors, "white");
+            // color: map-get(variables.$colors, "white");
+            // font-size: 1.2em;
+            // padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
 
-            &:focus{
-                outline: none;
-            }
+            // &:focus{
+            //     outline: none;
+            // }
             
             &-active{
                 border: 0.125em solid map-get(variables.$colors, "magenta");
