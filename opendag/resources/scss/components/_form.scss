@@ -1,0 +1,7 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.form{
+    @include mixins.flexBox(center, center);
+    flex-direction: column;
+}

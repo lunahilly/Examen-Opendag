@@ -2,12 +2,14 @@
 @use "../../abstracts/mixins";
 
 .courses{
-    @include mixins.flexBox(start, start);
-    flex-direction: column;
-    gap: 1em;
+    @include mixins.flexBox(space-between, start);
+    // flex-direction: column;
+    // gap: 1em;
+    flex-wrap: wrap;
+    width: 100%;
 
     &__item{
-        width: 50%;
+        width: 49%;
         @include mixins.flexBox(start, center);
         flex-direction: column;
         gap: 0.75em;

@@ -101,6 +101,17 @@ body {
   color: #ea95a2;
 }
 
+.head {
+  font-size: 1.3em;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -130,13 +141,13 @@ body {
 
 .courses {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: start;
-  flex-direction: column;
-  gap: 1em;
+  flex-wrap: wrap;
+  width: 100%;
 }
 .courses__item {
-  width: 50%;
+  width: 49%;
   display: flex;
   justify-content: start;
   align-items: center;
