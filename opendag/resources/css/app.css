@@ -141,8 +141,10 @@ body {
 
 .courses {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: start;
+  gap: 1em;
+  flex-direction: column;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -171,6 +173,10 @@ body {
 .courses__item--dropdown-active {
   border: 0.125em solid #FF00E6;
   color: #FF00E6;
+}
+
+.break {
+  flex-basis: 100%;
 }
 
 .course {

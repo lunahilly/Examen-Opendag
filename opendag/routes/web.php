@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoryController;
@@ -32,10 +34,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('course', CourseController::class)->except('index', 'show');
     Route::resource('story', StoryController::class)->except('index', 'show');
+    Route::resource('activity', ActivityController::class)->except('index', 'show');
 });
 
 
 Route::get('/information', [CourseController::class, 'index'])->name('information.index');
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
 require __DIR__.'/auth.php';

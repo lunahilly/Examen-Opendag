@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stories', function (Blueprint $table) {
-            $table->foreignId('course_id')->after('name')->constrained()->onDelete('cascade');
+        Schema::create('activities', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('course_id')->constrained()->onDelete('cascade');
+            $table->enum('activity', ['Voorlichting']);
+            $table->time('time');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('stories', function (Blueprint $table) {
-            $table->dropForeign('course_id');
-        });
+        Schema::dropIfExists('activities');
     }
 };

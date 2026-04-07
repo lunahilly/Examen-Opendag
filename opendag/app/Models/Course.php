@@ -15,4 +15,8 @@ class Course extends Model
     public function stories(){
         return $this->hasMany(Story::class);
     }
+
+    public function activities(){
+        return $this->hasMany(Activity::class);
+    }
 }

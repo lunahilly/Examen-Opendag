@@ -1,6 +1,6 @@
 import PageTitle from "@/Components/Title";
 import GuestLayout from "@/Layouts/GuestLayout";
-import { usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import Course from "./Course";
 
@@ -19,28 +19,33 @@ function Information(){
     console.log(open);
     return(
         <GuestLayout>
+            <Head title="Informatie per opleiding"/>
             <PageTitle title="Informatie per opleiding"/>
             <section className="courses">
                 {
                     courses.map((course, index) => 
-                        <div className="courses__item" key={index}>
-                            <button onClick={() => openCourse(index)} className={`courses__item--dropdown ${open == index ? 'courses__item--dropdown-active' : null}`}>{course.name}
+                        <>
+                            <div className="courses__item" key={index}>
+                                <button onClick={() => openCourse(index)} className={`courses__item--dropdown ${open == index ? 'courses__item--dropdown-active' : null}`}>{course.name}
+                                    {
+                                        open == index ? <p>^</p> :
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
+                                            <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                        </svg>
+                                    }
+                                </button>
                                 {
-                                    open == index ? <p>^</p> :
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
-                                        <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
-                                    </svg>
+                                    open == index ?
+                                    <Course course={courses[open]}/>
+                                    : null
                                 }
-                            </button>
+                            </div>
                             {
-                                open == index ?
-                                <Course course={courses[open]}/>
-                                : null
+                                index == 11 ? <span className="break"></span> : null
                             }
-                        </div>
+                        </>
                     )
                 }
-                
             </section>
         </GuestLayout>
     );
