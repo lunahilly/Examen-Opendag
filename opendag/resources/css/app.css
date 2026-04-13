@@ -18,6 +18,36 @@ body {
   gap: 1em;
 }
 
+.button {
+  border: none;
+  background: #FF00E6;
+  padding: 0.25em 0.5em;
+  color: white;
+  border-radius: 0.25em;
+  font-weight: 600;
+  font-size: 100%;
+}
+
+.checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+.checkbox__input {
+  appearance: none;
+  background: white;
+  width: 1.2em;
+  aspect-ratio: 1/1;
+  border-radius: 0.25em;
+}
+.checkbox__input:focus {
+  outline: none;
+}
+.checkbox__input:checked {
+  background: #FF00E6;
+}
+
 .dropdown {
   width: auto;
   display: flex;
@@ -62,13 +92,17 @@ body {
 }
 .input__field {
   padding: 0.125em 0.25em;
-  font-size: 1em;
+  font-size: 1.2em;
   border-radius: 0.25em;
   width: 100%;
+  background: rgba(255, 0, 230, 0.2);
+  border: 0.025em solid rgba(255, 0, 230, 0.2);
+  color: rgba(255, 255, 255, 0.8);
 }
 .input__field:focus {
   outline: none;
   background: white;
+  color: black;
 }
 .input__button {
   position: absolute;
@@ -108,8 +142,18 @@ body {
 .form {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   flex-direction: column;
+  gap: 1em;
+}
+.form__title {
+  font-size: 2em;
+  font-family: sangbleukingdom;
+  text-align: start;
+}
+.form__title::after {
+  content: attr(data-end);
+  color: #FF00E6;
 }
 
 .header {

@@ -57,7 +57,12 @@ class StoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $story = Story::find($id);
+        $courses = Course::all();
+        return Inertia::render('Stories/Form', [
+            'story' => $story,
+            'courses' => $courses
+        ]);
     }
 
     /**

@@ -5,6 +5,7 @@
     @include mixins.flexBox(start, start);
     flex-direction: column;
     gap: 1em;
+    
     &__students{
         @include mixins.flexBox(space-between, start);
         flex-wrap: wrap;

@@ -10,7 +10,7 @@ function Activities(){
             <Head title="Activiteiten"/>
             <PageTitle title="Activiteiten"/>
             <section className="activities">
-                div.activities__
+                {/* div.activities__ */}
             </section>
         </GuestLayout>
     );

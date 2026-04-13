@@ -1,21 +1,31 @@
+import Button from "@/Components/Button";
 import InputField from "@/Components/Input";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
 
 function StoryForm(){
-    const {data, setData, post, processing, errors} = useForm({
-        name: '',
-        course_id: '',
-        image: '',
-        story: ''
+    const story = usePage().props.story;
+    const {data, setData, post, patch, processing, errors} = useForm({
+        name: story ? story.name : '',
+        course_id: story ? story.course_id : '',
+        image: story ? story.image : '',
+        story: story ? story.story : ''
     });
+    console.log(usePage().props);
     const courses = usePage().props.courses;
     console.log(courses);
     console.log(data);
 
     const submit = (event) => {
         event.preventDefault();
-        post(route('story.store'));
+        console.log('this');
+        if(story != null){
+            console.log('hoho');
+            patch(route('story.update', story.id));
+        }
+        else{
+            post(route('story.store'));
+        }
     }
 
     return (
@@ -32,7 +42,7 @@ function StoryForm(){
                 </select>
                 <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image}/>
                 <InputField label="Story" value={data.story} onChange={(event) => setData('story', event.target.value)} error={errors.story}/>
-                <button className="form__submit">submit</button>
+                <Button type="submit" label={story ? 'Update' : 'Save'}/>
             </form>
         </AuthenticatedLayout>
     );

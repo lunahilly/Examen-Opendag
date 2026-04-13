@@ -2,6 +2,20 @@
 @use "../abstracts/mixins";
 
 .form{
-    @include mixins.flexBox(center, center);
+    @include mixins.flexBox(center, start);
     flex-direction: column;
+    gap: 1em;
+
+    &__title{
+        font-size: 2em;
+        font-family: map-get(variables.$baseVars, "secondary-font");
+        text-align: start;
+
+        &::after{
+            content: attr(data-end);
+            color: map-get(variables.$colors, "magenta");
+        }
+    }
+
+    // &__input
 }

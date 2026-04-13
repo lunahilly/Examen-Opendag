@@ -51,7 +51,10 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $course = Course::find($id);
+        return Inertia::render('Information/Form', [
+            'course' => $course
+        ]);
     }
 
     /**

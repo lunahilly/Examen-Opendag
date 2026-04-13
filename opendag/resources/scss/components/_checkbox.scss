@@ -2,5 +2,22 @@
 @use "../abstracts/mixins";
 
 .checkbox{
-    
+    @include mixins.flexBox(center, center);
+    gap: 0.5em;
+
+    &__input{
+        appearance: none;
+        background: rgba(map-get(variables.$colors, "white"), 1);
+        width: 1.2em;
+        aspect-ratio: 1/1;
+        border-radius: map-get(variables.$borders, "border-radius-s");
+
+        &:focus{
+            outline: none;
+        }
+
+        &:checked{
+            background: map-get(variables.$colors, "magenta");
+        }
+    }
 }

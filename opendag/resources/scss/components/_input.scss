@@ -23,13 +23,17 @@
     }
     &__field{
         padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
-        font-size: 1em;
+        font-size: 1.2em;
         border-radius: map-get(variables.$borders, "border-radius-s");
         width: 100%;
+        background: rgba(map-get(variables.$colors, "magenta"), 0.2);
+        border: 0.025em solid rgba(map-get(variables.$colors, "magenta"), 0.2);
+        color: rgba(map-get(variables.$colors, "white"), 0.8);
 
         &:focus{
             outline: none;
             background: map-get(variables.$colors, "white");
+            color: map-get(variables.$colors, "black");
         }
     }
 

@@ -1,25 +1,32 @@
+import Button from "@/Components/Button";
 import InputField from "@/Components/Input";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 function InformationForm(){
+    const course = usePage().props.course;
     const [value, setValue] = useState('');
-    const {data, setData, post, processing, errors} = useForm({
-        name: '',
-        image: '',
-        information: '',
-        careers: [],
-        duration: '',
-        internships: '',
-        code: 0
+    const {data, setData, post, patch, processing, errors} = useForm({
+        name: course ? course.name : '',
+        image: course ? course.image : '',
+        information: course ? course.information : '',
+        careers: course ? course.careers : [],
+        duration: course ? course.duration : '',
+        internships: course ? course.internships : '',
+        code: course ? course.code : 0
     });
     
     console.log(data.careers);
 
     const submit = (event) => {
         event.preventDefault();
-        post(route('course.store'));
+        if(course != null){
+            patch(route('course.update', course.id));
+        }
+        else{
+            post(route('course.store'));
+        }
     }
 
     const addCareers = (event) => {
@@ -50,7 +57,8 @@ function InformationForm(){
                 <InputField label="Duration" value={data.duration} onChange={(event) => setData('duration', event.target.value)} error={errors.duration}/>
                 <InputField label="Internships" value={data.internships} onChange={(event) => setData('internships', event.target.value)} error={errors.internships}/>
                 <InputField label="Code" value={data.code} onChange={(event) => setData('code', event.target.value)} error={errors.code}/>
-                <button className="form__submit">submit</button>
+                {/* <button className="form__submit">submit</button> */}
+                <Button type="submit" label={course ? 'Update' : 'Save'}/>
             </form>
         </AuthenticatedLayout>
     );
