@@ -24,6 +24,7 @@ function ActivitiesForm(){
             <PageTitle title="New activity"/>
             <form onSubmit={submit} className="form">
                 <select onChange={(event) => setData('course_id', event.target.value)} className="dropdown">
+                    <option value={null} className="dropdown__option">Geen opleiding</option>
                     {
                         courses.map((item, index) => 
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
