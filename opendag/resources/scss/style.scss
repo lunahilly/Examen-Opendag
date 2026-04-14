@@ -11,10 +11,14 @@
 @use "layout/navigation";
 
 @use "pages/welcome";
+
 @use "pages/information/information";
 @use "pages/information/course";
+
 @use "pages/stories/stories";
 @use "pages/stories/student";
+
+@use "pages/activities/timeline";
 
 @use "abstracts/mediaqueries"; // deze moet altijd onderaan staan
 

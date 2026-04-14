@@ -1,0 +1,16 @@
+.activities__timeline{
+    position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.activities__timeline::before{
+  content: '';
+  position: absolute;
+  width: 0.25em;
+  height: 20em;
+  background-color: white;
+  top: 0;
+  bottom: 0;
+  margin-left: -3px;
+}
