@@ -218,7 +218,6 @@ body {
   justify-content: start;
   align-items: start;
   gap: 1em;
-  flex-direction: column;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -244,6 +243,11 @@ body {
 .courses__item--dropdown:focus {
   outline: none;
 }
+.courses__item--dropdown {
+  padding: 0.6em;
+  border: 0.1em solid white;
+  border-radius: 0.2rem;
+}
 .courses__item--dropdown-active {
   border: 0.125em solid #FF00E6;
   color: #FF00E6;
@@ -251,6 +255,13 @@ body {
 
 .break {
   flex-basis: 100%;
+}
+
+.course__info {
+  font-size: 18px;
+}
+.course__details--career-head {
+  font-weight: 500;
 }
 
 .course {
