@@ -218,7 +218,6 @@ body {
   justify-content: start;
   align-items: start;
   gap: 1em;
-  flex-direction: column;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -240,6 +239,9 @@ body {
   color: white;
   font-size: 1.2em;
   padding: 0.125em 0.25em;
+  padding: 0.6em;
+  border: 0.1em solid white;
+  border-radius: 0.2rem;
 }
 .courses__item--dropdown:focus {
   outline: none;
@@ -251,6 +253,13 @@ body {
 
 .break {
   flex-basis: 100%;
+}
+
+.course__info {
+  font-size: 18px;
+}
+.course__details--career-head {
+  font-weight: 500;
 }
 
 .course {
@@ -369,6 +378,18 @@ body {
 @media screen and (max-width: 51.875em) {
   .stories__students {
     flex-direction: column;
+    gap: 1em;
+  }
+  .student {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 30em) {
+  .student__image {
+    aspect-ratio: 2.8/2.2;
   }
 }
 
