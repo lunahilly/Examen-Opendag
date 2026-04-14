@@ -1,3 +1,4 @@
+import Button from "@/Components/Button";
 import InputField from "@/Components/Input";
 import PageTitle from "@/Components/Title";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -16,6 +17,7 @@ function ActivitiesForm(){
         post(route('activity.store'));
     }
 
+    console.log(data);
     return(
         <AuthenticatedLayout>
             <Head title="New activity"/>
@@ -30,8 +32,10 @@ function ActivitiesForm(){
                 </select>
                 <select onChange={(event) => setData('activity', event.target.value)} className="dropdown">
                     <option value="Voorlichting" className="dropdown__option">Voorlichting</option>
+                    <option value="Other" className="dropdown__option">other</option>
                 </select>
-                <input type="time" value={data.time} onChange={(event) => setData('time', event.target.value)} className="form__time" />
+                <input type="time" value={data.time} onChange={(event) => setData('time', new Date().toTimeString(event.target.value))} className="form__time" />
+                <Button type="submit" label='send'/>
             </form>
         </AuthenticatedLayout>
     );
