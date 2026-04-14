@@ -4,7 +4,7 @@ import { Head, usePage } from "@inertiajs/react";
 
 function Activities(){
     const activities = usePage().props.activities;
-
+    console.log(activities);
     return(
         <GuestLayout>
             <Head title="Activiteiten"/>
