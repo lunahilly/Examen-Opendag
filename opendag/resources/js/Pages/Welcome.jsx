@@ -1,7 +1,7 @@
 import Navigation from "@/Layouts/Navigation";
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
-import floorZero from "../../../Plattegrond/Plattegrond_begaande-grond.svg"
+import floorZero from "../../../Plattegrond/Plattegrond_begane-grond.svg"
 import floorOne from "../../../Plattegrond/Plattegrond_verdieping1.svg";
 import floorTwo from "../../../Plattegrond/Plattegrond_verdieping2.svg";
 import floorThree from "../../../Plattegrond/Plattegrond_verdieping3.svg";
@@ -9,7 +9,7 @@ import floorThree from "../../../Plattegrond/Plattegrond_verdieping3.svg";
 const floors = [
     {
         value: "floor-0",
-        label: "Begaande grond",
+        label: "Begane grond",
         image: floorZero,
     },
     {
