@@ -15,7 +15,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::all();
+        $activities = Activity::with(['course', 'activityType'])->get();
         return Inertia::render('Activities/Activities', [
             'activities' => $activities
         ]);
@@ -40,7 +40,7 @@ class ActivityController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateData($request);
-        $activity = new Activity();
+        $activity = new Activity($data);
         $activity->save();
         return back();
     }
@@ -81,8 +81,7 @@ class ActivityController extends Controller
         $data = $request->validate([
             'course_id' => 'nullable',
             'activity_type_id' => '',
-            'activity' => '',
-            'time' => ''
+            'time' => 'nullable'
         ]);
         return $data;
     }

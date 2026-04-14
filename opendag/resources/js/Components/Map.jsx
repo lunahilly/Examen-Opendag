@@ -12,17 +12,17 @@ const floors = [
     },
     {
         value: "floor-1",
-        label: "Vloer 1",
+        label: "Verdieping 1",
         image: floorOne,
     },
     {
         value: "floor-2",
-        label: "Vloer 2",
+        label: "Verdieping 2",
         image: floorTwo,
     },
     {
         value: "floor-3",
-        label: "Vloer 3",
+        label: "Verdieping 3",
         image: floorThree,
     },
 ];
