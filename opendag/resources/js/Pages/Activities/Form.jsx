@@ -1,5 +1,4 @@
 import Button from "@/Components/Button";
-import InputField from "@/Components/Input";
 import PageTitle from "@/Components/Title";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
@@ -37,10 +36,6 @@ function ActivitiesForm(){
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }
-                </select>
-                <select onChange={(event) => setData('activity', event.target.value)} className="dropdown">
-                    <option value="Voorlichting" className="dropdown__option">Voorlichting</option>
-                    <option value="Other" className="dropdown__option">other</option>
                 </select>
                 <input type="time" value={data.time} onChange={(event) => setData('time', new Date().toTimeString(event.target.value))} className="form__time" />
                 <Button type="submit" label='send'/>

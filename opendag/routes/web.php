@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\ActivityTypeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StoryController;
+use App\Models\ActivityType;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('course', CourseController::class)->except('index', 'show');
     Route::resource('story', StoryController::class)->except('index', 'show');
     Route::resource('activity', ActivityController::class)->except('index', 'show');
+    Route::resource('type', ActivityTypeController::class)->except('index', 'show');
 });
 
 

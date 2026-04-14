@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ActivityType;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ActivityTypeController extends Controller
 {
@@ -20,7 +21,7 @@ class ActivityTypeController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('ActivityType/Form');
     }
 
     /**

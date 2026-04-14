@@ -39,7 +39,10 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validateData($request);
+        $activity = new Activity();
+        $activity->save();
+        return back();
     }
 
     /**
@@ -72,5 +75,15 @@ class ActivityController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    protected function validateData(Request $request){
+        $data = $request->validate([
+            'course_id' => 'nullable',
+            'activity_type_id' => '',
+            'activity' => '',
+            'time' => ''
+        ]);
+        return $data;
     }
 }
