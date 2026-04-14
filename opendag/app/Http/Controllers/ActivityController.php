@@ -81,7 +81,6 @@ class ActivityController extends Controller
         $data = $request->validate([
             'course_id' => 'nullable',
             'activity_type_id' => '',
-            'activity' => '',
             'time' => 'nullable'
         ]);
         return $data;

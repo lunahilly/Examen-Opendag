@@ -1,4 +1,5 @@
 import Button from "@/Components/Button";
+import InputField from "@/Components/Input";
 import PageTitle from "@/Components/Title";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
@@ -6,8 +7,8 @@ import { Head, useForm, usePage } from "@inertiajs/react";
 function ActivitiesForm(){
     const {data, setData, post, processing, errors} = useForm({
         course_id: null,
-        activity_type_id: 0,
-        activity: '',
+        activity_type_id: 1,
+        // activity: '',
         time: null
     });
     const courses = usePage().props.courses;
@@ -32,13 +33,14 @@ function ActivitiesForm(){
                         )
                     }
                 </select>
-                <select onChange={(event) => setData('type_id', event.target.value)} className="dropdown">
+                <select value={data.activity_type_id} onChange={(event) => setData('activity_type_id', event.target.value)} className="dropdown">
                     {
                         types.map((item, index) => 
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }
                 </select>
+                {/* <InputField label="Activity" value={data.activity} onChange={(event) => setData('activity', event.target.value)}/> */}
                 {
                     data.course_id !== null ? <input type="time" value={data.time} onChange={(event) => setData('time', new Date().toTimeString(event.target.value))} className="form__time" /> : null
                 }
