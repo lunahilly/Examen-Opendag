@@ -1,3 +1,9 @@
 
-
+@media screen and (max-width: 51.875em) {
+    .stories{
+        &__students{
+            flex-direction: column;
+        }
+    }
+}
 // hier komen alle mediaqueries

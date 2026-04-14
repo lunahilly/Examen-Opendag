@@ -349,5 +349,10 @@ body {
   color: #FF00E6;
   font-weight: 400;
 }
+@media screen and (max-width: 51.875em) {
+  .stories__students {
+    flex-direction: column;
+  }
+}
 
 /*# sourceMappingURL=app.css.map */

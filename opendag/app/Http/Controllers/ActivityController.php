@@ -15,7 +15,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::all();
+        $activities = Activity::with(['course', 'activityType'])->get();
         return Inertia::render('Activities/Activities', [
             'activities' => $activities
         ]);

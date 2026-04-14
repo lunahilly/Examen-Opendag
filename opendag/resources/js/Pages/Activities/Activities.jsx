@@ -5,7 +5,7 @@ import Activity from "./Activity";
 
 function Activities(){
     const activities = usePage().props.activities;
-
+    console.log(activities);
     return(
         <GuestLayout>
             <Head title="Activiteiten"/>
