@@ -2,11 +2,9 @@
 @use "../abstracts/mixins";
 
 .header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include mixins.flexBox(space-between, center);
     padding: 0.1em 1em;
-
+       
     &__logo{
         width: 5em;
 
@@ -17,7 +15,7 @@
     }
 
     &__navigation{
-        @include mixins.flexBox;
+        @include mixins.flexBox(center, center);
         gap: 1rem;
 
         &--link{

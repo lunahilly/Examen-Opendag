@@ -1,7 +1,12 @@
+import Navigation from "./Navigation";
+
 function GuestLayout({children}){
     return(
         <>
-            {children}
+            <Navigation/>
+            <main className="main">
+                {children}
+            </main>
         </>
     );
 }

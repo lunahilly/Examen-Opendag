@@ -1,3 +1,5 @@
+// hier staan alle variables
+
 $baseVars: (
     "font": aeonik,
     "secondary-font": sangbleukingdom
@@ -6,7 +8,8 @@ $baseVars: (
 $colors: (
     "white": white,
     "magenta": #FF00E6,
-    "black": black
+    "black": black,
+    "error-red": #ea95a2
 );
 
 $padding: (
@@ -28,4 +31,3 @@ $borders: (
 	"border-radius-xl": 1.25em, //(20px)
 );
 
-// hier staan alle variables

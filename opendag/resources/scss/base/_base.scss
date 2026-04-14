@@ -8,4 +8,11 @@ body{
     color: map-get(variables.$colors, "white");
 }
 
+.main{
+    padding: map-get(variables.$padding, "padding-m") map-get(variables.$padding, "padding-xl");
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
 // hier staat de base code dus van de body en main bijvoorbeeld

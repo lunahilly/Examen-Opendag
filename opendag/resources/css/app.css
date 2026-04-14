@@ -11,6 +11,151 @@ body {
   color: white;
 }
 
+.main {
+  padding: 0.5em 1.25em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.button {
+  border: none;
+  background: #FF00E6;
+  padding: 0.25em 0.5em;
+  color: white;
+  border-radius: 0.25em;
+  font-weight: 600;
+  font-size: 100%;
+}
+
+.checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+.checkbox__input {
+  appearance: none;
+  background: white;
+  width: 1.2em;
+  aspect-ratio: 1/1;
+  border-radius: 0.25em;
+}
+.checkbox__input:focus {
+  outline: none;
+}
+.checkbox__input:checked {
+  background: #FF00E6;
+}
+
+.dropdown {
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1em;
+  padding: 0.125em 0.25em;
+}
+.dropdown:focus {
+  outline: none;
+}
+.dropdown__option {
+  border: none;
+  font-family: inherit;
+  background: black;
+}
+.dropdown__option:hover {
+  cursor: pointer;
+  background: #FF00E6;
+}
+
+.auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 0.25em;
+}
+.input__wrapper {
+  position: relative;
+}
+.input__field {
+  padding: 0.125em 0.25em;
+  font-size: 1.2em;
+  border-radius: 0.25em;
+  width: 100%;
+  background: rgba(255, 0, 230, 0.2);
+  border: 0.025em solid rgba(255, 0, 230, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+}
+.input__field:focus {
+  outline: none;
+  background: white;
+  color: black;
+}
+.input__button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.3em;
+  padding: 0 0.5em;
+  border: none;
+  background: none;
+}
+.input__button:focus {
+  outline: none;
+}
+.input__data {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 0.125em;
+}
+.input__data--item {
+  background: #FF00E6;
+  border: none;
+  color: white;
+  font-family: inherit;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+}
+.input__error {
+  font-size: 0.75em;
+  color: #ea95a2;
+}
+
+.head {
+  font-size: 1.3em;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.form__title {
+  font-size: 2em;
+  font-family: sangbleukingdom;
+  text-align: start;
+}
+.form__title::after {
+  content: attr(data-end);
+  color: #FF00E6;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -36,6 +181,216 @@ body {
 }
 .header__navigation--link-active {
   color: #FF00E6;
+}
+
+.welcome {
+  padding: 1.25em;
+  text-align: center;
+}
+.welcome__content {
+  max-width: 60rem;
+  margin: 0 auto;
+}
+.welcome__title {
+  margin-bottom: 1em;
+}
+.welcome__dropdown {
+  margin-bottom: 1em;
+  padding: 0.25em 0.5em;
+  border: 0.0625em solid white;
+  background: black;
+  color: white;
+  font-family: inherit;
+}
+.welcome__dropdown:focus {
+  outline: none;
+}
+.welcome__image {
+  display: block;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.courses {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 1em;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.courses__item {
+  width: 49%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.75em;
+}
+.courses__item--dropdown {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1.2em;
+  padding: 0.125em 0.25em;
+  padding: 0.6em;
+  border: 0.1em solid white;
+  border-radius: 0.2rem;
+}
+.courses__item--dropdown:focus {
+  outline: none;
+}
+.courses__item--dropdown-active {
+  border: 0.125em solid #FF00E6;
+  color: #FF00E6;
+}
+
+.break {
+  flex-basis: 100%;
+}
+
+.course__info {
+  font-size: 18px;
+}
+.course__details--career-head {
+  font-weight: 500;
+}
+
+.course {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  padding: 0.25em 0.5em;
+  border-left: 0.025em solid #FF00E6;
+  gap: 1em;
+}
+.course__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 2em;
+}
+.course__details {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.course__details--career {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.course__details--career-list {
+  padding: 0 1em;
+  list-style: circle;
+}
+.course__details--career-item::marker {
+  color: #FF00E6;
+}
+.course__details--item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.course__details--item-text {
+  text-align: start;
+  min-width: 4em;
+}
+.course__image {
+  width: 20em;
+  height: 10em;
+  object-fit: cover;
+}
+
+.stories {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+}
+.stories__students {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.student {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 1em;
+  width: 48%;
+  height: 7em;
+}
+.student__image {
+  height: 100%;
+  aspect-ratio: 2.5/2;
+  object-fit: cover;
+}
+.student__details {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 0.25em;
+  height: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+.student__details--name {
+  font-weight: 400;
+}
+.student__details--course {
+  color: #FF00E6;
+  font-weight: 400;
+}
+.activities__timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.activities__timeline::before {
+  content: "";
+  position: absolute;
+  width: 0.25em;
+  height: 20em;
+  background-color: white;
+  top: 0;
+  bottom: 0;
+  margin-left: -3px;
+}
+
+@media screen and (max-width: 51.875em) {
+  .stories__students {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .student {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 30em) {
+  .student__image {
+    aspect-ratio: 2.8/2.2;
+  }
 }
 
 /*# sourceMappingURL=app.css.map */

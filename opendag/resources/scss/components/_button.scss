@@ -2,5 +2,11 @@
 @use "../abstracts/mixins";
 
 .button{
-
+    border: none;
+    background: map-get(variables.$colors, "magenta");
+    padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+    color: map-get(variables.$colors, "white");
+    border-radius: map-get(variables.$borders, "border-radius-s");
+    font-weight: 600;
+    font-size: 100%;
 }
