@@ -1,24 +1,28 @@
 @use "../../abstracts/variables";
 @use "../../abstracts/mixins";
 
-.courses{
+.courses {
     @include mixins.flexBox(start, start);
     gap: 1em;
-    flex-direction: column;
+    // flex-direction: column;
     flex-wrap: wrap;
     width: 100%;
     // height: 70vh;
 
-    &__item{
+    &__item {
         width: 49%;
         @include mixins.flexBox(start, center);
         flex-direction: column;
         gap: 0.75em;
 
-        &--dropdown{
+        &--dropdown {
             @include mixins.selectBox(100%, 1.2em, map-get(variables.$colors, "white"));
-            
-            &-active{
+            padding: 0.6em;
+            border: 0.1em solid white;
+            border-radius: 0.2rem;
+
+
+            &-active {
                 border: 0.125em solid map-get(variables.$colors, "magenta");
                 color: map-get(variables.$colors, "magenta");
             }
@@ -26,6 +30,16 @@
     }
 }
 
-.break{
+.break {
     flex-basis: 100%;
+}
+
+.course {
+    &__info {
+        font-size: 18px;
+    }
+
+    &__details--career-head {
+        font-weight: 500;
+    }
 }
