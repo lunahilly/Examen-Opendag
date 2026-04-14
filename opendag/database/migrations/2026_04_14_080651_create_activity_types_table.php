@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::create('activity_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('activity_type_id')->constrained()->onDelete('cascade');
-            $table->enum('activity', ['Voorlichting']);
-            $table->time('time');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists('activity_types');
     }
 };

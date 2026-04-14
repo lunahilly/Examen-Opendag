@@ -11,6 +11,7 @@ function ActivitiesForm(){
         time: ''
     });
     const courses = usePage().props.courses;
+    const types = usePage().props.types;
 
     const submit = (event) => {
         event.preventDefault();
@@ -26,6 +27,13 @@ function ActivitiesForm(){
                 <select onChange={(event) => setData('course_id', event.target.value)} className="dropdown">
                     {
                         courses.map((item, index) => 
+                            <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
+                        )
+                    }
+                </select>
+                <select onChange={(event) => setData('type_id', event.target.value)} className="dropdown">
+                    {
+                        types.map((item, index) => 
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }

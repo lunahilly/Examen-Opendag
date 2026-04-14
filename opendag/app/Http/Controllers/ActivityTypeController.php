@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
 use App\Models\ActivityType;
-use App\Models\Course;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
-class ActivityController extends Controller
+class ActivityTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $activities = Activity::all();
-        return Inertia::render('Activities/Activities', [
-            'activities' => $activities
-        ]);
+        //
     }
 
     /**
@@ -26,12 +20,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
-        $types = ActivityType::all();
-        return Inertia::render('Activities/Form', [
-            'courses' => $courses,
-            'types' => $types
-        ]);
+        //
     }
 
     /**
@@ -39,7 +28,10 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validateData($request);
+        $type = new ActivityType($data);
+        $type->save();
+        return back();
     }
 
     /**
@@ -63,7 +55,10 @@ class ActivityController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $this->validateData($request);
+        $type = ActivityType::find($id);
+        $type->update($data);
+        return back();
     }
 
     /**
@@ -72,5 +67,12 @@ class ActivityController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    protected function validateData(Request $request){
+        $data = $request->validate([
+            'name' => 'required'
+        ]);
+        return $data;
     }
 }
