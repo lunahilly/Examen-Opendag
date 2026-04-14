@@ -82,7 +82,7 @@ class ActivityController extends Controller
             'course_id' => 'nullable',
             'activity_type_id' => '',
             'activity' => '',
-            'time' => ''
+            'time' => 'nullable'
         ]);
         return $data;
     }
