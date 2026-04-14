@@ -7,7 +7,7 @@ import { Head, useForm, usePage } from "@inertiajs/react";
 function ActivitiesForm(){
     const {data, setData, post, processing, errors} = useForm({
         course_id: null,
-        activity_type_id: 1,
+        activity_type_id: 0,
         // activity: '',
         time: null
     });
@@ -42,7 +42,7 @@ function ActivitiesForm(){
                 </select>
                 {/* <InputField label="Activity" value={data.activity} onChange={(event) => setData('activity', event.target.value)}/> */}
                 {
-                    data.course_id !== null ? <input type="time" value={data.time} onChange={(event) => setData('time', new Date().toTimeString(event.target.value))} className="form__time" /> : null
+                    data.course_id !== null ? <input type="time" value={data.time} onChange={(event) => setData('time', event.target.value)} className="form__time" /> : null
                 }
                 
                 <Button type="submit" label='send'/>

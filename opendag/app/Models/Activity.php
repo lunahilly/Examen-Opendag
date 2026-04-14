@@ -11,4 +11,9 @@ class Activity extends Model
     public function course(){
         return $this->belongsTo(Course::class);
     }
+
+    public function activityType(){
+        return $this->belongsTo(ActivityType::class);
+    }
+
 }

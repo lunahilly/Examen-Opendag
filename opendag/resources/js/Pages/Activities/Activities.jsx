@@ -11,6 +11,7 @@ function Activities(){
             <PageTitle title="Activiteiten"/>
             <section className="activities">
                 {/* div.activities__ */}
+                {activities[1].time}
             </section>
         </GuestLayout>
     );

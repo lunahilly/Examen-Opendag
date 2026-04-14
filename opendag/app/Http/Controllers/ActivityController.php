@@ -40,7 +40,7 @@ class ActivityController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateData($request);
-        $activity = new Activity();
+        $activity = new Activity($data);
         $activity->save();
         return back();
     }
