@@ -1,9 +1,22 @@
-
 @media screen and (max-width: 51.875em) {
-    .stories{
-        &__students{
+    .stories {
+        &__students {
             flex-direction: column;
         }
     }
 }
+
 // hier komen alle mediaqueries
+
+@media screen and (max-width: 75em) {
+    .courses__item {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 42.375em) {
+    .course__wrapper {
+        flex-direction: column-reverse;
+    }
+
+}

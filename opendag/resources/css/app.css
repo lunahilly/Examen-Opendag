@@ -18,6 +18,11 @@ body {
   gap: 1em;
 }
 
+.wrapper {
+  max-width: 80em;
+  margin: 0 auto;
+}
+
 .button {
   border: none;
   background: #FF00E6;
@@ -228,6 +233,7 @@ body {
   align-items: center;
   flex-direction: column;
   gap: 0.75em;
+  letter-spacing: 0.5px;
 }
 .courses__item--dropdown {
   width: 100%;
@@ -245,25 +251,55 @@ body {
 }
 .courses__item--dropdown {
   padding: 0.6em;
-  border: 0.1em solid white;
+  border: 0.075em solid gray;
   border-radius: 0.2rem;
 }
 .courses__item--dropdown-active {
-  border: 0.125em solid #FF00E6;
+  border: 0.075em solid #FF00E6;
   color: #FF00E6;
+}
+.courses__item--dropdown-active .turn_180 {
+  animation: Smooth-rotate 0.3s;
+}
+.courses__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.courses__wrapper .head::before {
+  content: "i";
+  border: 0.1em solid white;
+  border-radius: 50%;
+  padding: 0.05em 0.5em;
+  margin-right: 0.5em;
 }
 
 .break {
   flex-basis: 100%;
 }
 
-.course__info {
-  font-size: 18px;
-}
-.course__details--career-head {
-  font-weight: 500;
+.rotate_180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
+@keyframes Smooth-rotate {
+  0% {
+    transform: rotate(-180deg);
+  }
+  25% {
+    transform: rotate(-135deg);
+  }
+  50% {
+    transform: rotate(-90deg);
+  }
+  75% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 .course {
   display: flex;
   justify-content: start;
@@ -271,7 +307,10 @@ body {
   flex-direction: column;
   padding: 0.25em 0.5em;
   border-left: 0.025em solid #FF00E6;
-  gap: 1em;
+  gap: 2em;
+}
+.course__info {
+  font-size: 18px;
 }
 .course__wrapper {
   display: flex;
@@ -284,7 +323,7 @@ body {
   justify-content: start;
   align-items: start;
   flex-direction: column;
-  gap: 1em;
+  gap: 2em;
 }
 .course__details--career {
   display: flex;
@@ -292,6 +331,9 @@ body {
   align-items: start;
   flex-direction: column;
   gap: 0.5em;
+}
+.course__details--career-head {
+  font-weight: 500;
 }
 .course__details--career-list {
   padding: 0 1em;
@@ -313,6 +355,7 @@ body {
   width: 20em;
   height: 10em;
   object-fit: cover;
+  border: solid 0.01em white;
 }
 
 .stories {
@@ -363,6 +406,16 @@ body {
 @media screen and (max-width: 51.875em) {
   .stories__students {
     flex-direction: column;
+  }
+}
+@media screen and (max-width: 75em) {
+  .courses__item {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 42.375em) {
+  .course__wrapper {
+    flex-direction: column-reverse;
   }
 }
 

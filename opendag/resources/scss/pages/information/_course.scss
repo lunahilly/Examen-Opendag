@@ -1,55 +1,66 @@
 @use "../../abstracts/variables";
 @use "../../abstracts/mixins";
 
-.course{
+.course {
     @include mixins.flexBox(start, start);
     flex-direction: column;
     padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
     border-left: 0.025em solid map-get(variables.$colors, "magenta");
-    gap: 1em;
+    gap: 2em;
 
-    &__wrapper{
+    &__info {
+        font-size: 18px;
+    }
+
+    &__wrapper {
         @include mixins.flexBox(center, start);
         gap: 2em;
     }
 
-    &__details{
+    &__details {
         @include mixins.flexBox(start, start);
         flex-direction: column;
-        gap: 1em;
+        gap: 2em;
 
-        &--career{
+        &--career {
             @include mixins.flexBox(start, start);
             flex-direction: column;
             gap: 0.5em;
 
-            &-list{
+            &-head {
+                font-weight: 500;
+
+            }
+
+            &-list {
                 padding: 0 map-get(variables.$padding, "padding-l");
                 list-style: circle;
             }
 
-            &-item{
+            &-item {
 
-                &::marker{
+                &::marker {
                     color: map-get(variables.$colors, "magenta");
+
                 }
             }
         }
 
-        &--item{
+        &--item {
             @include mixins.flexBox(start, center);
             // gap: 1em;
 
-            &-text{
+            &-text {
                 text-align: start;
                 min-width: 4em;
             }
         }
     }
 
-    &__image{
+    &__image {
         width: 20em;
         height: 10em;
         object-fit: cover;
+        border: solid 0.01em white;
     }
 }
