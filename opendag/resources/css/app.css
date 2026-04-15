@@ -402,8 +402,8 @@ body {
 
 .activities__timeline {
   position: relative;
-  max-width: 1200px;
   margin: 0 auto;
+  margin-inline-start: 5em;
 }
 
 .activities__timeline::before {
