@@ -17,7 +17,7 @@ function ActivityTypeForm(){
         <AuthenticatedLayout>
             <form onSubmit={submit} className="form">
                 <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} />
-                <Button label="send" type="submit"/>
+                <Button label="send" type="submit" isDisabled={processing}/>
             </form>
         </AuthenticatedLayout>
     );

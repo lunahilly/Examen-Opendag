@@ -4,9 +4,26 @@
 .button{
     border: none;
     background: map-get(variables.$colors, "magenta");
-    padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+    padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-md");
     color: map-get(variables.$colors, "white");
     border-radius: map-get(variables.$borders, "border-radius-s");
     font-weight: 600;
     font-size: 100%;
+    box-shadow: inset 0 -0.1rem 0 0 rgba(map-get(variables.$colors, "black"), 0.2);
+    transition: 0.4s all;
+    font-family: inherit;
+
+    &:disabled{
+        background: rgba(map-get(variables.$colors, "magenta"), 0.2);
+        color: rgba(map-get(variables.$colors, "white"), 0.2);
+    }
+
+    &:hover{
+        cursor: pointer;
+        background: darken(map-get(variables.$colors, "magenta"), 2%);
+    }
+
+    &:focus{
+        outline: none;
+    }
 }

@@ -26,11 +26,25 @@ body {
 .button {
   border: none;
   background: #FF00E6;
-  padding: 0.25em 0.5em;
+  padding: 0.25em 0.75em;
   color: white;
   border-radius: 0.25em;
   font-weight: 600;
   font-size: 100%;
+  box-shadow: inset 0 -0.1rem 0 0 rgba(0, 0, 0, 0.2);
+  transition: 0.4s all;
+  font-family: inherit;
+}
+.button:disabled {
+  background: rgba(255, 0, 230, 0.2);
+  color: rgba(255, 255, 255, 0.2);
+}
+.button:hover {
+  cursor: pointer;
+  background: rgb(244.8, 0, 220.8);
+}
+.button:focus {
+  outline: none;
 }
 
 .checkbox {
@@ -66,6 +80,9 @@ body {
 }
 .dropdown:focus {
   outline: none;
+}
+.dropdown {
+  width: 100%;
 }
 .dropdown__option {
   border: none;
@@ -147,7 +164,7 @@ body {
 .form {
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   flex-direction: column;
   gap: 1em;
 }
@@ -161,6 +178,292 @@ body {
   color: #FF00E6;
 }
 
+.wayfinding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.wayfinding__canvas-shell {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.wayfinding__canvas {
+  position: relative;
+  overflow: hidden;
+  min-height: 39rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.25rem;
+  background: #f2f2f2;
+}
+
+.wayfinding__canvas::before {
+  display: none;
+}
+
+.wayfinding__canvas-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+}
+
+.wayfinding__image,
+.wayfinding__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.4rem 2.8rem 0.4rem 0.4rem;
+}
+
+.wayfinding__image {
+  object-fit: contain;
+  filter: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.wayfinding__overlay {
+  z-index: 2;
+  overflow: visible;
+}
+
+.wayfinding__route-line {
+  stroke: var(--accent);
+  stroke-width: 8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: none;
+  animation: none;
+  filter: none;
+}
+
+.wayfinding__route-node {
+  fill: #ffffff;
+  stroke: var(--accent);
+  stroke-width: 5;
+  filter: none;
+}
+
+.wayfinding__wall-overlay {
+  pointer-events: none;
+}
+
+.wayfinding__wall-overlay .cls-21,
+.wayfinding__wall-overlay .cls-14,
+.wayfinding__wall-overlay .cls-7,
+.wayfinding__wall-overlay .cls-2 {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 6;
+  stroke-miterlimit: 10;
+}
+
+.wayfinding__marker {
+  cursor: pointer;
+}
+
+.wayfinding__marker-ring {
+  fill: #ffffff;
+  stroke: #111111;
+  stroke-width: 4;
+  transition: none;
+}
+
+.wayfinding__marker-core {
+  fill: #111111;
+}
+
+.wayfinding__marker--start .wayfinding__marker-ring {
+  fill: #111111;
+  stroke: #111111;
+}
+
+.wayfinding__marker--start .wayfinding__marker-core {
+  fill: #ffffff;
+}
+
+.wayfinding__marker--active .wayfinding__marker-ring {
+  fill: #ffffff;
+  stroke: #111111;
+}
+
+.wayfinding__marker--active .wayfinding__marker-core {
+  fill: var(--accent);
+}
+
+.wayfinding__marker:hover .wayfinding__marker-ring,
+.wayfinding__marker--active .wayfinding__marker-ring {
+  transform: none;
+}
+
+.wayfinding__floors {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+}
+
+.wayfinding__floor-button {
+  width: 1.8rem;
+  height: 1.65rem;
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+  background: transparent;
+  color: #444444;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.wayfinding__floor-button:last-child {
+  border-bottom: none;
+}
+
+.wayfinding__floor-button--route {
+  color: #444444;
+}
+
+.wayfinding__floor-button--active {
+  background: #ffffff;
+  color: var(--accent);
+}
+
+.wayfinding__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.wayfinding__field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.2rem;
+  background: #ffffff;
+  color: #111111;
+}
+
+.wayfinding__field-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #111111;
+  font-weight: 400;
+}
+
+.wayfinding__field-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: #111111;
+}
+
+.wayfinding__select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.7rem 0;
+  color: #8d8d8d;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.wayfinding__select:focus {
+  outline: none;
+}
+
+.wayfinding__directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.2rem;
+  background: transparent;
+}
+
+.wayfinding__directory-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.wayfinding__directory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.wayfinding__directory-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.wayfinding__directory-checkbox {
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+}
+
+.wayfinding__directory-copy {
+  display: block;
+}
+
+.wayfinding__directory-item--active .wayfinding__directory-copy {
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .wayfinding__canvas {
+    min-height: 26rem;
+  }
+  .wayfinding__directory {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+}
+@media (max-width: 640px) {
+  .wayfinding__controls {
+    grid-template-columns: 1fr;
+  }
+  .wayfinding__canvas {
+    min-height: 18rem;
+  }
+  .wayfinding__image,
+  .wayfinding__overlay {
+    padding: 0.4rem 2.4rem 0.4rem 0.4rem;
+  }
+  .wayfinding__directory {
+    padding: 0.6rem 0.75rem;
+  }
+}
 .header {
   display: flex;
   justify-content: space-between;
@@ -380,10 +683,32 @@ body {
   width: 48%;
   height: 7em;
 }
-.student__image {
+.student__figure {
+  height: 100%;
+  position: relative;
+}
+.student__figure:hover .student__figure--link {
+  opacity: 1;
+  transition: 0.4s all;
+}
+.student__figure--image {
   height: 100%;
   aspect-ratio: 2.5/2;
   object-fit: cover;
+}
+.student__figure--link {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  color: white;
+  text-decoration: none;
 }
 .student__details {
   display: flex;
@@ -403,9 +728,39 @@ body {
   color: #FF00E6;
   font-weight: 400;
 }
+
+.activities__timeline {
+  position: relative;
+  margin: 0 auto;
+  margin-inline-start: 5em;
+}
+
+.activities__timeline::before {
+  content: "";
+  position: absolute;
+  width: 0.25em;
+  height: 20em;
+  background-color: white;
+  top: 0;
+  bottom: 0;
+  margin-left: -3px;
+}
+
 @media screen and (max-width: 51.875em) {
   .stories__students {
     flex-direction: column;
+    gap: 1em;
+  }
+  .student {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 30em) {
+  .student__image {
+    aspect-ratio: 2.8/2.2;
   }
 }
 @media screen and (max-width: 75em) {

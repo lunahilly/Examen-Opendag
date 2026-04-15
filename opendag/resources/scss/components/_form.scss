@@ -2,7 +2,7 @@
 @use "../abstracts/mixins";
 
 .form{
-    @include mixins.flexBox(center, start);
+    @include mixins.flexBox(center, center);
     flex-direction: column;
     gap: 1em;
 
@@ -16,6 +16,10 @@
             color: map-get(variables.$colors, "magenta");
         }
     }
+
+    // &__wrapper{
+    //     // width: 20em;
+    // }
 
     // &__input
 }
