@@ -1,6 +1,8 @@
+import Button from "@/Components/Button";
 import { usePage } from "@inertiajs/react";
 
 function Navigation(){
+    const user = usePage().props.auth.user;
     const url = usePage().url;
     return(
         <header className="header">
@@ -13,6 +15,9 @@ function Navigation(){
                 <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                 <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
                 <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
+                {
+                    user != null ? <Button label="CMS"/> : null
+                }
             </nav>
         </header>
     );

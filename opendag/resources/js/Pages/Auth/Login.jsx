@@ -25,8 +25,7 @@ function Login(){
                 <InputField label="Email" value={data.email} onChange={(event) => setData('email', event.target.value)} error={errors.email} type="email"/>
                 <InputField label="Password" value={data.password} onChange={(event) => setData('password', event.target.value)} error={errors.password} type="password"/>
                 <Checkbox label="Remember me" value={data.remember} onChange={(event) => setData('remember', event.target.checked)}/>
-                {/* <button className="form__button">login</button> */}
-                <Button label="Login"/>
+                <Button label="Login" type="submit"/>
             </form>
         </GuestLayout>
     );
