@@ -1,4 +1,7 @@
-function Course({course}){
+// dit is een test
+
+
+function Course({ course }) {
     return (
         <div className="course">
             <p className="course__info">
@@ -10,7 +13,7 @@ function Course({course}){
                         <h3 className="course__details--career-head">Carriere mogelijkheden:</h3>
                         <ul className="course__details--career-list">
                             {
-                                course.careers.map((item, index) => 
+                                course.careers.map((item, index) =>
                                     <li className="course__details--career-item" key={index}>{item}</li>
                                 )
                             }

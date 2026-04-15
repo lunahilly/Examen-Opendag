@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('activity_type_id')->constrained()->onDelete('cascade');
-            $table->enum('activity', ['Voorlichting']);
             $table->time('time')->nullable();
             $table->timestamps();
         });

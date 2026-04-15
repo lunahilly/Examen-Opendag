@@ -216,6 +216,7 @@ body {
 }
 
 .courses {
+<<<<<<< HEAD
     display: flex;
     justify-content: start;
     align-items: start;
@@ -223,6 +224,14 @@ body {
     flex-direction: column;
     flex-wrap: wrap;
     width: 100%;
+=======
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 1em;
+  flex-wrap: wrap;
+  width: 100%;
+>>>>>>> 1ffd73fd1179478002e63bf049b28770348f3b1a
 }
 .courses__item {
     width: 49%;
@@ -233,6 +242,7 @@ body {
     gap: 0.75em;
 }
 .courses__item--dropdown {
+<<<<<<< HEAD
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -242,6 +252,20 @@ body {
     color: white;
     font-size: 1.2em;
     padding: 0.125em 0.25em;
+=======
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1.2em;
+  padding: 0.125em 0.25em;
+  padding: 0.6em;
+  border: 0.1em solid white;
+  border-radius: 0.2rem;
+>>>>>>> 1ffd73fd1179478002e63bf049b28770348f3b1a
 }
 .courses__item--dropdown:focus {
     outline: none;
@@ -253,6 +277,13 @@ body {
 
 .break {
     flex-basis: 100%;
+}
+
+.course__info {
+  font-size: 18px;
+}
+.course__details--career-head {
+  font-weight: 500;
 }
 
 .course {
@@ -1365,6 +1396,40 @@ body {
     .wayfinding__overlay {
         padding: 0.4rem 2.4rem 0.4rem 0.4rem;
     }
+}
+.activities__timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.activities__timeline::before {
+  content: "";
+  position: absolute;
+  width: 0.25em;
+  height: 20em;
+  background-color: white;
+  top: 0;
+  bottom: 0;
+  margin-left: -3px;
+}
+
+@media screen and (max-width: 51.875em) {
+  .stories__students {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .student {
+    width: 100%;
+  }
+  .dropdown {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 30em) {
+  .student__image {
+    aspect-ratio: 2.8/2.2;
+  }
 }
 
 /*# sourceMappingURL=app.css.map */

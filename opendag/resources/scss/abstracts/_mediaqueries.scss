@@ -1,3 +1,30 @@
+//830 px
+@media screen and (max-width: 51.875em) {
+    .stories{
+        &__students{
+            flex-direction: column;
+            gap: 1em;
+        }
+    }
+    .student{
+        width: 100%;
+    }
+    .dropdown{
+        width: 100%;
+    }
+}
 
+// 700 px
+@media screen and (max-width: 43.75em) {
 
+}
+
+//480 px
+@media screen and (max-width: 30em) {
+    .student{
+        &__image{
+            aspect-ratio: 2.8/2.2;
+        }
+    }
+}
 // hier komen alle mediaqueries
