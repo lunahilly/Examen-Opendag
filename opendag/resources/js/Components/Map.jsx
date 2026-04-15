@@ -8,9 +8,38 @@ import {
     locations,
 } from "@/data/campusWayfinding";
 
+function renderWalkableShape(shape, index) {
+    if (shape.type === "rect") {
+        return (
+            <rect
+                key={`walkable-${index}`}
+                x={shape.x}
+                y={shape.y}
+                width={shape.width}
+                height={shape.height}
+            />
+        );
+    }
+
+    if (shape.type === "polygon") {
+        return <polygon key={`walkable-${index}`} points={shape.points} />;
+    }
+
+    if (shape.type === "polyline") {
+        return <polyline key={`walkable-${index}`} points={shape.points} />;
+    }
+
+    if (shape.type === "path") {
+        return <path key={`walkable-${index}`} d={shape.d} />;
+    }
+
+    return null;
+}
+
 function Map() {
     const [selectedStartId, setSelectedStartId] = useState(defaultStartId);
     const [selectedDestinationId, setSelectedDestinationId] = useState(defaultDestinationId);
+    const [wallOverlayMarkup, setWallOverlayMarkup] = useState("");
     const [selectedFloorId, setSelectedFloorId] = useState(
         getRoute(defaultStartId, defaultDestinationId)?.floorsInRoute[0] ?? floors[0].value,
     );
@@ -22,6 +51,11 @@ function Map() {
     );
     const floorRoute = route?.path.filter((point) => point.floorId === activeFloor.value) ?? [];
     const floorRouteNodes = floorRoute.filter((point) => point.isNode);
+    const walkableClipId = `wayfinding-walkable-${activeFloor.value}`;
+    const routeClipPath =
+        activeFloor.walkableAreas?.length > 0
+            ? `url(#${walkableClipId})`
+            : undefined;
 
     useEffect(() => {
         const nextRoute = getRoute(selectedStartId, selectedDestinationId);
@@ -36,6 +70,46 @@ function Map() {
                 : nextRoute.floorsInRoute[0] ?? nextRoute.destination.floorId,
         );
     }, [selectedDestinationId, selectedStartId]);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function loadWallOverlay() {
+            if (!activeFloor.image || !activeFloor.wallStrokeClass) {
+                setWallOverlayMarkup("");
+                return;
+            }
+
+            try {
+                const response = await fetch(activeFloor.image);
+                const svgSource = await response.text();
+
+                if (cancelled) {
+                    return;
+                }
+
+                const parser = new DOMParser();
+                const svgDocument = parser.parseFromString(svgSource, "image/svg+xml");
+                const wallElements = svgDocument.querySelectorAll(`.${activeFloor.wallStrokeClass}`);
+                const serializer = new XMLSerializer();
+                const markup = Array.from(wallElements)
+                    .map((element) => serializer.serializeToString(element))
+                    .join("");
+
+                setWallOverlayMarkup(markup);
+            } catch {
+                if (!cancelled) {
+                    setWallOverlayMarkup("");
+                }
+            }
+        }
+
+        loadWallOverlay();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [activeFloor.image, activeFloor.wallStrokeClass]);
 
     const handleDestinationSelect = (locationId) => {
         setSelectedDestinationId(locationId);
@@ -58,24 +132,41 @@ function Map() {
                         preserveAspectRatio="xMidYMid meet"
                         aria-hidden="true"
                     >
-                        {floorRoute.length > 1 ? (
-                            <polyline
-                                className="wayfinding__route-line"
-                                points={floorRoute
-                                    .map((point) => `${point.x},${point.y}`)
-                                    .join(" ")}
-                            />
+                        {activeFloor.walkableAreas?.length ? (
+                            <defs>
+                                <clipPath id={walkableClipId} clipPathUnits="userSpaceOnUse">
+                                    {activeFloor.walkableAreas.map(renderWalkableShape)}
+                                </clipPath>
+                            </defs>
                         ) : null}
 
-                        {floorRouteNodes.map((point, index) => (
-                            <circle
-                                key={`${point.id}-${index}`}
-                                className="wayfinding__route-node"
-                                cx={point.x}
-                                cy={point.y}
-                                r={index === floorRouteNodes.length - 1 ? 18 : 12}
+                        <g clipPath={routeClipPath}>
+                            {floorRoute.length > 1 ? (
+                                <polyline
+                                    className="wayfinding__route-line"
+                                    points={floorRoute
+                                        .map((point) => `${point.x},${point.y}`)
+                                        .join(" ")}
+                                />
+                            ) : null}
+
+                            {floorRouteNodes.map((point, index) => (
+                                <circle
+                                    key={`${point.id}-${index}`}
+                                    className="wayfinding__route-node"
+                                    cx={point.x}
+                                    cy={point.y}
+                                    r={index === floorRouteNodes.length - 1 ? 18 : 12}
+                                />
+                            ))}
+                        </g>
+
+                        {wallOverlayMarkup ? (
+                            <g
+                                className="wayfinding__wall-overlay"
+                                dangerouslySetInnerHTML={{ __html: wallOverlayMarkup }}
                             />
-                        ))}
+                        ) : null}
 
                         {currentLocations.map((location) => {
                             const isStart = location.id === selectedStartId;
