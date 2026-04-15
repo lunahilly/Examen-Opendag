@@ -24,7 +24,7 @@ function Navigation() {
     return (
         <header className="header">
             <Link href="/" className="header__logo" aria-label="Mediacollege Amsterdam home">
-                <img className="header__logo-mark" src="/malogo.png" alt="MA logo" />
+                <img className="header__logo--image" src="/malogo.png" alt="MA logo" />
             </Link>
 
             <div className="header__right">
