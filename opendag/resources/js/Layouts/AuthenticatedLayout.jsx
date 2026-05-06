@@ -4,7 +4,6 @@ function AuthenticatedLayout({children}){
     return(
         <>
             <Navigation/>
-            this is authenticated
             {children}
         </>
     );

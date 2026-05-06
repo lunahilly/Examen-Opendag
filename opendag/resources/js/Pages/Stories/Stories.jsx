@@ -23,7 +23,7 @@ function Stories(){
             setFiltered(stories);
         }
     }
-
+    
     return(
         <GuestLayout>
             <Head title="Verhalen van studenten"/>

@@ -33,16 +33,18 @@ function StoryForm(){
             <Head title="New story"/>
             <form onSubmit={submit} className="form">
                 <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name}/>
-                <select value={data.course_id} onChange={(event) => setData('course_id', event.target.value)} className="dropdown">
-                    {
-                        courses.map((item, index) => 
-                            <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
-                        )
-                    }
-                </select>
+                <span className="form__wrapper">
+                    <select value={data.course_id} onChange={(event) => setData('course_id', event.target.value)} className="dropdown">
+                        {
+                            courses.map((item, index) => 
+                                <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
+                            )
+                        }
+                    </select>
+                </span>
                 <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image}/>
                 <InputField label="Story" value={data.story} onChange={(event) => setData('story', event.target.value)} error={errors.story}/>
-                <Button type="submit" label={story ? 'Update' : 'Save'}/>
+                <Button type="submit" label={story ? 'Update' : 'Save'} isDisabled={processing}/>
             </form>
         </AuthenticatedLayout>
     );
