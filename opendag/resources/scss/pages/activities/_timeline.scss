@@ -5,25 +5,8 @@
   margin-block-start: 1em;
 }
 
-.activities__timeline::after{
-  content: '';
-  position: absolute;
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  background-color: aqua;
-  transform: translateX(-50%);
-}
-
-.activities__timeline::before{
-  content: '';
-  position: absolute;
-  width: 0.25em;
-  height: 20em;
-  background-color: white;
-  top: 0;
-  bottom: 0;
-  margin-left: -3px;
+.activities_timelineData{
+  margin-inline-start: 1.5em;
 }
 
 .activity{
@@ -31,3 +14,6 @@
   margin-block-start: 4em;
 }
 
+// .courses__item--dropdown , .courses__item--dropdown-active{
+//   max-width: 15em;
+// }

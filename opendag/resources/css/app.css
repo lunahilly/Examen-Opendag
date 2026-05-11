@@ -41,7 +41,7 @@ body {
 }
 .button:hover {
   cursor: pointer;
-  background: rgb(244.8, 0, 220.8);
+  background: #f500dd;
 }
 .button:focus {
   outline: none;
@@ -77,12 +77,10 @@ body {
   color: white;
   font-size: 1em;
   padding: 0.125em 0.25em;
+  width: 100%;
 }
 .dropdown:focus {
   outline: none;
-}
-.dropdown {
-  width: 100%;
 }
 .dropdown__option {
   border: none;
@@ -548,14 +546,12 @@ body {
   color: white;
   font-size: 1.2em;
   padding: 0.125em 0.25em;
-}
-.courses__item--dropdown:focus {
-  outline: none;
-}
-.courses__item--dropdown {
   padding: 0.6em;
   border: 0.075em solid gray;
   border-radius: 0.2rem;
+}
+.courses__item--dropdown:focus {
+  outline: none;
 }
 .courses__item--dropdown-active {
   border: 0.075em solid #FF00E6;
@@ -736,25 +732,8 @@ body {
   margin-block-start: 1em;
 }
 
-.activities__timeline::after {
-  content: "";
-  position: absolute;
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  background-color: aqua;
-  transform: translateX(-50%);
-}
-
-.activities__timeline::before {
-  content: "";
-  position: absolute;
-  width: 0.25em;
-  height: 20em;
-  background-color: white;
-  top: 0;
-  bottom: 0;
-  margin-left: -3px;
+.activities_timelineData {
+  margin-inline-start: 1.5em;
 }
 
 .activity {

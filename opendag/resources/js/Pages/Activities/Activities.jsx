@@ -49,7 +49,7 @@ function Activities() {
             <Head title="Activiteiten" />
             <PageTitle title="Activiteiten" />
             <section className="activities__general">
-                <button onClick={() => openList(withoutCourse[0].id)} className={`courses__item--dropdown ${open == withCourse[0].id ? 'courses__item--dropdown-active' : null}`}>Algemene activiteiten
+                <button onClick={() => openList(withoutCourse[0].id)} className={`courses__item--dropdown ${open == withoutCourse[0].id ? 'courses__item--dropdown-active' : null}`}>Algemene activiteiten
                     {
                         open == withoutCourse[0].id ? <p>^</p> :
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-left" viewBox="0 0 16 16">
@@ -87,32 +87,25 @@ function Activities() {
                         <div className="activities__timeline" /> : null
                 }
                 {
-                    withCourse.map((activity, index) =>
-                        <>
-                            {
-                                open == withCourse[0].id ?
-                                    <Activity data={activity} key={index} />
-                                    : null
-                            }
-                        </>
-                    )
+                    open == withCourse[0].id ?
+                        <div className="activities_timelineData">
+                            {Object.entries(groupedData).map(([hour, test]) => (
+                                <div key={hour} style={{ marginBottom: '24px' }}>
+                                    <h3 style={{ color: '#333', borderBottom: '1px solid #ddd' }}>{hour}</h3>
+
+                                    {test.map((activity) => (
+                                        <div key={activity.id} style={{ padding: '8px 0', display: 'flex', gap: '15px' }}>
+                                            <span style={{ fontWeight: 'bold' }}>{activity.time}</span>
+                                            <span> {activity.course.name}</span>
+                                            <span style={{ color: '#666' }}>(Type: {activity.activity_type.name})</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div> : null
                 }
             </section>
-            <div>
-                {Object.entries(groupedData).map(([hour, test]) => (
-                    <div key={hour} style={{ marginBottom: '24px' }}>
-                        <h3 style={{ color: '#333', borderBottom: '1px solid #ddd' }}>{hour}</h3>
 
-                        {test.map((activity) => (
-                            <div key={activity.id} style={{ padding: '8px 0', display: 'flex', gap: '15px' }}>
-                                <span style={{ fontWeight: 'bold' }}>{activity.time}</span>
-                                <span>Cursus: {activity.courseId}</span>
-                                <span style={{ color: '#666' }}>(Type: {activity.activity_type_id})</span>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
         </GuestLayout>
     );
 }
