@@ -1,18 +1,23 @@
 @use "../abstracts/mixins";
 @use "../abstracts/variables";
 
-body{
+body {
     min-height: 100vh;
     font-family: map-get(variables.$baseVars, "font");
     background: map-get(variables.$colors, "black");
     color: map-get(variables.$colors, "white");
 }
 
-.main{
+.main {
     padding: map-get(variables.$padding, "padding-m") map-get(variables.$padding, "padding-xl");
     display: flex;
     flex-direction: column;
     gap: 1em;
+}
+
+.wrapper {
+    max-width: 80em;
+    margin: 0 auto;
 }
 
 // hier staat de base code dus van de body en main bijvoorbeeld
