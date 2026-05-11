@@ -735,6 +735,24 @@ body {
 .activities_timelineData {
   margin-inline-start: 1.5em;
 }
+.activities_timelineData .activities__timelineHour {
+  margin-block-end: 24px;
+}
+.activities_timelineData .activities__timelineHour h3 {
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+.activities_timelineData .activities__timelineItem {
+  padding: 8px 0;
+  display: flex;
+  gap: 15px;
+}
+.activities_timelineData .activities__timelineItem .activities__timelineItem-time {
+  font-weight: bold;
+}
+.activities_timelineData .activities__timelineItem .activities__timelineItem-type {
+  color: #666;
+}
 
 .activity {
   margin-inline-start: 5em;
