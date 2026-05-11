@@ -9,6 +9,6 @@
     &__students{
         @include mixins.flexBox(space-between, start);
         flex-wrap: wrap;
-        // gap: 1em;
+        gap: 1em;
     }
 }

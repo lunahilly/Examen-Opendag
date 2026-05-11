@@ -35,7 +35,7 @@ class CourseController extends Controller
         $data = $this->validateData($request);
         $course = new Course($data);
         $course->save();
-        return back();
+        return redirect(route('information.index'));
     }
 
     /**
@@ -65,7 +65,7 @@ class CourseController extends Controller
         $data = $this->validateData($request);
         $course = Course::find($id);
         $course->update($data);
-        return back();
+        return redirect(route('information.index'));
     }
 
     /**
