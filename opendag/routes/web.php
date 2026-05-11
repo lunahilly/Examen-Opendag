@@ -29,11 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route::get('/course', [CourseController::class, 'create'])->named('course.create');
-    // Route::post('/course', [CourseController::class, 'store'])->named('course.store');
-    // Route::get('/course/{id}', [CourseController::class, 'edit'])->named('course.edit');
-    // Route::patch('/course/{id}', [CourseController::class, 'update'])->named('course.update');
-
     Route::resource('course', CourseController::class)->except('index', 'show');
     Route::resource('story', StoryController::class)->except('index', 'show');
     Route::resource('activity', ActivityController::class)->except('index', 'show');
