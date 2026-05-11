@@ -21,6 +21,13 @@ function Information() {
         <GuestLayout>
             <div className="wrapper courses__wrapper">
                 <PageTitle title="Informatie per opleiding" />
+                {
+                    open != null ?
+                        <article className="course__article">
+                            <Course course={courses[open]} />
+                        </article>
+                        : null
+                }
                 <section className="courses">
                     <Head title="Informatie per opleiding" />
                     {
@@ -39,11 +46,6 @@ function Information() {
                                                 </svg>
                                         }
                                     </button>
-                                    {
-                                        open == index ?
-                                            <Course course={courses[open]} />
-                                            : null
-                                    }
                                 </div >
                                 {/* {
                                 index == 11 ? <span className="break"></span> : null
