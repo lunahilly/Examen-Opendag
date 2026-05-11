@@ -522,21 +522,17 @@ body {
 }
 
 .courses {
-  display: flex;
-  justify-content: start;
-  align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1em;
-  flex-wrap: wrap;
   width: 100%;
+  grid-auto-rows: minmax(100px, auto);
 }
 .courses__item {
-  width: 49%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
   flex-direction: column;
   gap: 0.75em;
   letter-spacing: 0.5px;
+  display: grid;
 }
 .courses__item--dropdown {
   width: 100%;
@@ -553,9 +549,10 @@ body {
   outline: none;
 }
 .courses__item--dropdown {
-  padding: 0.6em;
+  padding: 1.6em 1.6em 1.6em 0.6em;
   border: 0.075em solid gray;
   border-radius: 0.2rem;
+  font-size: 1em;
 }
 .courses__item--dropdown-active {
   border: 0.075em solid #FF00E6;
@@ -604,28 +601,36 @@ body {
   }
 }
 .course {
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  flex-direction: column;
   padding: 0.25em 0.5em;
   border-left: 0.025em solid #FF00E6;
+  display: grid;
+  gap: 1em;
+}
+.course__name {
+  font-size: 2em;
+  font-weight: 300;
+}
+.course__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2em;
 }
 .course__info {
-  font-size: 18px;
-}
-.course__wrapper {
   display: flex;
-  justify-content: center;
-  align-items: start;
-  gap: 2em;
+  flex-direction: column;
+  gap: 1em;
+}
+.course__text {
+  font-size: 18px;
+  color: gray;
 }
 .course__details {
   display: flex;
   justify-content: start;
   align-items: start;
-  flex-direction: column;
+  align-items: end;
+  flex-direction: row;
+  padding: 0.5em;
   gap: 2em;
 }
 .course__details--career {
@@ -636,7 +641,8 @@ body {
   gap: 0.5em;
 }
 .course__details--career-head {
-  font-weight: 500;
+  font-weight: 300;
+  color: #FF00E3;
 }
 .course__details--career-list {
   padding: 0 1em;
@@ -655,10 +661,23 @@ body {
   min-width: 4em;
 }
 .course__image {
-  width: 20em;
-  height: 10em;
+  width: 100%;
+  height: 14em;
   object-fit: cover;
   border: solid 0.01em white;
+}
+.course__button {
+  width: 100%;
+  height: 2.5em;
+  font-size: 1em;
+  background-color: black;
+  border: 0.075em solid #FF00E3;
+  border-radius: 0.2rem;
+  color: white;
+}
+.course__button__highlighted {
+  color: #FF00E3;
+  font-weight: 500;
 }
 
 .stories {
