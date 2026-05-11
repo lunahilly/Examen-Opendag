@@ -1,7 +1,18 @@
 .activities__timeline{
   position: relative;
   margin: 0 auto;
-  margin-inline-start: 5em;
+  margin-inline-start: 2em;
+  margin-block-start: 1em;
+}
+
+.activities__timeline::after{
+  content: '';
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background-color: aqua;
+  transform: translateX(-50%);
 }
 
 .activities__timeline::before{
@@ -13,5 +24,10 @@
   top: 0;
   bottom: 0;
   margin-left: -3px;
+}
+
+.activity{
+  margin-inline-start: 5em;
+  margin-block-start: 4em;
 }
 
