@@ -251,26 +251,13 @@ function HeaderBar({
       <div className={styles.hRow}>
         {/* Logo */}
         <div className={styles.logo}>
-          <img src="/logo2.png" alt="Logo" style={{ height: "2.125em" }} />
           <div className={styles.logoWords}>
             <span className={styles.logoName}>Mediacollege</span>
             <span className={styles.logoCity}>Amsterdam</span>
           </div>
         </div>
 
-        {/* Desktop nav — sits in grid col 2, auto-centred between logo and icons */}
-        <nav className={styles.nav}>
-          {["Home", "Opleidingen", "Verhalen", "Activiteiten", "Contact"].map(
-            (item, i) => (
-              <span
-                key={item}
-                className={`${styles.navLink} ${i === 0 ? styles.navActive : ""}`}
-              >
-                {item}
-              </span>
-            ),
-          )}
-        </nav>
+       
 
         {/* Settings icon buttons — SVG icons, always visible */}
         <div className={styles.hIcons}>
