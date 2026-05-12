@@ -1,6 +1,10 @@
 @use "../abstracts/mixins";
 @use "../abstracts/variables";
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     min-height: 100vh;
     font-family: map-get(variables.$baseVars, "font");

@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   font-family: aeonik;
@@ -576,7 +580,9 @@ body {
   color: white;
   font-size: 1.2em;
   padding: 0.125em 0.25em;
-  padding: 1.6em 1.6em 1.6em 0.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 0.075em solid gray;
   border-radius: 0.2rem;
   font-size: 1em;
@@ -700,14 +706,18 @@ body {
   width: 100%;
   height: 2.5em;
   font-size: 1em;
-  background-color: black;
-  border: 0.075em solid #FF00E3;
+  background-color: #FF00E3;
+  border: 0.075em solid white;
   border-radius: 0.2rem;
   color: white;
+  font-weight: 600;
+  padding: 0.5em;
 }
 .course__button__highlighted {
-  color: #FF00E3;
-  font-weight: 500;
+  color: black;
+}
+.course__button:hover {
+  background-color: #E600CC;
 }
 
 .stories {
@@ -813,6 +823,20 @@ body {
   margin-block-start: 4em;
 }
 
+@media screen and (max-width: 75em) {
+  .courses__item {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 57em) {
+  .courses {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .course__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+}
 @media screen and (max-width: 51.875em) {
   .stories__students {
     flex-direction: column;
@@ -825,19 +849,36 @@ body {
     width: 100%;
   }
 }
+@media screen and (max-width: 42.375em) {
+  .course__wrapper {
+    flex-direction: column-reverse;
+  }
+}
+@media screen and (max-width: 40.625em) {
+  .course__details {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+@media screen and (max-width: 33em) {
+  .courses {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 @media screen and (max-width: 30em) {
   .student__image {
     aspect-ratio: 2.8/2.2;
   }
-}
-@media screen and (max-width: 75em) {
-  .courses__item {
-    width: 100%;
+  .student .course__button {
+    height: 3em;
   }
 }
-@media screen and (max-width: 42.375em) {
-  .course__wrapper {
-    flex-direction: column-reverse;
+@media screen and (max-width: 22.5em) {
+  .courses {
+    grid-template-columns: 1fr;
+  }
+  .courses__item {
+    height: 5em;
   }
 }
 
