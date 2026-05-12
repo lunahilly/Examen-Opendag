@@ -26,6 +26,7 @@ body {
 }
 
 .button {
+<<<<<<< HEAD
     border: none;
     background: #ff00e6;
     padding: 0.25em 0.5em;
@@ -33,6 +34,29 @@ body {
     border-radius: 0.25em;
     font-weight: 600;
     font-size: 100%;
+=======
+  border: none;
+  background: #FF00E6;
+  padding: 0.25em 0.75em;
+  color: white;
+  border-radius: 0.25em;
+  font-weight: 600;
+  font-size: 100%;
+  box-shadow: inset 0 -0.1rem 0 0 rgba(0, 0, 0, 0.2);
+  transition: 0.4s all;
+  font-family: inherit;
+}
+.button:disabled {
+  background: rgba(255, 0, 230, 0.2);
+  color: rgba(255, 255, 255, 0.2);
+}
+.button:hover {
+  cursor: pointer;
+  background: #f500dd;
+}
+.button:focus {
+  outline: none;
+>>>>>>> 9886f37 (indoor map fixed with routing data, and new fuetures added!)
 }
 
 .checkbox {
@@ -56,6 +80,7 @@ body {
 }
 
 .dropdown {
+<<<<<<< HEAD
     width: auto;
     display: flex;
     justify-content: space-between;
@@ -65,13 +90,28 @@ body {
     color: white;
     font-size: 1em;
     padding: 0.125em 0.25em;
+=======
+  width: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1em;
+  padding: 0.125em 0.25em;
+  width: 100%;
+>>>>>>> 9886f37 (indoor map fixed with routing data, and new fuetures added!)
 }
 .dropdown:focus {
     outline: none;
 }
+<<<<<<< HEAD
 .dropdown {
     width: 100%;
 }
+=======
+>>>>>>> 9886f37 (indoor map fixed with routing data, and new fuetures added!)
 .dropdown__option {
     border: none;
     font-family: inherit;
@@ -917,6 +957,7 @@ body {
     letter-spacing: 0.5px;
 }
 .courses__item--dropdown {
+<<<<<<< HEAD
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -934,6 +975,24 @@ body {
     padding: 0.6em;
     border: 0.075em solid gray;
     border-radius: 0.2rem;
+=======
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: 0.125em solid white;
+  color: white;
+  font-size: 1.2em;
+  padding: 0.125em 0.25em;
+  padding: 1.6em 1.6em 1.6em 0.6em;
+  border: 0.075em solid gray;
+  border-radius: 0.2rem;
+  font-size: 1em;
+>>>>>>> 9886f37 (indoor map fixed with routing data, and new fuetures added!)
+}
+.courses__item--dropdown:focus {
+  outline: none;
 }
 .courses__item--dropdown-active {
     border: 0.075em solid #ff00e6;
