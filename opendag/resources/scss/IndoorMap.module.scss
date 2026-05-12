@@ -1067,6 +1067,171 @@ $red:    #f44336;
 // Applied when the user taps the handle to fully expand the sheet
 .sheetOpen { transform: translateY(0); }
 
+@media (max-width: 62em) {
+  .main {
+    padding: 1em 0.75em 1.5em;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .mapRow {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .mapWrap {
+    min-height: 18rem;
+  }
+
+  .floorCol {
+    width: 100%;
+    border-left: none;
+    border-top: 0.0625em solid #f0e4f8;
+    padding: 0.75em 0.85em;
+    background: var(--input-bg);
+  }
+
+  .routeBox {
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .routeDivider {
+    width: 100%;
+    height: 0.0625em;
+  }
+
+  .clearBtn {
+    width: 100%;
+    border-left: none;
+    border-top: 0.094em solid $pink;
+    justify-content: center;
+  }
+
+  .stepsHeader {
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .progTabsRow,
+  .catTabsRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .tabsLabel {
+    width: 100%;
+  }
+
+  .progTabs,
+  .catTabs {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.25em;
+  }
+
+  .progTab,
+  .catTab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .poiBox {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .legend {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 48em) {
+  .main {
+    padding: 0.75em 0.75em 1.25em;
+  }
+
+  .mapRow {
+    height: 22rem;
+  }
+
+  .routeField {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .routeValue {
+    max-width: 100%;
+  }
+
+  .searchWrap {
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .searchInput {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .poiBox {
+    grid-template-columns: 1fr;
+  }
+
+  .detailCard {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.75em 0.75em 0 0;
+  }
+
+  .detailActions {
+    flex-direction: column;
+  }
+
+  .detailAction,
+  .detailFav {
+    width: 100%;
+  }
+
+  .tourActions {
+    flex-direction: column;
+  }
+
+  .tourCancelBtn,
+  .tourNextBtn {
+    width: 100%;
+  }
+
+  .legendItem {
+    font-size: 0.6875em;
+  }
+}
+
+@media (max-width: 37.5em) {
+  .hRow {
+    padding: 0 0.75em;
+    height: 2.75em;
+  }
+
+  .searchWrap {
+    padding: 0.375em 0.5em;
+  }
+
+  .progTabsRow,
+  .catTabsRow {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
+  .sheetHandle {
+    padding: 0.75em 0.75em 0.5em;
+  }
+}
+
 // Tappable header area of the bottom sheet (drag handle + summary + buttons)
 .sheetHandle {
   display: flex;
