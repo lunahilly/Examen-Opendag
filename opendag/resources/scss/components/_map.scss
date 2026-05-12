@@ -55,8 +55,8 @@ overflow: visible;
 }
 
 .wayfinding__route-line {
-stroke: var(--accent);
-stroke-width: 8;
+stroke: #111111;
+stroke-width: 4;
 fill: none;
 stroke-linecap: round;
 stroke-linejoin: round;
@@ -67,8 +67,8 @@ filter: none;
 
 .wayfinding__route-node {
 fill: #ffffff;
-stroke: var(--accent);
-stroke-width: 5;
+stroke: #111111;
+stroke-width: 4;
 filter: none;
 }
 

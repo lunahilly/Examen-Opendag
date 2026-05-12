@@ -156,7 +156,7 @@ function Map() {
                                     className="wayfinding__route-node"
                                     cx={point.x}
                                     cy={point.y}
-                                    r={index === floorRouteNodes.length - 1 ? 18 : 12}
+                                    r={index === floorRouteNodes.length - 1 ? 12 : 8}
                                 />
                             ))}
                         </g>
