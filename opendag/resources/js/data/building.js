@@ -4,9 +4,9 @@ export const BUILDING_NAME = 'Mediacollege Amsterdam'
 // All floors in the building; id matches the floor number used throughout the app
 export const FLOORS = [
   { id: 0, label: 'BG', name: 'Begane grond' },
-  { id: 1, label: '1e', name: '1e Verdieping' },
-  { id: 2, label: '2e', name: '2e Verdieping' },
-  { id: 3, label: '3e', name: 'Derde verdieping' },
+  { id: 1, label: '1', name: '1e Verdieping' },
+  { id: 2, label: '2', name: '2e Verdieping' },
+  { id: 3, label: '3', name: 'Derde verdieping' },
 ]
 
 // Width and height of the SVG canvas in user-space units
