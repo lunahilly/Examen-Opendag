@@ -29,14 +29,16 @@ function Stories(){
             <Head title="Verhalen van studenten"/>
             <PageTitle title="Verhalen van studenten"/>
             <section className="stories">
-                <select onChange={filterCourses} name="" id="" className="dropdown">
-                    <option value="" className="dropdown__option">Alle opleidingen</option>
-                    {
-                        courses.map((item, index) => 
-                            <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
-                        )
-                    }
-                </select>
+                <div className="stories__dropdown">
+                    <select onChange={filterCourses} name="" id="" className="dropdown">
+                        <option value="" className="dropdown__option">Alle opleidingen</option>
+                        {
+                            courses.map((item, index) => 
+                                <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
+                            )
+                        }
+                    </select>
+                </div>
                 <div className="stories__students">
                     {
                         filtered.map((item, index) => 

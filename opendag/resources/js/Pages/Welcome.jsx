@@ -10,7 +10,9 @@ function Welcome() {
             <Head title="Home" />
             <Navigation />
             <main className="welcome">
+                
                 <Map/>
+                
             </main>
         </>
     );
