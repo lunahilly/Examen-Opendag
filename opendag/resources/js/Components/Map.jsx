@@ -3,7 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
 import { computeRoute, getPositionAtProgress } from "../utils/routing";
 import MapCanvas from "../Components/MapCanvas";
-import FloorSelector from "../components/FloorSelector";
+import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/IndoorMap.module.scss";
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
@@ -251,7 +251,7 @@ function HeaderBar({
       <div className={styles.hRow}>
         {/* Logo */}
         <div className={styles.logo}>
-          
+          <img src="/logo2.png" alt="Logo" style={{ height: "2.125em" }} />
           <div className={styles.logoWords}>
             <span className={styles.logoName}>Mediacollege</span>
             <span className={styles.logoCity}>Amsterdam</span>
@@ -259,7 +259,18 @@ function HeaderBar({
         </div>
 
         {/* Desktop nav — sits in grid col 2, auto-centred between logo and icons */}
-        
+        <nav className={styles.nav}>
+          {["Home", "Opleidingen", "Verhalen", "Activiteiten", "Contact"].map(
+            (item, i) => (
+              <span
+                key={item}
+                className={`${styles.navLink} ${i === 0 ? styles.navActive : ""}`}
+              >
+                {item}
+              </span>
+            ),
+          )}
+        </nav>
 
         {/* Settings icon buttons — SVG icons, always visible */}
         <div className={styles.hIcons}>
@@ -1147,18 +1158,6 @@ export default function IndoorMap() {
     [lang],
   );
 
-<<<<<<< HEAD
-                            {floorRouteNodes.map((point, index) => (
-                                <circle
-                                    key={`${point.id}-${index}`}
-                                    className="wayfinding__route-node"
-                                    cx={point.x}
-                                    cy={point.y}
-                                    r={index === floorRouteNodes.length - 1 ? 12 : 8}
-                                />
-                            ))}
-                        </g>
-=======
   // Handles a POI click from either the map or the list;
   // assigns it as origin or destination depending on the current selection mode
   const handlePoiClick = useCallback(
@@ -1191,7 +1190,6 @@ export default function IndoorMap() {
     },
     [selectionMode, origin, destination, applyRoute],
   );
->>>>>>> 9886f37 (indoor map fixed with routing data, and new fuetures added!)
 
   // Resets origin, destination, route, and selection mode to their initial state
   const handleClear = () => {
