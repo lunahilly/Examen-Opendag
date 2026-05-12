@@ -7,10 +7,12 @@ function Welcome() {
 
     return (
         <>
-            <Head title="welcome" />
+            <Head title="Home" />
             <Navigation />
             <main className="welcome">
+                
                 <Map/>
+                
             </main>
         </>
     );

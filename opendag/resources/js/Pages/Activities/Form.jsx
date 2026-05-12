@@ -45,7 +45,7 @@ function ActivitiesForm(){
                     data.course_id !== null ? <input type="time" value={data.time} onChange={(event) => setData('time', event.target.value)} className="form__time" /> : null
                 }
                 
-                <Button type="submit" label='send'/>
+                <Button type="submit" label='send' isDisabled={processing}/>
             </form>
         </AuthenticatedLayout>
     );

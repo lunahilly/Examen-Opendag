@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   font-family: aeonik;
@@ -18,14 +22,33 @@ body {
   gap: 1em;
 }
 
+.wrapper {
+  max-width: 80em;
+  margin: 0 auto;
+}
+
 .button {
   border: none;
   background: #FF00E6;
-  padding: 0.25em 0.5em;
+  padding: 0.25em 0.75em;
   color: white;
   border-radius: 0.25em;
   font-weight: 600;
   font-size: 100%;
+  box-shadow: inset 0 -0.1rem 0 0 rgba(0, 0, 0, 0.2);
+  transition: 0.4s all;
+  font-family: inherit;
+}
+.button:disabled {
+  background: rgba(255, 0, 230, 0.2);
+  color: rgba(255, 255, 255, 0.2);
+}
+.button:hover {
+  cursor: pointer;
+  background: #f500dd;
+}
+.button:focus {
+  outline: none;
 }
 
 .checkbox {
@@ -58,6 +81,7 @@ body {
   color: white;
   font-size: 1em;
   padding: 0.125em 0.25em;
+  width: 100%;
 }
 .dropdown:focus {
   outline: none;
@@ -142,7 +166,7 @@ body {
 .form {
   display: flex;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   flex-direction: column;
   gap: 1em;
 }
@@ -156,6 +180,292 @@ body {
   color: #FF00E6;
 }
 
+.wayfinding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.wayfinding__canvas-shell {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.wayfinding__canvas {
+  position: relative;
+  overflow: hidden;
+  min-height: 39rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.25rem;
+  background: #f2f2f2;
+}
+
+.wayfinding__canvas::before {
+  display: none;
+}
+
+.wayfinding__canvas-label {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.95rem;
+}
+
+.wayfinding__image,
+.wayfinding__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.4rem 2.8rem 0.4rem 0.4rem;
+}
+
+.wayfinding__image {
+  object-fit: contain;
+  filter: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.wayfinding__overlay {
+  z-index: 2;
+  overflow: visible;
+}
+
+.wayfinding__route-line {
+  stroke: #111111;
+  stroke-width: 4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: none;
+  animation: none;
+  filter: none;
+}
+
+.wayfinding__route-node {
+  fill: #ffffff;
+  stroke: #111111;
+  stroke-width: 4;
+  filter: none;
+}
+
+.wayfinding__wall-overlay {
+  pointer-events: none;
+}
+
+.wayfinding__wall-overlay .cls-21,
+.wayfinding__wall-overlay .cls-14,
+.wayfinding__wall-overlay .cls-7,
+.wayfinding__wall-overlay .cls-2 {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 6;
+  stroke-miterlimit: 10;
+}
+
+.wayfinding__marker {
+  cursor: pointer;
+}
+
+.wayfinding__marker-ring {
+  fill: #ffffff;
+  stroke: #111111;
+  stroke-width: 4;
+  transition: none;
+}
+
+.wayfinding__marker-core {
+  fill: #111111;
+}
+
+.wayfinding__marker--start .wayfinding__marker-ring {
+  fill: #111111;
+  stroke: #111111;
+}
+
+.wayfinding__marker--start .wayfinding__marker-core {
+  fill: #ffffff;
+}
+
+.wayfinding__marker--active .wayfinding__marker-ring {
+  fill: #ffffff;
+  stroke: #111111;
+}
+
+.wayfinding__marker--active .wayfinding__marker-core {
+  fill: var(--accent);
+}
+
+.wayfinding__marker:hover .wayfinding__marker-ring,
+.wayfinding__marker--active .wayfinding__marker-ring {
+  transform: none;
+}
+
+.wayfinding__floors {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.4rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+}
+
+.wayfinding__floor-button {
+  width: 1.8rem;
+  height: 1.65rem;
+  border: none;
+  border-bottom: 1px solid #d9d9d9;
+  background: transparent;
+  color: #444444;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.wayfinding__floor-button:last-child {
+  border-bottom: none;
+}
+
+.wayfinding__floor-button--route {
+  color: #444444;
+}
+
+.wayfinding__floor-button--active {
+  background: #ffffff;
+  color: var(--accent);
+}
+
+.wayfinding__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.wayfinding__field {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0 0.85rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.2rem;
+  background: #ffffff;
+  color: #111111;
+}
+
+.wayfinding__field-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #111111;
+  font-weight: 400;
+}
+
+.wayfinding__field-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: #111111;
+}
+
+.wayfinding__select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0.7rem 0;
+  color: #8d8d8d;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.wayfinding__select:focus {
+  outline: none;
+}
+
+.wayfinding__directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.2rem;
+  background: transparent;
+}
+
+.wayfinding__directory-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.wayfinding__directory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.wayfinding__directory-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.wayfinding__directory-checkbox {
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+}
+
+.wayfinding__directory-copy {
+  display: block;
+}
+
+.wayfinding__directory-item--active .wayfinding__directory-copy {
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .wayfinding__canvas {
+    min-height: 26rem;
+  }
+  .wayfinding__directory {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+}
+@media (max-width: 640px) {
+  .wayfinding__controls {
+    grid-template-columns: 1fr;
+  }
+  .wayfinding__canvas {
+    min-height: 18rem;
+  }
+  .wayfinding__image,
+  .wayfinding__overlay {
+    padding: 0.4rem 2.4rem 0.4rem 0.4rem;
+  }
+  .wayfinding__directory {
+    padding: 0.6rem 0.75rem;
+  }
+}
 .header {
   display: flex;
   justify-content: space-between;
@@ -181,6 +491,40 @@ body {
 }
 .header__navigation--link-active {
   color: #FF00E6;
+}
+.header__dropdown {
+  position: relative;
+  width: 100%;
+}
+.header__dropdown button {
+  width: 100%;
+}
+.header__dropdown:hover .header__dropdown--list {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+}
+.header__dropdown--list {
+  position: absolute;
+  display: none;
+  list-style: none;
+  width: 100%;
+  border: 0.1em solid white;
+  border-top: none;
+  top: 100%;
+}
+.header__dropdown--item {
+  background: black;
+  width: 100%;
+  padding: 0.25em;
+}
+.header__dropdown--item:hover {
+  background: #FF00E6;
+}
+.header__dropdown--item-link {
+  color: white;
+  text-decoration: none;
 }
 
 .welcome {
@@ -214,20 +558,17 @@ body {
 }
 
 .courses {
-  display: flex;
-  justify-content: start;
-  align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1em;
-  flex-wrap: wrap;
   width: 100%;
+  grid-auto-rows: minmax(100px, auto);
 }
 .courses__item {
-  width: 49%;
-  display: flex;
-  justify-content: start;
-  align-items: center;
   flex-direction: column;
   gap: 0.75em;
+  letter-spacing: 0.5px;
+  display: grid;
 }
 .courses__item--dropdown {
   width: 100%;
@@ -239,50 +580,94 @@ body {
   color: white;
   font-size: 1.2em;
   padding: 0.125em 0.25em;
-  padding: 0.6em;
-  border: 0.1em solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.075em solid gray;
   border-radius: 0.2rem;
+  font-size: 1em;
 }
 .courses__item--dropdown:focus {
   outline: none;
 }
 .courses__item--dropdown-active {
-  border: 0.125em solid #FF00E6;
+  border: 0.075em solid #FF00E6;
   color: #FF00E6;
+}
+.courses__item--dropdown-active .turn_180 {
+  animation: Smooth-rotate 0.3s;
+}
+.courses__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.courses__wrapper .head::before {
+  content: "i";
+  border: 0.1em solid white;
+  border-radius: 50%;
+  padding: 0.05em 0.5em;
+  margin-right: 0.5em;
 }
 
 .break {
   flex-basis: 100%;
 }
 
-.course__info {
-  font-size: 18px;
-}
-.course__details--career-head {
-  font-weight: 500;
+.rotate_180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
+@keyframes Smooth-rotate {
+  0% {
+    transform: rotate(-180deg);
+  }
+  25% {
+    transform: rotate(-135deg);
+  }
+  50% {
+    transform: rotate(-90deg);
+  }
+  75% {
+    transform: rotate(-45deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 .course {
-  display: flex;
-  justify-content: start;
-  align-items: start;
-  flex-direction: column;
   padding: 0.25em 0.5em;
   border-left: 0.025em solid #FF00E6;
+  display: grid;
   gap: 1em;
 }
+.course__name {
+  font-size: 2em;
+  font-weight: 300;
+}
 .course__wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2em;
+}
+.course__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.course__text {
+  font-size: 18px;
+  color: gray;
 }
 .course__details {
   display: flex;
   justify-content: start;
   align-items: start;
-  flex-direction: column;
-  gap: 1em;
+  align-items: end;
+  flex-direction: row;
+  padding: 0.5em;
+  gap: 2em;
 }
 .course__details--career {
   display: flex;
@@ -290,6 +675,10 @@ body {
   align-items: start;
   flex-direction: column;
   gap: 0.5em;
+}
+.course__details--career-head {
+  font-weight: 300;
+  color: #FF00E3;
 }
 .course__details--career-list {
   padding: 0 1em;
@@ -308,9 +697,27 @@ body {
   min-width: 4em;
 }
 .course__image {
-  width: 20em;
-  height: 10em;
+  width: 100%;
+  height: 14em;
   object-fit: cover;
+  border: solid 0.01em white;
+}
+.course__button {
+  width: 100%;
+  height: 2.5em;
+  font-size: 1em;
+  background-color: #FF00E3;
+  border: 0.075em solid white;
+  border-radius: 0.2rem;
+  color: white;
+  font-weight: 600;
+  padding: 0.5em;
+}
+.course__button__highlighted {
+  color: black;
+}
+.course__button:hover {
+  background-color: #E600CC;
 }
 
 .stories {
@@ -325,6 +732,7 @@ body {
   justify-content: space-between;
   align-items: start;
   flex-wrap: wrap;
+  gap: 1em;
 }
 
 .student {
@@ -335,10 +743,32 @@ body {
   width: 48%;
   height: 7em;
 }
-.student__image {
+.student__figure {
+  height: 100%;
+  position: relative;
+}
+.student__figure:hover .student__figure--link {
+  opacity: 1;
+  transition: 0.4s all;
+}
+.student__figure--image {
   height: 100%;
   aspect-ratio: 2.5/2;
   object-fit: cover;
+}
+.student__figure--link {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  color: white;
+  text-decoration: none;
 }
 .student__details {
   display: flex;
@@ -358,23 +788,55 @@ body {
   color: #FF00E6;
   font-weight: 400;
 }
+
 .activities__timeline {
   position: relative;
-  max-width: 1200px;
   margin: 0 auto;
+  margin-inline-start: 2em;
+  margin-block-start: 1em;
 }
 
-.activities__timeline::before {
-  content: "";
-  position: absolute;
-  width: 0.25em;
-  height: 20em;
-  background-color: white;
-  top: 0;
-  bottom: 0;
-  margin-left: -3px;
+.activities_timelineData {
+  margin-inline-start: 1.5em;
+}
+.activities_timelineData .activities__timelineHour {
+  margin-block-end: 24px;
+}
+.activities_timelineData .activities__timelineHour h3 {
+  border-bottom: 1px solid #ddd;
+  color: #333;
+}
+.activities_timelineData .activities__timelineItem {
+  padding: 8px 0;
+  display: flex;
+  gap: 15px;
+}
+.activities_timelineData .activities__timelineItem .activities__timelineItem-time {
+  font-weight: bold;
+}
+.activities_timelineData .activities__timelineItem .activities__timelineItem-type {
+  color: #666;
 }
 
+.activity {
+  margin-inline-start: 5em;
+  margin-block-start: 4em;
+}
+
+@media screen and (max-width: 75em) {
+  .courses__item {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 57em) {
+  .courses {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .course__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+}
 @media screen and (max-width: 51.875em) {
   .stories__students {
     flex-direction: column;
@@ -387,9 +849,36 @@ body {
     width: 100%;
   }
 }
+@media screen and (max-width: 42.375em) {
+  .course__wrapper {
+    flex-direction: column-reverse;
+  }
+}
+@media screen and (max-width: 40.625em) {
+  .course__details {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+@media screen and (max-width: 33em) {
+  .courses {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 @media screen and (max-width: 30em) {
   .student__image {
     aspect-ratio: 2.8/2.2;
+  }
+  .student .course__button {
+    height: 3em;
+  }
+}
+@media screen and (max-width: 22.5em) {
+  .courses {
+    grid-template-columns: 1fr;
+  }
+  .courses__item {
+    height: 5em;
   }
 }
 

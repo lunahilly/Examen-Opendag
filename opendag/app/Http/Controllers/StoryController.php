@@ -41,7 +41,7 @@ class StoryController extends Controller
         $data = $this->validateData($request);
         $story = new Story($data);
         $story->save();
-        return back();
+        return redirect(route('stories.index'));
     }
 
     /**
@@ -73,7 +73,7 @@ class StoryController extends Controller
         $data = $this->validateData($request);
         $story = Story::find($id);
         $story->update($data);
-        return back();
+        return redirect(route('stories.index'));
     }
 
     /**

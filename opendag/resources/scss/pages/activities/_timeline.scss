@@ -1,16 +1,42 @@
 .activities__timeline{
-    position: relative;
-  max-width: 1200px;
+  position: relative;
   margin: 0 auto;
+  margin-inline-start: 2em;
+  margin-block-start: 1em;
 }
 
-.activities__timeline::before{
-  content: '';
-  position: absolute;
-  width: 0.25em;
-  height: 20em;
-  background-color: white;
-  top: 0;
-  bottom: 0;
-  margin-left: -3px;
+.activities_timelineData{
+  margin-inline-start: 1.5em;
+  
+  .activities__timelineHour{
+    margin-block-end: 24px;
+
+    h3{
+      border-bottom: 1px solid #ddd;
+      color: #333;
+    }
+  }
+
+  .activities__timelineItem{
+    padding: 8px 0;
+    display: flex;
+    gap: 15px;
+
+    .activities__timelineItem-time{
+      font-weight: bold;
+    }
+
+    .activities__timelineItem-type{
+      color: #666;
+    }
+  }
 }
+
+.activity{
+  margin-inline-start: 5em;
+  margin-block-start: 4em;
+}
+
+// .courses__item--dropdown , .courses__item--dropdown-active{
+//   max-width: 15em;
+// }

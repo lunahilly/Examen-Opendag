@@ -42,7 +42,7 @@ class ActivityController extends Controller
         $data = $this->validateData($request);
         $activity = new Activity($data);
         $activity->save();
-        return back();
+        return redirect(route('activities.index'));
     }
 
     /**

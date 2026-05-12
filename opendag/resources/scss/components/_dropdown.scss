@@ -3,6 +3,7 @@
 
 .dropdown{
     @include mixins.selectBox(auto, 1em, map-get(variables.$colors, "white"));
+    width: 100%;
 
     &__option{
         border: none;
