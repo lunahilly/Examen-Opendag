@@ -27,4 +27,42 @@
             }
         }
     }
+
+    &__dropdown{
+        position: relative;
+        width: 100%;
+
+        & button{
+            width: 100%;
+        }
+
+        &:hover &--list{
+            @include mixins.flexBox(start, start);
+            flex-direction: column;
+        }
+
+        &--list{
+            position: absolute;
+            display: none;
+            list-style: none;
+            width: 100%;
+            border: 0.1em solid map-get(variables.$colors, "white");
+            border-top: none;
+            top: 100%;
+        }
+        &--item{
+            background: map-get(variables.$colors, "black");
+            width: 100%;
+            padding: map-get(variables.$padding, "padding-s");
+
+            &:hover{
+                background: map-get(variables.$colors, "magenta");
+            }
+
+            &-link{
+                color: map-get(variables.$colors, "white");
+                text-decoration: none;
+            }
+        }
+    }
 }

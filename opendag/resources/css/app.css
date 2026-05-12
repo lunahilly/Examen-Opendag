@@ -834,6 +834,40 @@ body {
 .header__navigation--link-active {
     color: #ff00e6;
 }
+.header__dropdown {
+    position: relative;
+    width: 100%;
+}
+.header__dropdown button {
+    width: 100%;
+}
+.header__dropdown:hover .header__dropdown--list {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+}
+.header__dropdown--list {
+    position: absolute;
+    display: none;
+    list-style: none;
+    width: 100%;
+    border: 0.1em solid white;
+    border-top: none;
+    top: 100%;
+}
+.header__dropdown--item {
+    background: black;
+    width: 100%;
+    padding: 0.25em;
+}
+.header__dropdown--item:hover {
+    background: #ff00e6;
+}
+.header__dropdown--item-link {
+    color: white;
+    text-decoration: none;
+}
 
 .welcome {
     padding: 1.25em;
@@ -1003,6 +1037,19 @@ body {
     height: 10em;
     object-fit: cover;
     border: solid 0.01em white;
+}
+.course__button {
+    width: 100%;
+    height: 2.5em;
+    font-size: 1em;
+    background-color: black;
+    border: 0.075em solid #ff00e3;
+    border-radius: 0.2rem;
+    color: white;
+}
+.course__button__highlighted {
+    color: #ff00e3;
+    font-weight: 500;
 }
 
 .stories {
