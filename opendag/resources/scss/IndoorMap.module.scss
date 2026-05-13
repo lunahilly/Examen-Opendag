@@ -604,7 +604,7 @@ $red: #f44336;
   color: white;
 }
 
->>>>>>>e0a632a89278d74a176bdab36e40e657b68850af // ── Category tabs (Feature 2) ─────────────────────────────────────────────────
+// ── Category tabs (Feature 2) ─────────────────────────────────────────────────
 
 // Horizontal scrollable strip of filter pills above the POI grid
 // Used both standalone (legacy) and inside .catTabsRow (new layout)
@@ -616,14 +616,14 @@ $red: #f44336;
 
 // Individual category pill button
 .catTab {
-  <<<<<<< HEAD padding: 0.75em 1em;
+  padding: 0.75em 1em;
   border-radius: 0.5em;
   border: 0.1em solid;
   background: none;
   font-size: 0.75em;
   color: white;
   cursor: pointer;
-  =======padding: 0.25em 0.75em;
+  padding: 0.25em 0.75em;
   border-radius: 0.2em;
   border: 0.094em solid rgba(255, 255, 255, 0.25);
   background: none;
@@ -631,7 +631,7 @@ $red: #f44336;
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af transition: all 120ms;
+  transition: all 120ms;
 
   &:hover {
     border-color: $pink;
@@ -835,9 +835,9 @@ $red: #f44336;
   font-size: 0.75em;
   font-weight: 600;
   cursor: pointer;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af transition: all 120ms;
+  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
+  transition: all 120ms;
 
   &:hover {
     background: $pink;
@@ -907,9 +907,8 @@ $red: #f44336;
   font-size: 0.6875em;
   color: var(--muted);
   cursor: pointer;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af transition: all 120ms;
+  font-family: 'Aeonik', sans-serif;
+  transition: all 120ms;
 
   &:hover {
     border-color: $pink;
@@ -927,9 +926,8 @@ $red: #f44336;
   color: #FF00E3;
   font-size: 0.75em;
   font-weight: 600;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af cursor: pointer;
+  font-family: 'Aeonik', sans-serif;
+  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
@@ -954,9 +952,7 @@ $red: #f44336;
   font-size: 0.6875em;
   color: var(--muted);
   white-space: nowrap;
-  <<<<<<< HEAD // font-family: 'Space Mono', monospace;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af
+  font-family: 'Aeonik', sans-serif;
 }
 
 // Custom-styled range input; the --pct CSS variable sets the pink fill amount
@@ -1009,9 +1005,8 @@ $red: #f44336;
   color: var(--muted);
   cursor: pointer;
   transition: all 120ms;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af white-space: nowrap;
+  font-family: 'Aeonik', sans-serif;
+  white-space: nowrap;
 
   &:hover {
     border-color: $pink;
@@ -1065,11 +1060,11 @@ $red: #f44336;
   gap: 0.5em;
   margin: 0.375em 0.75em 0;
   border: 0.094em solid $border;
-  <<<<<<< HEAD border-radius: 0.375em;
+  border-radius: 0.375em;
   padding: 0.9em;
-  =======border-radius: 0.15em;
+  border-radius: 0.15em;
   padding: 0.375em 0.625em;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af background: var(--input-bg);
+  background: var(--input-bg);
   transition: border-color 150ms, background 250ms;
 
   // Highlight border when the input has focus
@@ -1091,9 +1086,9 @@ $red: #f44336;
   border: none;
   background: none;
   color: var(--text);
-  <<<<<<< HEAD font-family: inherit;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af outline: none;
+  font-family: inherit;
+  font-family: 'Aeonik', sans-serif;
+  outline: none;
   transition: color 250ms;
 
   &::placeholder {
@@ -1608,9 +1603,8 @@ $red: #f44336;
   font-size: 0.75em;
   color: var(--muted);
   cursor: pointer;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af transition: all 120ms;
+  font-family: 'Aeonik', sans-serif;
+  transition: all 120ms;
 
   &:hover {
     border-color: #f44336;
@@ -1629,9 +1623,8 @@ $red: #f44336;
   font-size: 0.75em;
   font-weight: 700;
   cursor: pointer;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af transition: all 120ms;
+  font-family: 'Aeonik', sans-serif;
+  transition: all 120ms;
 
   &:hover {
     background: #388e3c;
@@ -1799,9 +1792,7 @@ $red: #f44336;
 .qrItemFloor {
   font-size: 0.625em;
   color: var(--muted);
-  <<<<<<< HEAD // font-family: 'Space Mono', monospace;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af
+  font-family: 'Aeonik', sans-serif;
 }
 
 // ── Print override for QR modal ───────────────────────────────────────────────
@@ -1849,9 +1840,8 @@ $red: #f44336;
   color: #ff8f00;
   font-size: 0.75em;
   font-weight: 600;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af cursor: pointer;
+  font-family: 'Aeonik', sans-serif;
+  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
@@ -1893,9 +1883,8 @@ $red: #f44336;
   font-size: 0.75em;
   font-weight: 700;
   color: #ff8f00;
-  <<<<<<< HEAD // font-family: 'Space Mono', monospace;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af white-space: nowrap;
+  font-family: 'Aeonik', sans-serif;
+  white-space: nowrap;
 }
 
 // Event title column
@@ -1916,9 +1905,8 @@ $red: #f44336;
 .scheduleFloor {
   font-size: 0.6875em;
   color: var(--muted);
-  <<<<<<< HEAD // font-family: 'Space Mono', monospace;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af white-space: nowrap;
+  font-family: 'Aeonik', sans-serif;
+  white-space: nowrap;
 }
 
 // ── Feature 1: POI grid event badge ──────────────────────────────────────────
@@ -2010,8 +1998,8 @@ $red: #f44336;
   font-size: 1em;
   color: var(--muted);
   font-weight: 400;
-  <<<<<<< HEAD=======text-transform: uppercase;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af letter-spacing: 0.05em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -2025,7 +2013,7 @@ $red: #f44336;
 
 // Individual programme pill button
 .progTab {
-  <<<<<<< HEAD padding: 0.75em 1em;
+  padding: 0.75em 1em;
   border-radius: 0.5em;
   border: 0.1em solid white;
   background: none;
@@ -2034,7 +2022,7 @@ $red: #f44336;
   cursor: pointer;
   // font-family: 'DM Sans', sans-serif;
   transition: all 120ms;
-  =======padding: 0.25em 0.75em;
+  padding: 0.25em 0.75em;
   border-radius: 0.2em;
   border: 0.094em solid rgba(255, 255, 255, 0.25);
   background: none;
@@ -2048,17 +2036,15 @@ $red: #f44336;
     border-color: $pink;
     color: $pink;
   }
-
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af
 }
 
 // Applied to the currently active programme tab — pink fill
 .progTabActive {
-  <<<<<<< HEAD background: #FF00E3;
+  background: #FF00E3;
   border-color: #FF00E3;
-  =======background: $pink;
+  background: $pink;
   border-color: $pink;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af color: #fff;
+  color: #fff;
   font-weight: 500;
 }
 
@@ -2072,9 +2058,8 @@ $red: #f44336;
   color: #7c4dff;
   font-size: 0.75em;
   font-weight: 600;
-  <<<<<<< HEAD // font-family: 'DM Sans', sans-serif;
-  =======font-family: 'Aeonik', sans-serif;
-  >>>>>>>e0a632a89278d74a176bdab36e40e657b68850af cursor: pointer;
+  font-family: 'Aeonik', sans-serif;
+  cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
