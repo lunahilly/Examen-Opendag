@@ -585,7 +585,6 @@ body {
   border: 0.0625em solid white;
   background: black;
   color: white;
-  font-family: inherit;
 }
 .welcome__dropdown:focus {
   outline: none;

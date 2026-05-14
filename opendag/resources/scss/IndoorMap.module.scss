@@ -1,9 +1,9 @@
 // ── Mediacollege Amsterdam — Theme-aware ──────────────────────────────────────
 // Shared colour variables used throughout this file
-$pink:   #e040fb;
-$border: #e8b4f8;
-$green:  #4caf50;
-$red:    #f44336;
+$pink: #FF00E3;
+$border: #FF00E3;
+$green: #4caf50;
+$red: #f44336;
 
 // Root app shell — full-height flex column, background comes from the theme token
 .app {
@@ -11,7 +11,7 @@ $red:    #f44336;
   flex-direction: column;
   min-height: 100vh;
   background: var(--bg-app);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: 'Aeonik', system-ui, sans-serif;
   transition: background 250ms;
 }
 
@@ -19,7 +19,10 @@ $red:    #f44336;
 // Two-row header: top row (logo + nav + icons) and sub-bar (building tabs + tools).
 // The sub-bar scrolls horizontally on narrow screens so nothing overflows.
 .header {
-  background: var(--header-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #000;
   border-bottom: 0.0625em solid var(--divider);
   transition: background 250ms, border-color 250ms;
   position: sticky;
@@ -33,8 +36,8 @@ $red:    #f44336;
 //   col 2 (auto) → nav links, centred
 //   col 3 (1fr) → icon buttons, right-aligned
 .hRow {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: center;
   align-items: center;
   padding: 0 1.25em;
   height: 3em;
@@ -52,14 +55,18 @@ $red:    #f44336;
 .hSubRow {
   display: flex;
   align-items: center;
-  padding: 0.3125em 1.25em;
+  justify-content: space-between;
   gap: 0.5em;
   border-top: 0.0625em solid var(--divider);
   background: var(--input-bg);
   overflow-x: auto;
   scrollbar-width: none;
   transition: background 250ms;
-  &::-webkit-scrollbar { display: none; }
+  width: 80em;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   @media (max-width: 37.5em) {
     padding: 0.3125em 0.75em;
@@ -67,7 +74,10 @@ $red:    #f44336;
 }
 
 // Flex spacer — grows to fill available space, pushing siblings to the edges
-.hSpacer { flex: 1; min-width: 0; }
+.hSpacer {
+  flex: 1;
+  min-width: 0;
+}
 
 // Group of tool buttons in the sub-bar; uses a subtle pill background
 .hTools {
@@ -89,7 +99,7 @@ $red:    #f44336;
   font-size: 0.8125em;
   color: var(--text-dim);
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   white-space: nowrap;
   transition: background 120ms, color 120ms;
 
@@ -101,35 +111,43 @@ $red:    #f44336;
 
 // Text label inside a tool button — hidden on mobile to save space
 .hBtnLabel {
-  @media (max-width: 37.5em) { display: none; }
+  @media (max-width: 37.5em) {
+    display: none;
+  }
 }
 
 // Tool button variant — green tint when the guided tour is active
 .hToolBtnGreen {
   color: #2e7d32;
   background: rgba(76, 175, 80, 0.12);
-  &:hover { background: rgba(76, 175, 80, 0.22); color: #1b5e20; }
+
+  &:hover {
+    background: rgba(76, 175, 80, 0.22);
+    color: #1b5e20;
+  }
 }
 
 // Tool button variant — pink tint when the demo is running
 .hToolBtnPink {
   color: $pink;
   background: rgba(224, 64, 251, 0.1);
-  &:hover { background: rgba(224, 64, 251, 0.2); }
+
+  &:hover {
+    background: rgba(224, 64, 251, 0.2);
+  }
 }
 
 // Row of icon buttons — sits in grid column 3, pushed to the right
 .hIcons {
   display: flex;
   align-items: center;
-  gap: 0.25em;
+  gap: 2em;
   justify-self: end; // grid: align to right edge of col 3
 }
 
 // Single SVG icon button (theme, access, kiosk)
 // No border by default — clean look; a subtle background appears on hover
 .hIconBtn {
-  width: 1.875em;
   height: 1.875em;
   display: flex;
   align-items: center;
@@ -143,7 +161,9 @@ $red:    #f44336;
   line-height: 1;
   transition: background 120ms, color 120ms, transform 150ms;
 
-  svg { display: block; }
+  svg {
+    display: block;
+  }
 
   &:hover {
     background: var(--pink-hover);
@@ -154,9 +174,7 @@ $red:    #f44336;
 
 // Applied to the accessibility button when the mode is active
 .hIconBtnOn {
-  background: rgba(76, 175, 80, 0.12);
-  color: #2e7d32;
-  &:hover { background: rgba(76, 175, 80, 0.22); color: #1b5e20; transform: scale(1.1); }
+  color: #FF00E3;
 }
 
 // Thin vertical line separating settings icons from the help button
@@ -172,7 +190,6 @@ $red:    #f44336;
 // The ? help button — slightly more prominent than the other icon buttons
 // so visitors notice it, but still subtle enough not to distract
 .hHelpBtn {
-  width: 1.875em;
   height: 1.875em;
   display: flex;
   align-items: center;
@@ -186,7 +203,9 @@ $red:    #f44336;
   line-height: 1;
   transition: all 150ms;
 
-  svg { display: block; }
+  svg {
+    display: block;
+  }
 
   &:hover {
     border-color: $pink;
@@ -199,23 +218,24 @@ $red:    #f44336;
 // Language toggle button — shows "NL" or "EN" as a small monospace pill
 // Uses text instead of a flag emoji for a cleaner, more typographic look
 .hLangBtn {
-  height: 1.875em;
-  padding: 0 0.5em;
-  display: flex;
-  align-items: center;
   justify-content: center;
   background: none;
   border: 0.094em solid var(--divider);
   border-radius: 0.25em;
-  font-size: 0.6875em;
-  font-weight: 700;
+  font-size: 0.7em;
+  font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--text-dim);
   cursor: pointer;
   flex-shrink: 0;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   transition: border-color 120ms, color 120ms, background 120ms;
-  &:hover { border-color: $pink; color: $pink; background: var(--pink-hover); }
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+    background: var(--pink-hover);
+  }
 }
 
 // ── Logo ──────────────────────────────────────────────────────────────────────
@@ -234,7 +254,7 @@ $red:    #f44336;
 .logoMark {
   flex-shrink: 0;
   line-height: 0;
-  filter: drop-shadow(0 0.125em 0.375em rgba(224,64,251,0.35));
+  filter: drop-shadow(0 0.125em 0.375em rgba(224, 64, 251, 0.35));
 }
 
 // Stacks "Mediacollege" and "Amsterdam" vertically
@@ -257,7 +277,7 @@ $red:    #f44336;
 .logoCity {
   font-size: 0.625em;
   font-weight: 500;
-  color: #e040fb;
+  color: #FF00E3;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -278,7 +298,10 @@ $red:    #f44336;
   transition: color 150ms;
   user-select: none;
   white-space: nowrap;
-  &:hover { color: $pink; }
+
+  &:hover {
+    color: $pink;
+  }
 }
 
 // Applied to the currently active nav link
@@ -303,7 +326,12 @@ $red:    #f44336;
   flex-shrink: 0;
   transition: border-color 120ms, background 120ms, transform 200ms;
   line-height: 1;
-  &:hover { border-color: $pink; background: rgba(224,64,251,0.08); transform: scale(1.15); }
+
+  &:hover {
+    border-color: $pink;
+    background: rgba(224, 64, 251, 0.08);
+    transform: scale(1.15);
+  }
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -323,19 +351,10 @@ $red:    #f44336;
   background: var(--card);
   border-radius: 0.25em;
   width: 100%;
-  max-width: 60em;
   overflow: hidden;
-  box-shadow: 0 0.0625em 0.25em rgba(0,0,0,0.1);
+  box-shadow: 0 0.0625em 0.25em rgba(0, 0, 0, 0.1);
   transition: background 250ms;
   position: relative;
-}
-
-// Small muted label shown above the map canvas
-.mapTitle {
-  font-size: 0.6875em;
-  color: var(--muted);
-  padding: 0.5em 0.75em 0;
-  letter-spacing: 0.01875em;
 }
 
 // ── Map row ───────────────────────────────────────────────────────────────────
@@ -343,7 +362,7 @@ $red:    #f44336;
 .mapRow {
   display: flex;
   align-items: stretch;
-  height: 27.5em;
+  height: 32em;
   border-bottom: 0.0625em solid #f0e4f8;
 }
 
@@ -367,13 +386,13 @@ $red:    #f44336;
 }
 
 // ── Route box ─────────────────────────────────────────────────────────────────
-// Pink-bordered row with "Vanaf" and "Naar" buttons for picking route endpoints
+// White-bordered row with "Vanaf" and "Naar" buttons for picking route endpoints
 .routeBox {
   display: flex;
   align-items: center;
   margin: 0.625em 0.75em 0;
-  border: 0.094em solid $pink;
-  border-radius: 0.375em;
+  border: 0.094em solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.15em;
   overflow: hidden;
   position: relative;
 }
@@ -384,38 +403,40 @@ $red:    #f44336;
   align-items: center;
   gap: 0.5em;
   flex: 1;
-  padding: 0.625em 0.875em;
+  padding: 1em;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
   transition: background 120ms;
 
-  &:hover { background: var(--pink-hover); }
-  &.routeFieldActive { background: var(--pink-hover); }
+  &:hover {
+    background: var(--pink-hover);
+  }
+
+  &.routeFieldActive {
+    background: var(--pink-hover);
+  }
 }
 
 // "Vanaf" / "Naar" label inside the route field
 .routeLabel {
-  font-size: 0.8125em;
+  font-size: 1em;
   font-weight: 600;
-  color: var(--text);
+  color: white;
   min-width: 2.5em;
   transition: color 250ms;
 }
 
 // Displays the selected POI name, or "Locatie" as placeholder
 .routeValue {
-  font-size: 0.8125em;
-  color: var(--muted);
+  font-size: 1em;
+  color: white;
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-// Applied when a POI is actually selected — uses full text colour
-.routeValueSet { color: var(--text); }
 
 // Thin vertical pink line separating the two route fields
 .routeDivider {
@@ -426,9 +447,18 @@ $red:    #f44336;
 }
 
 // Green dot colour for the "Vanaf" (origin) indicator
-.dotGreen { color: $green; font-size: 1.125em; line-height: 1; }
+.dotGreen {
+  color: #FF00E3;
+  font-size: 1.125em;
+  line-height: 1;
+}
+
 // Red dot colour for the "Naar" (destination) indicator
-.dotPink  { color: $red;   font-size: 1.125em; line-height: 1; }
+.dotPink {
+  color: white;
+  font-size: 1.125em;
+  line-height: 1;
+}
 
 // "✕" button that clears the selected route endpoints
 .clearBtn {
@@ -436,7 +466,6 @@ $red:    #f44336;
   border: none;
   border-left: 0.094em solid $pink;
   padding: 0 0.625em;
-  height: 100%;
   cursor: pointer;
   color: var(--muted);
   font-size: 0.8125em;
@@ -444,7 +473,11 @@ $red:    #f44336;
   align-self: stretch;
   display: flex;
   align-items: center;
-  &:hover { color: $red; background: rgba(244,67,54,0.06); }
+
+  &:hover {
+    color: $red;
+    background: rgba(244, 67, 54, 0.06);
+  }
 }
 
 // ── Hint ──────────────────────────────────────────────────────────────────────
@@ -479,11 +512,11 @@ $red:    #f44336;
   transition: background 250ms;
 }
 
-// Distance/time summary text in monospace purple
+// Distance/time summary text
 .stepsMeta {
-  font-size: 0.6875em;
-  color: #b800d4;
-  font-family: 'Space Mono', monospace;
+  font-size: 0.8em;
+  color: white;
+  font-family: 'Aeonik', sans-serif;
   font-weight: 700;
   letter-spacing: 0.01875em;
 }
@@ -520,13 +553,13 @@ $red:    #f44336;
 }
 
 // Vertical line connecting consecutive step icons
-.stepLine {
-  width: 0.094em;
-  flex: 1;
-  min-height: 0.5em;
-  background: $border;
-  margin: 0.125em 0 0;
-}
+// .stepLine {
+//   width: 0.094em;
+//   flex: 1;
+//   min-height: 0.5em;
+//   background: $border;
+//   margin: 0.125em 0 0;
+// }
 
 // Instruction text for a single step
 .stepText {
@@ -539,12 +572,40 @@ $red:    #f44336;
 }
 
 // Step type colour overrides
-.step_start  .stepText { color: var(--text); font-weight: 600; }
-.step_arrive .stepText { color: #b800d4; font-weight: 600; }
-.step_elevator .stepText { color: #b06000; }
-.step_enter  .stepText { color: var(--text); }
+.step_start .stepText,
+.step_arrive .stepText {
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.step_elevator .stepText {
+  color: #b06000;
+}
+
+.step_enter .stepText {
+  color: var(--text);
+}
+
+.step_start .stepText {
+  color: white;
+  font-weight: 600;
+}
+
+.step_arrive .stepText {
+  color: white;
+  font-weight: 600;
+}
+
+.step_elevator .stepText {
+  color: white;
+}
+
+.step_enter .stepText {
+  color: white;
+}
 
 // ── Category tabs (Feature 2) ─────────────────────────────────────────────────
+
 // Horizontal scrollable strip of filter pills above the POI grid
 // Used both standalone (legacy) and inside .catTabsRow (new layout)
 .catTabs {
@@ -555,16 +616,27 @@ $red:    #f44336;
 
 // Individual category pill button
 .catTab {
-  padding: 0.25em 0.75em;
-  border-radius: 1.25em;
-  border: 0.094em solid $border;
+  padding: 0.75em 1em;
+  border-radius: 0.5em;
+  border: 0.1em solid;
   background: none;
   font-size: 0.75em;
-  color: #888;
+  color: white;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  padding: 0.25em 0.75em;
+  border-radius: 0.2em;
+  border: 0.094em solid rgba(255, 255, 255, 0.25);
+  background: none;
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { border-color: $pink; color: $pink; }
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+  }
 }
 
 // Applied to the currently active category tab — filled pink background
@@ -579,11 +651,12 @@ $red:    #f44336;
 // 3-column grid listing all visible points of interest
 .poiBox {
   display: grid;
+  padding: 0.5em;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.125em 0;
   margin: 0.5em 0.75em 0.75em;
-  border: 0.094em solid $pink;
-  border-radius: 0.375em;
+  border: 0.094em solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.15em;
   overflow: hidden;
 }
 
@@ -592,26 +665,34 @@ $red:    #f44336;
   display: flex;
   align-items: center;
   gap: 0.4375em;
-  padding: 0.4375em 0.625em;
+  padding: 0.8em 0.5em;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
   transition: background 120ms;
 
-  &:hover { background: var(--pink-hover); }
+  &:hover {
+    background: var(--pink-hover);
+  }
+
   // Green tint when this POI is the route origin
-  &.poiFrom { background: rgba(76,175,80,0.1); }
+  &.poiFrom {
+    background: rgba(76, 175, 80, 0.1);
+  }
+
   // Red tint when this POI is the route destination
-  &.poiTo   { background: rgba(244,67,54,0.1); }
+  &.poiTo {
+    background: rgba(244, 67, 54, 0.1);
+  }
 }
 
 // Small checkbox-style square shown before the POI name
 .checkBox {
   width: 0.8125em;
   height: 0.8125em;
-  border: 0.094em solid #bbb;
-  background: var(--check-bg);
+  border: 0.094em solid rgba(255, 255, 255, 0.35);
+  background: transparent;
   border-radius: 0.125em;
   flex-shrink: 0;
   transition: all 120ms;
@@ -625,14 +706,13 @@ $red:    #f44336;
 
 // POI name with icon; truncates with ellipsis if too long
 .poiName {
-  font-size: 0.719em;
+  font-size: 1em;
   color: white;
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 250ms;
-  flex: 1;
 }
 
 // ── Favorites (Feature 6) ─────────────────────────────────────────────────────
@@ -640,17 +720,23 @@ $red:    #f44336;
 .favBtn {
   background: none;
   border: none;
-  font-size: 0.875em;
+  font-size: 1.2em;
   cursor: pointer;
   padding: 0 0.125em;
   line-height: 1;
   opacity: 0.6;
   flex-shrink: 0;
-  &:hover { opacity: 1; }
+  color: white;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 // Full opacity when the POI is a favourite
-.favActive { opacity: 1; }
+.favActive {
+  opacity: 1;
+}
 
 // ── Detail card (Feature 3) ───────────────────────────────────────────────────
 // Slide-up panel anchored to the bottom of the card; shows info about a selected POI
@@ -664,14 +750,19 @@ $red:    #f44336;
   border-radius: 0.75em 0.75em 0 0;
   padding: 1em;
   z-index: 10;
-  box-shadow: 0 -0.25em 1.25em rgba(0,0,0,0.12);
+  box-shadow: 0 -0.25em 1.25em rgba(0, 0, 0, 0.12);
   animation: slideUp 200ms ease;
 }
 
 // The detail card slides up from the bottom when it appears
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 // "✕" button in the top-right corner of the detail card
@@ -745,8 +836,13 @@ $red:    #f44336;
   font-weight: 600;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { background: $pink; color: #fff; }
+
+  &:hover {
+    background: $pink;
+    color: #fff;
+  }
 }
 
 // Star/favourite toggle button in the detail card action row
@@ -758,7 +854,10 @@ $red:    #f44336;
   font-size: 1em;
   cursor: pointer;
   transition: all 120ms;
-  &:hover { background: #fce4ff; }
+
+  &:hover {
+    background: #fce4ff;
+  }
 }
 
 // ── Legend ────────────────────────────────────────────────────────────────────
@@ -808,27 +907,35 @@ $red:    #f44336;
   font-size: 0.6875em;
   color: var(--muted);
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { border-color: $pink; color: $pink; }
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+  }
 }
 
 // ── Demo button ───────────────────────────────────────────────────────────────
 // "▶ Demo" / "⏹ Stop" pill button in the header
 .demoBtn {
   padding: 0.3125em 0.875em;
-  border: 0.094em solid #e040fb;
+  border: 0.094em solid #FF00E3;
   border-radius: 1.25em;
   background: none;
-  color: #e040fb;
+  color: #FF00E3;
   font-size: 0.75em;
   font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
-  &:hover { background: #e040fb; color: #fff; }
+
+  &:hover {
+    background: #FF00E3;
+    color: #fff;
+  }
 }
 
 // ── Demo speed control ────────────────────────────────────────────────────────
@@ -845,7 +952,7 @@ $red:    #f44336;
   font-size: 0.6875em;
   color: var(--muted);
   white-space: nowrap;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
 }
 
 // Custom-styled range input; the --pct CSS variable sets the pink fill amount
@@ -855,7 +962,7 @@ $red:    #f44336;
   width: 5em;
   height: 0.25em;
   border-radius: 0.125em;
-  background: linear-gradient(to right, #e040fb var(--pct, 50%), var(--divider) var(--pct, 50%));
+  background: linear-gradient(to right, #FF00E3 var(--pct, 50%), var(--divider) var(--pct, 50%));
   outline: none;
   cursor: pointer;
 
@@ -864,18 +971,19 @@ $red:    #f44336;
     width: 0.875em;
     height: 0.875em;
     border-radius: 50%;
-    background: #e040fb;
+    background: #FF00E3;
     border: 0.125em solid #fff;
-    box-shadow: 0 0.0625em 0.25em rgba(224,64,251,0.5);
+    box-shadow: 0 0.0625em 0.25em rgba(224, 64, 251, 0.5);
     cursor: pointer;
   }
+
   &::-moz-range-thumb {
     width: 0.875em;
     height: 0.875em;
     border-radius: 50%;
-    background: #e040fb;
+    background: #FF00E3;
     border: 0.125em solid #fff;
-    box-shadow: 0 0.0625em 0.25em rgba(224,64,251,0.5);
+    box-shadow: 0 0.0625em 0.25em rgba(224, 64, 251, 0.5);
     cursor: pointer;
   }
 }
@@ -891,15 +999,19 @@ $red:    #f44336;
 .buildingBtn {
   padding: 0.25em 0.75em;
   border: 0.094em solid $border;
-  border-radius: 1.25em;
+  border-radius: 0.2em;
   background: none;
   font-size: 0.75em;
   color: var(--muted);
   cursor: pointer;
   transition: all 120ms;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   white-space: nowrap;
-  &:hover { border-color: $pink; color: $pink; }
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+  }
 }
 
 // Applied to the currently selected building button — solid pink fill
@@ -922,11 +1034,23 @@ $red:    #f44336;
 }
 
 // Large emoji on the coming-soon screen
-.comingSoonIcon  { font-size: 2.5em; line-height: 1; }
+.comingSoonIcon {
+  font-size: 2.5em;
+  line-height: 1;
+}
+
 // Building name heading on the coming-soon screen
-.comingSoonTitle { font-size: 1.125em; font-weight: 700; color: var(--text); }
+.comingSoonTitle {
+  font-size: 1.125em;
+  font-weight: 700;
+  color: var(--text);
+}
+
 // Subtitle on the coming-soon screen
-.comingSoonSub   { font-size: 0.8125em; color: var(--muted); }
+.comingSoonSub {
+  font-size: 0.8125em;
+  color: var(--muted);
+}
 
 // ── Search bar ────────────────────────────────────────────────────────────────
 // Bordered input row for filtering the POI grid by name, description, or category
@@ -937,27 +1061,39 @@ $red:    #f44336;
   margin: 0.375em 0.75em 0;
   border: 0.094em solid $border;
   border-radius: 0.375em;
+  padding: 0.9em;
+  border-radius: 0.15em;
   padding: 0.375em 0.625em;
   background: var(--input-bg);
   transition: border-color 150ms, background 250ms;
+
   // Highlight border when the input has focus
-  &:focus-within { border-color: $pink; }
+  &:focus-within {
+    border-color: $pink;
+  }
 }
 
 // Magnifying glass icon to the left of the search input
-.searchIcon { font-size: 0.8125em; line-height: 1; flex-shrink: 0; }
+.searchIcon {
+  font-size: 0.8125em;
+  line-height: 1;
+  flex-shrink: 0;
+}
 
 // The actual text input inside the search bar
 .searchInput {
   flex: 1;
   border: none;
   background: none;
-  font-size: 0.8125em;
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: inherit;
+  font-family: 'Aeonik', sans-serif;
   outline: none;
   transition: color 250ms;
-  &::placeholder { color: var(--muted); }
+
+  &::placeholder {
+    color: var(--muted);
+  }
 }
 
 // "✕" button that clears the search query; only visible when query is non-empty
@@ -969,7 +1105,10 @@ $red:    #f44336;
   font-size: 0.75em;
   padding: 0;
   line-height: 1;
-  &:hover { color: $red; }
+
+  &:hover {
+    color: $red;
+  }
 }
 
 // ── Status dot (in POI grid) ──────────────────────────────────────────────────
@@ -1001,13 +1140,18 @@ $red:    #f44336;
   border-radius: 0.25em;
   transition: background 120ms;
   line-height: 1;
-  &:hover { background: rgba(224,64,251,0.12); }
+
+  &:hover {
+    background: rgba(224, 64, 251, 0.12);
+  }
 }
 
 // ── Desktop/mobile visibility ─────────────────────────────────────────────────
 // Hides an element on screens narrower than 600 px (e.g. route steps on mobile)
 .desktopOnly {
-  @media (max-width: 37.5em) { display: none !important; }
+  @media (max-width: 37.5em) {
+    display: none !important;
+  }
 }
 
 // ── Legend dot (status) ───────────────────────────────────────────────────────
@@ -1055,17 +1199,22 @@ $red:    #f44336;
   background: var(--sheet-bg);
   border-top: 0.094em solid $border;
   border-radius: 0.75em 0.75em 0 0;
-  box-shadow: 0 -0.25em 1.25em rgba(0,0,0,0.15);
+  box-shadow: 0 -0.25em 1.25em rgba(0, 0, 0, 0.15);
   z-index: 50;
   // Peek: only the handle (52 px) is visible until opened
   transform: translateY(calc(100% - 3.25em));
   transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1), background 250ms;
 
-  @media (max-width: 37.5em) { display: flex; flex-direction: column; }
+  @media (max-width: 37.5em) {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 // Applied when the user taps the handle to fully expand the sheet
-.sheetOpen { transform: translateY(0); }
+.sheetOpen {
+  transform: translateY(0);
+}
 
 @media (max-width: 62em) {
   .main {
@@ -1261,7 +1410,7 @@ $red:    #f44336;
 .sheetHandleLabel {
   font-size: 0.6875em;
   color: var(--muted);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   font-weight: 700;
   letter-spacing: 0.01875em;
 }
@@ -1275,63 +1424,75 @@ $red:    #f44336;
 
 // ── Dark mode overrides ───────────────────────────────────────────────────────
 // These rules override specific elements when data-theme="dark" is set on .app
-.app[data-theme="dark"] {
-  background: #111;
-}
-.app[data-theme="dark"] .header {
-  background: #161616;
-}
+// .app[data-theme="dark"] {
+//   background: #111;
+// }
+
+// .app[data-theme="dark"] .header {
+//   background: #161616;
+// }
+
 .app[data-theme="dark"] .card {
   background: #1e1e1e;
 }
+
 .app[data-theme="dark"] .logoName,
 .app[data-theme="dark"] .comingSoonTitle {
   color: #f0f0f0;
 }
-.app[data-theme="dark"] .routeBox {
-  border-color: rgba(224,64,251,0.25);
-}
+
+// .app[data-theme="dark"] .routeBox {
+//   border-color: rgba(224, 64, 251, 0.25);
+// }
+
 .app[data-theme="dark"] .stepsBox {
   border-color: #9c27b0;
   background: #252525;
 }
+
 .app[data-theme="dark"] .hint {
-  background: rgba(224,64,251,0.15);
+  background: rgba(224, 64, 251, 0.15);
 }
-.app[data-theme="dark"] .searchWrap {
-  background: #2a2a2a;
-}
+
+// .app[data-theme="dark"] .searchWrap {
+//   background: #2a2a2a;
+// }
+
 .app[data-theme="dark"] .poiItem:hover {
-  background: rgba(224,64,251,0.15);
+  background: rgba(224, 64, 251, 0.15);
 }
+
 .app[data-theme="dark"] .navLink {
   color: #aaa;
 }
+
 .app[data-theme="dark"] .legendItem {
   color: #ccc;
 }
+
 .app[data-theme="dark"] .sheet {
   background: #1e1e1e;
 }
+
 .app[data-theme="dark"] .comingSoonSub {
   color: #888;
 }
+
 .app[data-theme="dark"] .detailCard {
   background: #1e1e1e;
   border-color: #9c27b0;
 }
+
 .app[data-theme="dark"] .detailName {
   color: #f0f0f0;
 }
+
 .app[data-theme="dark"] .detailClose {
   color: #aaa;
 }
+
 .app[data-theme="dark"] .detailDesc {
   color: #888;
-}
-.app[data-theme="dark"] .catTab {
-  color: #888;
-  border-color: rgba(224,64,251,0.35);
 }
 
 // (Old per-button header styles removed — replaced by .hToolBtn / .hIconBtn system)
@@ -1403,9 +1564,9 @@ $red:    #f44336;
 // Small muted counter text
 .tourStopCounter {
   font-size: 0.6875em;
-  color: #4caf50;
+  color: white;
   font-weight: 600;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   letter-spacing: 0.019em;
 }
 
@@ -1442,9 +1603,13 @@ $red:    #f44336;
   font-size: 0.75em;
   color: var(--muted);
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { border-color: #f44336; color: #f44336; }
+
+  &:hover {
+    border-color: #f44336;
+    color: #f44336;
+  }
 }
 
 // "Ik ben er ✓" / "🎉 Tour voltooid!" primary action button
@@ -1458,9 +1623,13 @@ $red:    #f44336;
   font-size: 0.75em;
   font-weight: 700;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { background: #388e3c; border-color: #388e3c; }
+
+  &:hover {
+    background: #388e3c;
+    border-color: #388e3c;
+  }
 }
 
 // Tour stop highlight in the POI grid — green tint for the current stop
@@ -1550,10 +1719,14 @@ $red:    #f44336;
   font-size: 0.75em;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
   white-space: nowrap;
-  &:hover { background: #5e35b1; border-color: #5e35b1; }
+
+  &:hover {
+    background: #5e35b1;
+    border-color: #5e35b1;
+  }
 }
 
 // "✕" close button in the modal header
@@ -1566,7 +1739,11 @@ $red:    #f44336;
   color: var(--muted);
   cursor: pointer;
   transition: all 120ms;
-  &:hover { border-color: #f44336; color: #f44336; }
+
+  &:hover {
+    border-color: #f44336;
+    color: #f44336;
+  }
 }
 
 // Auto-fill grid of QR code cards — 4 columns on desktop, fewer on mobile
@@ -1590,7 +1767,9 @@ $red:    #f44336;
   transition: background 250ms;
 
   // QR code SVG inherits text colour for dark-mode compatibility
-  svg { color: var(--text); }
+  svg {
+    color: var(--text);
+  }
 }
 
 // Large emoji icon below the QR code
@@ -1613,7 +1792,7 @@ $red:    #f44336;
 .qrItemFloor {
   font-size: 0.625em;
   color: var(--muted);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
 }
 
 // ── Print override for QR modal ───────────────────────────────────────────────
@@ -1626,12 +1805,17 @@ $red:    #f44336;
     backdrop-filter: none !important;
     display: block !important;
   }
+
   .qrModal {
     box-shadow: none !important;
     border-radius: 0 !important;
     max-width: none !important;
   }
-  .qrModalHeader { display: none !important; }
+
+  .qrModalHeader {
+    display: none !important;
+  }
+
   .qrGrid {
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 0 !important;
@@ -1639,6 +1823,7 @@ $red:    #f44336;
     background: none !important;
     page-break-inside: avoid;
   }
+
   .qrItem {
     border: 0.0625em solid #ddd;
     page-break-inside: avoid;
@@ -1655,12 +1840,16 @@ $red:    #f44336;
   color: #ff8f00;
   font-size: 0.75em;
   font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
-  &:hover { background: #ff8f00; color: #fff; }
+
+  &:hover {
+    background: #ff8f00;
+    color: #fff;
+  }
 }
 
 // ── Feature 1: Schedule modal list ───────────────────────────────────────────
@@ -1679,8 +1868,14 @@ $red:    #f44336;
   gap: 0.625em;
   padding: 0.5em 1.25em;
   border-bottom: 0.0625em solid var(--divider);
-  &:last-child { border-bottom: none; }
-  &:hover { background: var(--pink-hover); }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--pink-hover);
+  }
 }
 
 // "HH:MM" time column in the schedule
@@ -1688,7 +1883,7 @@ $red:    #f44336;
   font-size: 0.75em;
   font-weight: 700;
   color: #ff8f00;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   white-space: nowrap;
 }
 
@@ -1710,7 +1905,7 @@ $red:    #f44336;
 .scheduleFloor {
   font-size: 0.6875em;
   color: var(--muted);
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   white-space: nowrap;
 }
 
@@ -1726,10 +1921,10 @@ $red:    #f44336;
 // Events list inside the detail card, shown between detailDesc and detailMeta
 .detailEvents {
   margin: 0.375em 0 0.5em;
-  border: 0.0625em solid rgba(255,143,0,0.35);
+  border: 0.0625em solid rgba(255, 143, 0, 0.35);
   border-radius: 0.375em;
   overflow: hidden;
-  background: rgba(255,143,0,0.04);
+  background: rgba(255, 143, 0, 0.04);
 }
 
 // "📅 Open dag programma" heading inside the events box
@@ -1738,7 +1933,7 @@ $red:    #f44336;
   font-weight: 700;
   color: #ff8f00;
   padding: 0.375em 0.625em 0.25em;
-  border-bottom: 0.0625em solid rgba(255,143,0,0.2);
+  border-bottom: 0.0625em solid rgba(255, 143, 0, 0.2);
 }
 
 // One row in the detail card's event list
@@ -1747,8 +1942,11 @@ $red:    #f44336;
   align-items: center;
   gap: 0.5em;
   padding: 0.25em 0.625em;
-  border-bottom: 0.0625em solid rgba(255,143,0,0.1);
-  &:last-child { border-bottom: none; }
+  border-bottom: 0.0625em solid rgba(255, 143, 0, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 // Time column in detail event row
@@ -1756,7 +1954,7 @@ $red:    #f44336;
   font-size: 0.6875em;
   font-weight: 700;
   color: #ff8f00;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   white-space: nowrap;
 }
 
@@ -1778,31 +1976,35 @@ $red:    #f44336;
 // Wrapper row for the programme filter tab strip with label
 .progTabsRow {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
   gap: 0.5em;
   padding: 0.5em 0.75em 0;
+  margin: 0.5em 0;
 }
 
 // Wrapper row for the category tab strip with label (mirrors progTabsRow)
 .catTabsRow {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
   gap: 0.5em;
   padding: 0.25em 0.75em 0;
+  margin: 1em 0;
 }
 
 // Small muted label before a tab strip ("Opleiding:" / "Categorie:")
 .tabsLabel {
-  font-size: 0.625em;
+  font-size: 1em;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-// Programme pill tabs (amber colour scheme, distinct from pink category tabs)
+// Programme pill tabs
 .progTabs {
   display: flex;
   gap: 0.375em;
@@ -1811,22 +2013,37 @@ $red:    #f44336;
 
 // Individual programme pill button
 .progTab {
-  padding: 0.25em 0.75em;
-  border-radius: 1.25em;
-  border: 0.094em solid #ffb300;
+  padding: 0.75em 1em;
+  border-radius: 0.5em;
+  border: 0.1em solid white;
   background: none;
   font-size: 0.75em;
-  color: #b36a00;
+  color: white;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  // font-family: 'DM Sans', sans-serif;
   transition: all 120ms;
-  &:hover { border-color: #ff8f00; color: #ff6f00; }
+  padding: 0.25em 0.75em;
+  border-radius: 0.2em;
+  border: 0.094em solid rgba(255, 255, 255, 0.25);
+  background: none;
+  font-size: 0.75em;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-family: 'Aeonik', sans-serif;
+  transition: all 120ms;
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+  }
 }
 
-// Applied to the currently active programme tab — amber fill
+// Applied to the currently active programme tab — pink fill
 .progTabActive {
-  background: #ff8f00;
-  border-color: #ff8f00;
+  background: #FF00E3;
+  border-color: #FF00E3;
+  background: $pink;
+  border-color: $pink;
   color: #fff;
   font-weight: 500;
 }
@@ -1841,12 +2058,16 @@ $red:    #f44336;
   color: #7c4dff;
   font-size: 0.75em;
   font-weight: 600;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
   transition: all 150ms;
-  &:hover { background: #7c4dff; color: #fff; }
+
+  &:hover {
+    background: #7c4dff;
+    color: #fff;
+  }
 }
 
 // ── Feature 4 (new): Accessibility mode ──────────────────────────────────────
@@ -1865,23 +2086,27 @@ $red:    #f44336;
   flex-shrink: 0;
   transition: border-color 120ms, background 120ms;
   line-height: 1;
-  &:hover { border-color: #2196f3; background: rgba(33,150,243,0.08); }
+
+  &:hover {
+    border-color: #2196f3;
+    background: rgba(33, 150, 243, 0.08);
+  }
 }
 
 // Applied when accessibility mode is on — solid blue border
 .accessBtnActive {
   border-color: #2196f3;
-  background: rgba(33,150,243,0.12);
+  background: rgba(33, 150, 243, 0.12);
   color: #2196f3;
 }
 
 // Banner below the header in accessibility mode
 .accessBanner {
-  background: rgba(33,150,243,0.12);
-  border-bottom: 0.0625em solid rgba(33,150,243,0.4);
-  color: #1565c0;
-  font-size: 0.75em;
-  font-weight: 600;
+  background: rgba(243, 33, 233, 0.12);
+  border-bottom: 0.0625em solid rgba(243, 33, 233, 0.4);
+  color: #FF00E3;
+  font-size: 0.8em;
+  font-weight: 400;
   padding: 0.375em 1.25em;
   text-align: center;
 }
@@ -1900,7 +2125,7 @@ $red:    #f44336;
   padding: 0.0625em 0.375em;
   white-space: nowrap;
   flex-shrink: 0;
-  background: rgba(33,150,243,0.08);
+  background: rgba(33, 150, 243, 0.08);
 }
 
 // ── Feature 5 (new): Language toggle ─────────────────────────────────────────
@@ -1919,7 +2144,11 @@ $red:    #f44336;
   flex-shrink: 0;
   transition: border-color 120ms, background 120ms;
   line-height: 1;
-  &:hover { border-color: $pink; background: rgba(224,64,251,0.08); }
+
+  &:hover {
+    border-color: $pink;
+    background: rgba(224, 64, 251, 0.08);
+  }
 }
 
 // ── Feature 6 (new): Saved route button ──────────────────────────────────────
@@ -1938,7 +2167,11 @@ $red:    #f44336;
   flex-shrink: 0;
   transition: border-color 120ms, background 120ms;
   line-height: 1;
-  &:hover { border-color: $pink; background: rgba(224,64,251,0.08); }
+
+  &:hover {
+    border-color: $pink;
+    background: rgba(224, 64, 251, 0.08);
+  }
 }
 
 // ── Feature 7 (new): Kiosk mode ──────────────────────────────────────────────
@@ -1957,7 +2190,11 @@ $red:    #f44336;
   flex-shrink: 0;
   transition: border-color 120ms, background 120ms;
   line-height: 1;
-  &:hover { border-color: $pink; background: rgba(224,64,251,0.08); }
+
+  &:hover {
+    border-color: $pink;
+    background: rgba(224, 64, 251, 0.08);
+  }
 }
 
 // Minimal header shown in kiosk mode
@@ -1977,7 +2214,7 @@ $red:    #f44336;
   font-size: 1.375em;
   font-weight: 800;
   color: $pink;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Aeonik', sans-serif;
   letter-spacing: 0.05em;
 }
 
@@ -1990,9 +2227,13 @@ $red:    #f44336;
   font-size: 0.75em;
   color: var(--muted);
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Aeonik', sans-serif;
   transition: all 120ms;
-  &:hover { border-color: $pink; color: $pink; }
+
+  &:hover {
+    border-color: $pink;
+    color: $pink;
+  }
 }
 
 // Applied to .app in kiosk mode — larger text and big touch targets
@@ -2000,7 +2241,9 @@ $red:    #f44336;
   font-size: 1.2em;
 
   // Bigger minimum touch targets for all buttons in kiosk mode
-  button { min-height: 3em; }
+  button {
+    min-height: 3em;
+  }
 }
 
 // ── Help modal ────────────────────────────────────────────────────────────────
@@ -2020,7 +2263,7 @@ $red:    #f44336;
 
 // The white popup box — compact, centred, max 28em wide
 .helpModal {
-  background: var(--card);
+  background: black;
   border-radius: 0.75em;
   width: 100%;
   max-width: 28em;
@@ -2035,18 +2278,15 @@ $red:    #f44336;
 // Sticky header inside the popup: title + close button
 .helpHeader {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 1em;
   padding: 1em 1.25em;
-  border-bottom: 0.0625em solid var(--divider);
-  flex-shrink: 0;
+  margin-left: 6em;
+  margin-bottom: 1em;
 }
 
 // "Uitleg & functies" heading
 .helpTitle {
-  font-size: 0.9375em;
-  font-weight: 700;
+  font-size: 1.2em;
   color: var(--text);
   margin-bottom: 0.2em;
   transition: color 250ms;
@@ -2068,12 +2308,14 @@ $red:    #f44336;
 // One feature row: icon square on the left, name + description on the right
 .helpItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.875em;
   padding: 0.75em 1.25em;
   border-bottom: 0.0625em solid var(--divider);
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 // Centred icon / emoji container — fixed size so all rows align
@@ -2091,7 +2333,9 @@ $red:    #f44336;
   border: 0.0625em solid var(--divider);
   transition: background 250ms;
 
-  svg { display: block; }
+  svg {
+    display: block;
+  }
 }
 
 // Text block to the right of the icon
@@ -2102,9 +2346,7 @@ $red:    #f44336;
 
 // Bold feature name
 .helpItemName {
-  font-size: 0.8125em;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 1em;
   margin-bottom: 0.2em;
   transition: color 250ms;
 }
@@ -2112,35 +2354,69 @@ $red:    #f44336;
 // Plain-language description
 .helpItemDesc {
   font-size: 0.75em;
-  color: var(--muted);
   line-height: 1.5;
 }
 
 // ── Responsive ────────────────────────────────────────────────────────────────
 // Mobile adjustments: hide nav, switch to 2-column POI grid, shrink map
 @media (max-width: 37.5em) {
+
   // Nav links hidden on mobile — accessible via building/tool bar instead
-  .nav { display: none; }
+  .nav {
+    display: none;
+  }
+
   // Tighter building switcher buttons
-  .buildingBar { gap: 0.25em; }
-  .buildingBtn { padding: 0.1875em 0.5em; font-size: 0.6875em; }
+  .buildingBar {
+    gap: 0.25em;
+  }
+
+  .buildingBtn {
+    padding: 0.1875em 0.5em;
+    font-size: 0.6875em;
+  }
+
   // POI grid: 2 columns on mobile instead of 3
-  .poiBox { grid-template-columns: repeat(2, 1fr); }
+  .poiBox {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   // Shorter map on mobile
-  .mapRow { height: 18.75em; }
+  .mapRow {
+    height: 18.75em;
+  }
+
   // Legend wraps below the card on mobile
-  .main { flex-direction: column; }
-  .legend { flex-direction: row; flex-wrap: wrap; align-self: stretch; gap: 0.5em 1em; }
+  .main {
+    flex-direction: column;
+  }
+
+  .legend {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-self: stretch;
+    gap: 0.5em 1em;
+  }
 }
 
 // ── Print styles (Feature 7) ──────────────────────────────────────────────────
 // When printing from the main map view, hide everything except the route step list.
 // When printing from the QR modal the .qrOverlay rules above take over instead.
 @media print {
+
   // Only apply these rules when the QR modal is NOT open
-  .app:not(:has(.qrOverlay)) > *:not(.main) { display: none !important; }
-  .app:not(:has(.qrOverlay)) .main > *:not(.card) { display: none !important; }
-  .app:not(:has(.qrOverlay)) .card > *:not(.stepsBox) { display: none !important; }
+  .app:not(:has(.qrOverlay))>*:not(.main) {
+    display: none !important;
+  }
+
+  .app:not(:has(.qrOverlay)) .main>*:not(.card) {
+    display: none !important;
+  }
+
+  .app:not(:has(.qrOverlay)) .card>*:not(.stepsBox) {
+    display: none !important;
+  }
+
   .stepsBox {
     display: block !important;
     box-shadow: none;
