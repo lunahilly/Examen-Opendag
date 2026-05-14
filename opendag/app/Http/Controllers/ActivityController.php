@@ -81,7 +81,8 @@ class ActivityController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $activity = Activity::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){

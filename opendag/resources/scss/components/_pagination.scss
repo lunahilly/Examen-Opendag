@@ -1,0 +1,30 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.pagination{
+    width: 100%;
+    @include mixins.flexBox(space-between, center);
+
+    &__link{
+        color: rgba(map-get(variables.$colors, "white"), 0.4);
+        text-decoration: none;
+
+        &:link{
+            color: map-get(variables.$colors, "white");
+        }
+    }
+
+    &__pages{
+        @include mixins.flexBox(center, center);
+        gap: 0.8em;
+
+        &--link{
+            text-decoration: none;
+            color: map-get(variables.$colors, "white");
+
+            &-active{
+                color: map-get(variables.$colors, "magenta");
+            }
+        }
+    }
+}

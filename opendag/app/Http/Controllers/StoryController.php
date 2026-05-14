@@ -95,7 +95,8 @@ class StoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $story = Story::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){

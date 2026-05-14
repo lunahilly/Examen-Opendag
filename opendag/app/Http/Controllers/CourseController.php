@@ -80,7 +80,8 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $course = Course::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){

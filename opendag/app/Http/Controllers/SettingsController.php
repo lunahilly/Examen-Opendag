@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
+use App\Models\Course;
 use App\Models\Setting;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,10 +16,17 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        $settings = Setting::find(1);
-        return Inertia::render('Dashboard', [
-            'settings' => $settings
-        ]);
+        return Inertia::render('Settings/Settings');
+        // $settings = Setting::find(1);
+        // $courses = Course::paginate(10);
+        // $stories = Story::paginate(10);
+        // $activities = Activity::paginate(10);
+        // return Inertia::render('Dashboard', [
+        //     'settings' => $settings,
+        //     'courses' => $courses,
+        //     'stories' => $stories,
+        //     'activities' => $activities
+        // ]);
     }
 
     /**

@@ -34,20 +34,21 @@ function Navigation(){
                 }
                 {
                     user != null ? 
-                        <div className="header__dropdown">
-                            <Button label="CMS"/>
-                            <ul className="header__dropdown--list">
-                                <li className="header__dropdown--item">
-                                    <a href={route('course.create')} className="header__dropdown--item-link">New course</a>
-                                </li>
-                                <li className="header__dropdown--item">
-                                    <a href={route('story.create')} className="header__dropdown--item-link">New story</a>
-                                </li>
-                                <li className="header__dropdown--item">
-                                    <a href={route('activity.create')} className="header__dropdown--item-link">New activity</a>
-                                </li>
-                            </ul>
-                        </div>
+                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
+                        // <div className="header__dropdown">
+                        //     <Button label="CMS"/>
+                        //     <ul className="header__dropdown--list">
+                        //         <li className="header__dropdown--item">
+                        //             <a href={route('course.create')} className="header__dropdown--item-link">New course</a>
+                        //         </li>
+                        //         <li className="header__dropdown--item">
+                        //             <a href={route('story.create')} className="header__dropdown--item-link">New story</a>
+                        //         </li>
+                        //         <li className="header__dropdown--item">
+                        //             <a href={route('activity.create')} className="header__dropdown--item-link">New activity</a>
+                        //         </li>
+                        //     </ul>
+                        // </div>
                     : null
                 }
             </nav>
