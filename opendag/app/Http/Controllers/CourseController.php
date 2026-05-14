@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,10 +14,16 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
-        return Inertia::render('Information/Information', [
-            'courses' => $courses
-        ]);
+        $settings = Setting::find(1);
+        if($settings->courses == true){
+            $courses = Course::all();
+            return Inertia::render('Information/Information', [
+                'courses' => $courses
+            ]);
+        }
+        else{
+            return redirect('/');
+        }
     }
 
     /**

@@ -8,10 +8,12 @@
 @use "components/title";
 @use "components/form";
 @use "components/map";
+@use "components/toggle";
 
 @use "layout/navigation";
 
 @use "pages/welcome";
+@use "pages/dashboard";
 
 @use "pages/information/information";
 @use "pages/information/course";

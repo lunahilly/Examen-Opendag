@@ -468,11 +468,50 @@ body {
     padding: 0.6rem 0.75rem;
   }
 }
+.toggle {
+  position: relative;
+  width: 2.5em;
+  height: 1.4em;
+  border-radius: 1em;
+}
+.toggle__checkbox {
+  appearance: none;
+}
+.toggle__slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 0, 230, 0.4);
+  border-radius: 1em;
+  transition: 0.2s all;
+}
+.toggle__slider:before {
+  content: "";
+  position: absolute;
+  width: 1.2em;
+  height: 1.2em;
+  left: 0.1em;
+  bottom: 0.1em;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 100%;
+  transition: 0.2s all;
+}
+.toggle__checkbox:checked + .toggle__slider {
+  background: #FF00E6;
+}
+.toggle__checkbox:checked + .toggle__slider:before {
+  transform: translateX(1.1em);
+  background: white;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.1em 1em;
+  width: 100%;
 }
 .header__logo {
   width: 5em;
@@ -557,6 +596,40 @@ body {
   max-width: 50rem;
   margin: 0 auto;
   object-fit: contain;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25em;
+}
+
+.settings {
+  background: rgba(255, 0, 230, 0.2);
+  border: 0.02em solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25em;
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+  width: 50%;
+}
+.settings__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+.settings__input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .courses {
@@ -745,10 +818,13 @@ body {
   align-items: start;
   gap: 1em;
   width: 48%;
-  height: 7em;
+  min-height: 7em;
+  border: 0.1em solid rgba(255, 255, 255, 0.2);
+  padding: 0.5em;
+  border-radius: 0.25em;
 }
 .student__figure {
-  height: 100%;
+  height: 7em;
   position: relative;
 }
 .student__figure:hover .student__figure--link {
@@ -759,6 +835,7 @@ body {
   height: 100%;
   aspect-ratio: 2.5/2;
   object-fit: cover;
+  border-radius: 0.25em;
 }
 .student__figure--link {
   position: absolute;

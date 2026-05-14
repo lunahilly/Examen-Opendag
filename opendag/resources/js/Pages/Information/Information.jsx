@@ -7,6 +7,7 @@ import Course from "./Course";
 function Information() {
     const courses = usePage().props.courses;
     console.log(courses);
+    console.log(usePage());
     const [open, setOpen] = useState(null);
 
     const openCourse = (id) => {

@@ -4,6 +4,7 @@ import { usePage } from "@inertiajs/react";
 function Navigation(){
     const user = usePage().props.auth.user;
     const url = usePage().url;
+    const settings = usePage().props.settings;
     return(
         <header className="header">
             <a href="/" className="header__logo">
@@ -11,10 +12,26 @@ function Navigation(){
             </a>
             <nav className="header__navigation">
                 <a href="/" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
-                <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
-                <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
-                <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
-                <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
+                {
+                    settings.courses ? 
+                        <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
+                    : null
+                }
+                {
+                    settings.stories ? 
+                        <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
+                    : null
+                }
+                {
+                    settings.activities ? 
+                        <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
+                    : null
+                }
+                {
+                    settings.contact ? 
+                        <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
+                    : null
+                }
                 {
                     user != null ? 
                         <div className="header__dropdown">

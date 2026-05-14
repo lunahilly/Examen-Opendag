@@ -4,6 +4,7 @@
 .header{
     @include mixins.flexBox(space-between, center);
     padding: 0.1em 1em;
+    width: 100%;
        
     &__logo{
         width: 5em;
@@ -17,10 +18,13 @@
     &__navigation{
         @include mixins.flexBox(center, center);
         gap: 1rem;
+        // width: 100%;
+        // background: blue;
 
         &--link{
             text-decoration: none;
             color: map-get(variables.$colors, "white");
+            // border: 0.1rem solid red;
 
             &-active{
                 color: map-get(variables.$colors, "magenta");

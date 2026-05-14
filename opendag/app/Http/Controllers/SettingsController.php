@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
-use App\Models\ActivityType;
-use App\Models\Course;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ActivityController extends Controller
+class SettingsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,15 +14,9 @@ class ActivityController extends Controller
     public function index()
     {
         $settings = Setting::find(1);
-        if($settings->activities == true){
-            $activities = Activity::with(['course', 'activityType'])->get();
-            return Inertia::render('Activities/Activities', [
-                'activities' => $activities
-            ]);
-        }
-        else{
-        return redirect('/');
-        }
+        return Inertia::render('Dashboard', [
+            'settings' => $settings
+        ]);
     }
 
     /**
@@ -33,12 +24,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
-        $types = ActivityType::all();
-        return Inertia::render('Activities/Form', [
-            'courses' => $courses,
-            'types' => $types
-        ]);
+        //
     }
 
     /**
@@ -46,10 +32,7 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
-        $activity = new Activity($data);
-        $activity->save();
-        return redirect(route('activities.index'));
+        //
     }
 
     /**
@@ -73,7 +56,10 @@ class ActivityController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $this->validateData($request);
+        $settings = Setting::find(1);
+        $settings->update($data);
+        return back();
     }
 
     /**
@@ -83,12 +69,13 @@ class ActivityController extends Controller
     {
         //
     }
-
+    
     protected function validateData(Request $request){
         $data = $request->validate([
-            'course_id' => 'nullable',
-            'activity_type_id' => '',
-            'time' => 'nullable'
+            'courses' => 'required',
+            'stories' => 'required',
+            'activities' => 'required',
+            'contact' => 'required'
         ]);
         return $data;
     }

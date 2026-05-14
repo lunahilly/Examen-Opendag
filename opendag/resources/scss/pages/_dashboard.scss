@@ -1,0 +1,30 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.dashboard{
+    @include mixins.flexBox(center, center);
+    padding: map-get(variables.$padding, "padding-xl");
+}
+
+.settings{
+    background: rgba(map-get(variables.$colors, "magenta"), 0.2);
+    border: 0.02em solid rgba(map-get(variables.$colors, "white"), 0.2);
+    border-radius: map-get(variables.$borders, "border-radius-s");
+    padding: map-get(variables.$padding, "padding-l");
+    @include mixins.flexBox(center, center);
+    flex-direction: column;
+    gap: 1em;
+    width: 50%;
+
+    &__wrapper{
+        @include mixins.flexBox(center, center);
+        flex-direction: column;
+        gap: 1em;
+        width: 100%;
+    }
+
+    &__input{
+        @include mixins.flexBox(space-between, center);
+        width: 100%;
+    }
+}
