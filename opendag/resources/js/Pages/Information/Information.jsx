@@ -6,8 +6,6 @@ import Course from "./Course";
 
 function Information() {
     const courses = usePage().props.courses;
-    console.log(courses);
-    console.log(usePage());
     const [open, setOpen] = useState(null);
 
     const openCourse = (id) => {
@@ -17,7 +15,6 @@ function Information() {
         }
         setOpen(id);
     }
-    console.log(open);
     return (
         <GuestLayout>
             <div className="wrapper courses__wrapper">

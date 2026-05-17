@@ -1,7 +1,7 @@
 @use "../abstracts/variables";
 @use "../abstracts/mixins";
 
-.button{
+.button, .form__file::file-selector-button{
     border: none;
     background: map-get(variables.$colors, "magenta");
     padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-md");

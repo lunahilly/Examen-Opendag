@@ -28,7 +28,7 @@ body {
   margin: 0 auto;
 }
 
-.button {
+.button, .form__file::file-selector-button {
   border: none;
   background: #FF00E6;
   padding: 0.25em 0.75em;
@@ -41,32 +41,32 @@ body {
   font-family: inherit;
   text-decoration: none;
 }
-.button:disabled {
+.button:disabled, .form__file::file-selector-button:disabled {
   background: rgba(255, 0, 230, 0.2);
   color: rgba(255, 255, 255, 0.2);
 }
-.button:disabled:hover {
+.button:disabled:hover, .form__file::file-selector-button:disabled:hover {
   cursor: not-allowed;
   background: rgba(255, 0, 230, 0.2);
 }
-.button:hover {
+.button:hover, .form__file::file-selector-button:hover {
   cursor: pointer;
   background: rgb(244.8, 0, 220.8);
 }
-.button:focus {
+.button:focus, .form__file::file-selector-button:focus {
   outline: none;
 }
-.button__logout {
+.button__logout, .form__file::file-selector-button__logout {
   background: #fa6767;
 }
-.button__logout:disabled {
+.button__logout:disabled, .form__file::file-selector-button__logout:disabled {
   background: rgba(250, 103, 103, 0.2);
 }
-.button__logout:disabled:hover {
+.button__logout:disabled:hover, .form__file::file-selector-button__logout:disabled:hover {
   cursor: not-allowed;
   background: rgba(250, 103, 103, 0.2);
 }
-.button__logout:hover {
+.button__logout:hover, .form__file::file-selector-button__logout:hover {
   background: rgb(249.6751592357, 93.1248407643, 93.1248407643);
 }
 
@@ -131,23 +131,22 @@ body {
   justify-content: center;
   align-items: start;
   gap: 0.25em;
+  width: 100%;
 }
 .input__wrapper {
-  position: relative;
+  width: 100%;
 }
 .input__field {
-  padding: 0.125em 0.25em;
-  font-size: 1.2em;
-  border-radius: 0.25em;
   width: 100%;
-  background: rgba(255, 0, 230, 0.2);
-  border: 0.025em solid rgba(255, 0, 230, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  border: 0.02em solid rgba(0, 0, 0, 0.2);
+  background: white;
+  border-radius: 0.125em;
+  font-family: inherit;
+  padding: 0.25em 0.5em;
+  font-size: 1.2em;
 }
 .input__field:focus {
-  outline: none;
-  background: white;
-  color: black;
+  outline: 0.02em solid #FF00E6;
 }
 .input__button {
   position: absolute;
@@ -180,6 +179,53 @@ body {
   color: #ea95a2;
 }
 
+.textarea {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  flex-direction: column;
+  width: 100%;
+}
+.textarea__panel {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.4em;
+  background: white;
+  width: 100%;
+  padding: 0.5em;
+}
+.textarea__panel--button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: inherit;
+  width: 2em;
+  aspect-ratio: 1/1;
+  background: none;
+  border: 0.02em solid black;
+  border-radius: 0.125em;
+  text-align: center;
+}
+.textarea__box {
+  width: 100%;
+}
+.textarea__italic {
+  font-style: italic;
+}
+.textarea__bold {
+  font-weight: bold;
+}
+.textarea__underline {
+  text-decoration: underline;
+}
+.textarea__heading--first {
+  font-size: large;
+}
+.textarea__heading--second {
+  font-size: larger;
+}
+
 .head {
   font-size: 1.3em;
 }
@@ -190,6 +236,10 @@ body {
   align-items: center;
   flex-direction: column;
   gap: 1em;
+  width: 50%;
+  padding: 1.25em;
+  border: 0.02em solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.25em;
 }
 .form__title {
   font-size: 2em;
@@ -199,6 +249,17 @@ body {
 .form__title::after {
   content: attr(data-end);
   color: #FF00E6;
+}
+.form__wrapper {
+  width: 100%;
+}
+.form__file {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1em;
+  font-family: inherit;
 }
 
 .wayfinding {
@@ -552,12 +613,23 @@ body {
   color: #FF00E6;
 }
 
+.background {
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100vh;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.1em 1em;
   width: 100%;
+  position: relative;
 }
 .header__logo {
   width: 5em;
@@ -565,19 +637,6 @@ body {
 .header__logo--image {
   width: 100%;
   object-fit: cover;
-}
-.header__navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-}
-.header__navigation--link {
-  text-decoration: none;
-  color: white;
-}
-.header__navigation--link-active {
-  color: #FF00E6;
 }
 .header__dropdown {
   position: relative;
@@ -612,6 +671,72 @@ body {
 .header__dropdown--item-link {
   color: white;
   text-decoration: none;
+}
+.header__menu {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  gap: 1em;
+}
+.header__menu--button {
+  background: none;
+  border: none;
+  color: white;
+}
+.header__menu--logo {
+  width: 4em;
+}
+.header__sidebar {
+  position: absolute;
+  background: black;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  padding: 1.25em;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 2em;
+  transition: 2s all;
+  z-index: 100000;
+}
+.header__sidebar--wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.header__sidebar--button {
+  background: none;
+  border: none;
+  color: white;
+}
+.header__sidebar--list {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  gap: 1em;
+  list-style: none;
+}
+.header__sidebar--item-link {
+  text-decoration: none;
+  color: white;
+}
+.header__navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+.header__navigation--link {
+  text-decoration: none;
+  color: white;
+}
+.header__navigation--link-active {
+  color: #FF00E6;
 }
 
 .welcome {
@@ -1096,6 +1221,17 @@ body {
     width: 100%;
   }
 }
+@media screen and (max-width: 50em) {
+  .headlink {
+    width: 100%;
+  }
+  .dashboard {
+    width: 100%;
+  }
+  .settings {
+    width: 100%;
+  }
+}
 @media screen and (max-width: 42.375em) {
   .course__wrapper {
     flex-direction: column-reverse;
@@ -1120,12 +1256,28 @@ body {
     height: 3em;
   }
 }
+@media screen and (max-width: 27.5em) {
+  .dashboard {
+    font-size: 80%;
+  }
+}
 @media screen and (max-width: 22.5em) {
   .courses {
     grid-template-columns: 1fr;
   }
   .courses__item {
     height: 5em;
+  }
+  .headlink {
+    font-size: 90%;
+  }
+  .dashboard__header {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .dashboard__options {
+    justify-content: center;
+    font-size: 80%;
   }
 }
 

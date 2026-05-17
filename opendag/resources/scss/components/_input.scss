@@ -12,28 +12,47 @@
     justify-content: center;
     align-items: start;
     gap: 0.25em;
+    width: 100%;
     // width: 15em;
 
     // &__label{
     //     // font-size: 0.85em;
     // }
 
+    // &__wrapper{
+    //     position: relative;
+    // }
+    // &__field{
+    //     padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
+    //     font-size: 1.2em;
+    //     border-radius: map-get(variables.$borders, "border-radius-s");
+    //     width: 100%;
+    //     background: rgba(map-get(variables.$colors, "magenta"), 0.2);
+    //     border: 0.025em solid rgba(map-get(variables.$colors, "magenta"), 0.2);
+    //     color: rgba(map-get(variables.$colors, "white"), 0.8);
+
+    //     &:focus{
+    //         outline: none;
+    //         background: map-get(variables.$colors, "white");
+    //         color: map-get(variables.$colors, "black");
+    //     }
+    // }
+
     &__wrapper{
-        position: relative;
-    }
-    &__field{
-        padding: map-get(variables.$padding, "padding-xs") map-get(variables.$padding, "padding-s");
-        font-size: 1.2em;
-        border-radius: map-get(variables.$borders, "border-radius-s");
         width: 100%;
-        background: rgba(map-get(variables.$colors, "magenta"), 0.2);
-        border: 0.025em solid rgba(map-get(variables.$colors, "magenta"), 0.2);
-        color: rgba(map-get(variables.$colors, "white"), 0.8);
+    }
+
+    &__field{
+        width: 100%;
+        border: 0.02em solid rgba(map-get(variables.$colors, "black"), 0.2);
+        background: map-get(variables.$colors, "white");
+        border-radius: map-get(variables.$borders, "border-radius-xs");
+        font-family: inherit;
+        padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+        font-size: 1.2em;
 
         &:focus{
-            outline: none;
-            background: map-get(variables.$colors, "white");
-            color: map-get(variables.$colors, "black");
+            outline: 0.02em solid map-get(variables.$colors, "magenta");
         }
     }
 
@@ -68,5 +87,53 @@
     &__error{
         font-size: 0.75em;
         color: map-get(variables.$colors, "error-red");
+    }
+}
+
+.textarea{
+    @include mixins.flexBox(center, start);
+    flex-direction: column;
+    width: 100%;
+    &__panel{
+        @include mixins.flexBox(start, center);
+        gap: 0.4em;
+        background: map-get(variables.$colors, "white");
+        width: 100%;
+        padding: map-get(variables.$padding, "padding-m") map-get(variables.$padding, "padding-sm");
+
+        &--button{
+            @include mixins.flexBox(center, center);
+            font-family: inherit;
+            width: 2em;
+            aspect-ratio: 1/1;
+            background: none;
+            border: 0.02em solid map-get(variables.$colors, "black");
+            border-radius: map-get(variables.$borders, "border-radius-xs");
+            text-align: center;
+        }
+    }
+
+    &__box{
+        width: 100%;
+    }
+
+    &__italic{
+        font-style: italic;
+    }
+
+    &__bold{
+        font-weight: bold;
+    }
+
+    &__underline{
+        text-decoration: underline;
+    }
+
+    &__heading--first{
+        font-size: large;
+    }
+
+    &__heading--second{
+        font-size: larger;
     }
 }
