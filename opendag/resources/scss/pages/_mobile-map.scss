@@ -1,0 +1,150 @@
+// ── Mobile route view — 396 × 732 phone ──────────────────────────────────────
+// Three root problems this file fixes:
+//
+//  1. mapWrap has min-height: 18rem from the 62em breakpoint — this is larger
+//     than the mapRow height, so the floor-selector strip overflows into the
+//     routeBox, making floor buttons crash into the "To:" field.
+//     Fix: set mapWrap to a fixed height and zero out the min-height.
+//
+//  2. hSubRow has width: 80em — it overflows the 396 px viewport, causing
+//     the building-switcher and settings buttons to render mid-page.
+//     Fix: override to width: 100%.
+//
+//  3. The fixed bottom sheet (route steps) overlaps the scrollable card content.
+//     Fix: card gets padding-bottom equal to the peeked handle height so
+//     content never hides behind the sheet handle.
+
+@media screen and (max-width: 24.75em) {
+
+  // ── Header sub-bar: fix 80em overflow ─────────────────────────────────────
+  .hSubRow {
+    width: 100%;
+  }
+
+  // ── Main: remove horizontal padding, card goes edge-to-edge ───────────────
+  .main {
+    padding: 0;
+    gap: 0;
+  }
+
+  // ── Card: no radius, reserve space for peeked sheet handle (3.25em) ───────
+  .card {
+    border-radius: 0;
+    padding-bottom: 4em;
+  }
+
+  // ── Map row: let height be auto (driven by children) ──────────────────────
+  // The 18.75em override from the 37.5em breakpoint caused the overflow.
+  .mapRow {
+    height: auto;
+  }
+
+  // ── Map canvas: fixed height + zero out the 18rem min-height ──────────────
+  // Without this the mapWrap is 288px minimum, exceeding the mapRow height
+  // and pushing the floorCol on top of the routeBox below it.
+  .mapWrap {
+    height: 12.5em;  // 200 px — shows the route clearly
+    min-height: 0;
+  }
+
+  // ── Floor col: tighter padding, already full-width from 62em ──────────────
+  .floorCol {
+    padding: 0.375em 0.75em;
+  }
+
+  // ── Route box: tighter margin (stacking already handled by 48em) ──────────
+  .routeBox {
+    margin: 0.5em 0.625em 0;
+  }
+
+  .routeField {
+    padding: 0.625em 0.875em;
+  }
+
+  .routeLabel {
+    font-size: 0.875em;
+    min-width: 2em;
+  }
+
+  .routeValue {
+    font-size: 0.875em;
+  }
+
+  // ── Hint text ──────────────────────────────────────────────────────────────
+  .hint {
+    font-size: 0.625em;
+    padding: 0.25em 0.75em;
+  }
+
+  // ── Search bar ─────────────────────────────────────────────────────────────
+  .searchWrap {
+    margin: 0.375em 0.625em 0;
+    padding: 0.375em 0.625em;
+  }
+
+  // ── Programme / category tabs ──────────────────────────────────────────────
+  .progTabsRow,
+  .catTabsRow {
+    padding: 0.25em 0.625em 0;
+    margin: 0.375em 0;
+    gap: 0.25em;
+  }
+
+  .tabsLabel {
+    font-size: 0.875em;
+  }
+
+  .progTab,
+  .catTab {
+    font-size: 0.6875em;
+    padding: 0.25em 0.5em;
+  }
+
+  // ── POI grid ───────────────────────────────────────────────────────────────
+  .poiBox {
+    margin: 0.375em 0.625em 0.625em;
+  }
+
+  .poiItem {
+    padding: 0.625em 0.375em;
+  }
+
+  .poiName {
+    font-size: 0.875em;
+  }
+
+  // ── Bottom sheet (route steps drawer) ─────────────────────────────────────
+  .sheetHandle {
+    padding: 0.625em 0.875em 0.375em;
+    min-height: 2.75em;
+  }
+
+  .sheetHandleLabel {
+    font-size: 0.625em;
+  }
+
+  // Limit content height so the sheet never covers the map on a 732 px screen
+  .sheetContent {
+    max-height: 38vh; // ≈ 278 px — leaves map + From/To visible above
+  }
+
+  // ── Step list text ─────────────────────────────────────────────────────────
+  .stepsMeta {
+    font-size: 0.6875em;
+  }
+
+  .step {
+    padding: 0 0.625em;
+    min-height: 1.875em;
+  }
+
+  .stepText {
+    font-size: 0.75em;
+    padding-top: 0.375em;
+  }
+
+  .stepIcon {
+    font-size: 0.8125em;
+    margin-top: 0.375em;
+  }
+}
