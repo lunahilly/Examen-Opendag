@@ -2,25 +2,39 @@
 @use "../abstracts/mixins";
 
 .button{
+    display: inline-flex;
+    align-items: center;
+    gap: 1em;
     border: none;
     background: map-get(variables.$colors, "magenta");
-    padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-md");
+    padding: map-get(variables.$padding, "padding-md") map-get(variables.$padding, "padding-xl");
     color: map-get(variables.$colors, "white");
     border-radius: map-get(variables.$borders, "border-radius-s");
     font-weight: 600;
     font-size: 100%;
-    box-shadow: inset 0 -0.1rem 0 0 rgba(map-get(variables.$colors, "black"), 0.2);
-    transition: 0.4s all;
     font-family: inherit;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    &__arrow {
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
 
     &:disabled{
         background: rgba(map-get(variables.$colors, "magenta"), 0.2);
         color: rgba(map-get(variables.$colors, "white"), 0.2);
+        cursor: not-allowed;
     }
 
     &:hover{
-        cursor: pointer;
-        background: darken(map-get(variables.$colors, "magenta"), 2%);
+        background: map-get(variables.$colors, "black");
+
+        .button__arrow {
+            transform: translateX(0.25em);
+        }
     }
 
     &:focus{
