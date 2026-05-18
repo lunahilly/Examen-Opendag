@@ -1,60 +1,51 @@
-// ── Mobile route view — 396 × 732 phone ──────────────────────────────────────
-// Three root problems this file fixes:
+// ── Mobile map fixes — alle schermen ≤ 600 px ────────────────────────────────
 //
-//  1. mapWrap has min-height: 18rem from the 62em breakpoint — this is larger
-//     than the mapRow height, so the floor-selector strip overflows into the
-//     routeBox, making floor buttons crash into the "To:" field.
-//     Fix: set mapWrap to a fixed height and zero out the min-height.
+// Kernprobleem (geldt voor zowel 390 px als 593 px):
+//   mapWrap heeft min-height: 18rem (288 px) vanuit het 62em-breakpoint.
+//   Als mapRow een vaste hoogte kleiner dan 288 px krijgt, overflow de mapWrap
+//   én de floorCol en belanden de verdiepingstoetsen bóven de From/To-velden.
+//   Oplossing: height: auto op mapRow + expliciete hoogte op mapWrap +
+//   min-height: 0 om de 18rem te overschrijven.
 //
-//  2. hSubRow has width: 80em — it overflows the 396 px viewport, causing
-//     the building-switcher and settings buttons to render mid-page.
-//     Fix: override to width: 100%.
-//
-//  3. The fixed bottom sheet (route steps) overlaps the scrollable card content.
-//     Fix: card gets padding-bottom equal to the peeked handle height so
-//     content never hides behind the sheet handle.
+// Sheet-achtergrond:
+//   var(--sheet-bg) is semi-transparant, waardoor de PROGRAMME-tabs er
+//   doorheen schijnen. Oplossing: opake achtergrond via var(--card).
 
-@media screen and (max-width: 24.75em) {
+// ── Alle telefoonschermen (≤ 600 px / 37.5em) ────────────────────────────────
+@media screen and (max-width: 37.5em) {
 
-  // ── Header sub-bar: fix 80em overflow ─────────────────────────────────────
+  // Header sub-bar: width: 80em overflows the viewport on narrow screens
   .hSubRow {
     width: 100%;
   }
 
-  // ── Main: remove horizontal padding, card goes edge-to-edge ───────────────
+  // Main: no horizontal padding, card goes edge-to-edge
   .main {
     padding: 0;
     gap: 0;
   }
 
-  // ── Card: no radius, reserve space for peeked sheet handle (3.25em) ───────
+  // Card: no radius, padding-bottom reserves space for the peeked sheet handle
   .card {
     border-radius: 0;
     padding-bottom: 4em;
   }
 
-  // ── Map row: let height be auto (driven by children) ──────────────────────
-  // The 18.75em override from the 37.5em breakpoint caused the overflow.
+  // ── Map row / canvas ───────────────────────────────────────────────────────
+  // height: auto lets the row size to its children instead of overflowing them
   .mapRow {
     height: auto;
   }
 
-  // ── Map canvas: fixed height + zero out the 18rem min-height ──────────────
-  // Without this the mapWrap is 288px minimum, exceeding the mapRow height
-  // and pushing the floorCol on top of the routeBox below it.
+  // Fix: override min-height: 18rem from 62em breakpoint that caused overflow
   .mapWrap {
-    height: 12.5em;  // 200 px — shows the route clearly
+    height: 15em;   // 240 px — good balance for screens up to 600 px
     min-height: 0;
   }
 
-  // ── Floor col: tighter padding, already full-width from 62em ──────────────
-  .floorCol {
-    padding: 0.375em 0.75em;
-  }
-
-  // ── Route box: tighter margin (stacking already handled by 48em) ──────────
+  // ── Route box ──────────────────────────────────────────────────────────────
   .routeBox {
-    margin: 0.5em 0.625em 0;
+    margin: 0.5em 0.75em 0;
   }
 
   .routeField {
@@ -70,19 +61,74 @@
     font-size: 0.875em;
   }
 
-  // ── Hint text ──────────────────────────────────────────────────────────────
+  // ── Bottom sheet: opaque background ───────────────────────────────────────
+  // var(--sheet-bg) is semi-transparent — PROGRAMME tabs bleed through.
+  .sheet {
+    background: var(--card, #111);
+  }
+
+  .sheetHandle {
+    padding: 0.625em 0.875em 0.375em;
+    min-height: 2.75em;
+  }
+
+  .sheetHandleLabel {
+    font-size: 0.625em;
+  }
+
+  // Keep the expanded sheet from covering map + From/To fields
+  .sheetContent {
+    max-height: 40vh;
+  }
+
+  // ── Step text ──────────────────────────────────────────────────────────────
+  .stepsMeta {
+    font-size: 0.6875em;
+  }
+
+  .step {
+    padding: 0 0.75em;
+    min-height: 1.875em;
+  }
+
+  .stepText {
+    font-size: 0.75em;
+    padding-top: 0.375em;
+  }
+
+  .stepIcon {
+    font-size: 0.8125em;
+    margin-top: 0.375em;
+  }
+}
+
+// ── Extra kleine telefoons (≤ 396 px / 24.75em) ───────────────────────────────
+// Bouwt voort op de regels hierboven — overschrijft alleen wat kleiner moet.
+@media screen and (max-width: 24.75em) {
+
+  // Smaller map on tiny screens
+  .mapWrap {
+    height: 12.5em;  // 200 px
+  }
+
+  .floorCol {
+    padding: 0.375em 0.75em;
+  }
+
+  .routeBox {
+    margin: 0.5em 0.625em 0;
+  }
+
   .hint {
     font-size: 0.625em;
     padding: 0.25em 0.75em;
   }
 
-  // ── Search bar ─────────────────────────────────────────────────────────────
   .searchWrap {
     margin: 0.375em 0.625em 0;
     padding: 0.375em 0.625em;
   }
 
-  // ── Programme / category tabs ──────────────────────────────────────────────
   .progTabsRow,
   .catTabsRow {
     padding: 0.25em 0.625em 0;
@@ -100,7 +146,6 @@
     padding: 0.25em 0.5em;
   }
 
-  // ── POI grid ───────────────────────────────────────────────────────────────
   .poiBox {
     margin: 0.375em 0.625em 0.625em;
   }
@@ -111,40 +156,5 @@
 
   .poiName {
     font-size: 0.875em;
-  }
-
-  // ── Bottom sheet (route steps drawer) ─────────────────────────────────────
-  .sheetHandle {
-    padding: 0.625em 0.875em 0.375em;
-    min-height: 2.75em;
-  }
-
-  .sheetHandleLabel {
-    font-size: 0.625em;
-  }
-
-  // Limit content height so the sheet never covers the map on a 732 px screen
-  .sheetContent {
-    max-height: 38vh; // ≈ 278 px — leaves map + From/To visible above
-  }
-
-  // ── Step list text ─────────────────────────────────────────────────────────
-  .stepsMeta {
-    font-size: 0.6875em;
-  }
-
-  .step {
-    padding: 0 0.625em;
-    min-height: 1.875em;
-  }
-
-  .stepText {
-    font-size: 0.75em;
-    padding-top: 0.375em;
-  }
-
-  .stepIcon {
-    font-size: 0.8125em;
-    margin-top: 0.375em;
   }
 }
