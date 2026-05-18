@@ -2,9 +2,6 @@
 @use "../abstracts/mixins";
 
 .button{
-    display: inline-flex;
-    align-items: center;
-    gap: 1em;
     border: none;
     background: map-get(variables.$colors, "magenta");
     padding: map-get(variables.$padding, "padding-md") map-get(variables.$padding, "padding-xl");
@@ -13,20 +10,10 @@
     font-weight: 600;
     font-size: 100%;
     font-family: inherit;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-    position: relative;
-    overflow: hidden;
-
-    &__arrow {
-        display: inline-block;
-        transition: transform 0.3s ease;
-    }
 
     &:disabled{
         background: rgba(map-get(variables.$colors, "magenta"), 0.2);
         color: rgba(map-get(variables.$colors, "white"), 0.2);
-        cursor: not-allowed;
     }
 
     &:hover{
@@ -39,5 +26,22 @@
 
     &:focus{
         outline: none;
+    }
+
+    &__logout{
+        background: map-get(variables.$colors, "red");
+
+        &:disabled{
+        background: rgba(map-get(variables.$colors, "red"), 0.2);
+
+            &:hover{
+                cursor: not-allowed;
+                background: rgba(map-get(variables.$colors, "red"), 0.2);
+            }
+        }
+        
+        &:hover{
+            background: darken(map-get(variables.$colors, "red"), 2%);
+        }
     }
 }

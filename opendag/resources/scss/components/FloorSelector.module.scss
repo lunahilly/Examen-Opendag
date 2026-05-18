@@ -11,7 +11,7 @@
   width: 1.75em;
   height: 1.75em;
   border-radius: 0.25em;
-  border: 0.094em solid #e0b0f0;
+  border: 0.094em solid #ff00e3;
   background: var(--card);
   font-family: 'Space Mono', monospace;
   font-size: 0.625em;
@@ -23,16 +23,10 @@
   align-items: center;
   justify-content: center;
 
-  // Highlight border and text on hover (only when not already active)
-  &:hover:not(.active) {
-    border-color: #e040fb;
-    color: #e040fb;
-  }
-
   // Solid pink background for the currently selected floor
   &.active {
-    background: #e040fb;
-    border-color: #e040fb;
-    color: #fff;
+    background: white;
+    border-color: #FF00E3;
+    color: black;
   }
 }

@@ -9,7 +9,8 @@ $colors: (
     "white": white,
     "magenta": #FF00E6,
     "black": black,
-    "error-red": #ea95a2
+    "error-red": #ea95a2,
+	"red": #fa6767
 );
 
 $padding: (
@@ -23,6 +24,7 @@ $padding: (
 
 $borders: (
     "standard-border": minmax(1px, 0.125em) solid #000,
+	"border-radius-xs": 0.125em, //(2px)
 	"border-radius-s": 0.25em, //(4px)
 	"border-radius-sm": 0.5em, //(8px)
 	"border-radius-m": 0.625em,	//(10px)

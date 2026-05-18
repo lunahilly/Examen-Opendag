@@ -2,28 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Course;
 use App\Models\Setting;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class CourseController extends Controller
+class SettingsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $settings = Setting::find(1);
-        if($settings->courses == true){
-            $courses = Course::all();
-            return Inertia::render('Information/Information', [
-                'courses' => $courses
-            ]);
-        }
-        else{
-            return redirect('/');
-        }
+        return Inertia::render('Settings/Settings');
+        // $settings = Setting::find(1);
+        // $courses = Course::paginate(10);
+        // $stories = Story::paginate(10);
+        // $activities = Activity::paginate(10);
+        // return Inertia::render('Dashboard', [
+        //     'settings' => $settings,
+        //     'courses' => $courses,
+        //     'stories' => $stories,
+        //     'activities' => $activities
+        // ]);
     }
 
     /**
@@ -31,7 +34,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Information/Form');
+        //
     }
 
     /**
@@ -39,10 +42,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
-        $course = new Course($data);
-        $course->save();
-        return redirect(route('information.index'));
+        //
     }
 
     /**
@@ -58,10 +58,7 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        $course = Course::find($id);
-        return Inertia::render('Information/Form', [
-            'course' => $course
-        ]);
+        //
     }
 
     /**
@@ -70,9 +67,9 @@ class CourseController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $this->validateData($request);
-        $course = Course::find($id);
-        $course->update($data);
-        return redirect(route('information.index'));
+        $settings = Setting::find(1);
+        $settings->update($data);
+        return back();
     }
 
     /**
@@ -80,19 +77,15 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        $course = Course::find($id)->delete();
-        return back();
+        //
     }
-
+    
     protected function validateData(Request $request){
         $data = $request->validate([
-            'name' => 'required',
-            'image' => 'required',
-            'information' => 'required',
-            'careers' => 'required',
-            'duration' => 'required',
-            'internships' => 'required',
-            'code' => 'required'
+            'courses' => 'required',
+            'stories' => 'required',
+            'activities' => 'required',
+            'contact' => 'required'
         ]);
         return $data;
     }

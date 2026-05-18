@@ -1,9 +1,21 @@
 @use "../abstracts/variables";
 @use "../abstracts/mixins";
 
+.background{
+    background: rgba(map-get(variables.$colors, "black"), 0.4);
+    width: 100%;
+    height: 100vh;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
 .header{
     @include mixins.flexBox(space-between, center);
     padding: 0.1em 1em;
+    width: 100%;
+    position: relative;
        
     &__logo{
         width: 5em;
@@ -11,20 +23,6 @@
         &--image{
             width: 100%;
             object-fit: cover;
-        }
-    }
-
-    &__navigation{
-        @include mixins.flexBox(center, center);
-        gap: 1rem;
-
-        &--link{
-            text-decoration: none;
-            color: map-get(variables.$colors, "white");
-
-            &-active{
-                color: map-get(variables.$colors, "magenta");
-            }
         }
     }
 
@@ -62,6 +60,80 @@
             &-link{
                 color: map-get(variables.$colors, "white");
                 text-decoration: none;
+            }
+        }
+    }
+
+    &__menu{
+        @include mixins.flexBox(start, center);
+        width: 100%;
+        gap: 1em;
+
+        &--button{
+            background: none;
+            border: none;
+            color: map-get(variables.$colors, "white");
+        }
+
+        &--logo{
+            width: 4em;
+            
+        }
+    }
+
+    &__sidebar{
+        position: absolute;
+        background: map-get(variables.$colors, "black");
+        height: 100vh;
+        top: 0;
+        left: 0;
+        padding: map-get(variables.$padding, "padding-xl");
+        @include mixins.flexBox(start, start);
+        flex-direction: column;
+        gap: 2em;
+        // width: 40%;
+        transition: 2s all;
+        z-index: 100000;
+
+        &--wrapper{
+            width: 100%;
+            @include mixins.flexBox(start, center);
+        }
+
+        &--button{
+            background: none;
+            border: none;
+            color: map-get(variables.$colors, "white");
+        }
+
+        &--list{
+            @include mixins.flexBox(start, start);
+            flex-direction: column;
+            gap: 1em;
+            list-style: none;
+        }
+
+        &--item{
+            &-link{
+                text-decoration: none;
+                color: map-get(variables.$colors, "white");
+            }
+        }
+    }
+
+    &__navigation{
+        @include mixins.flexBox(center, center);
+        gap: 1rem;
+        // width: 100%;
+        // background: blue;
+
+        &--link{
+            text-decoration: none;
+            color: map-get(variables.$colors, "white");
+            // border: 0.1rem solid red;
+
+            &-active{
+                color: map-get(variables.$colors, "magenta");
             }
         }
     }

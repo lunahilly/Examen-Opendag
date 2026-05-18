@@ -247,145 +247,10 @@ function HeaderBar({
 }) {
   return (
     <header className={styles.header}>
-      {/* ── Top row: logo · nav · settings ─────────────────────────────── */}
-      <div className={styles.hRow}>
-        {/* Logo */}
-        <div className={styles.logo}>
-          <div className={styles.logoWords}>
-            <span className={styles.logoName}>Mediacollege</span>
-            <span className={styles.logoCity}>Amsterdam</span>
-          </div>
-        </div>
 
-       
-
-        {/* Settings icon buttons — SVG icons, always visible */}
-        <div className={styles.hIcons}>
-          {/* Accessibility toggle */}
-          <button
-            className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
-            onClick={toggleAccessMode}
-            title={t.accessBanner}
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="4" r="2" />
-              <path d="M12 9v5M9 21l1.5-5M15 21l-1.5-5" />
-              <path d="M7 12l5-3 5 3" />
-            </svg>
-          </button>
-
-          {/* Language toggle — clean text pill */}
-          <button
-            className={styles.hLangBtn}
-            onClick={toggleLang}
-            title={
-              lang === "nl" ? "Switch to English" : "Schakel naar Nederlands"
-            }
-          >
-            {lang === "nl" ? "NL" : "EN"}
-          </button>
-
-          {/* Kiosk mode */}
-          {!kioskMode && (
-            <button
-              className={styles.hIconBtn}
-              onClick={toggleKiosk}
-              title={t.kioskMode}
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
-              </svg>
-            </button>
-          )}
-
-          {/* Theme toggle — sun / moon SVG */}
-          <button
-            className={styles.hIconBtn}
-            onClick={toggleTheme}
-            title={theme === "light" ? "Donkere modus" : "Lichte modus"}
-          >
-            {theme === "light" ? (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-              </svg>
-            ) : (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            )}
-          </button>
-
-          {/* Divider between settings and help */}
-          <span className={styles.hIconDivider} />
-
-          {/* Help button — opens the feature explanation popup */}
-          <button
-            className={styles.hHelpBtn}
-            onClick={onShowHelp}
-            title="Uitleg over alle knoppen"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
       {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
-      <div className={styles.hSubRow}>
+      <div className={`${styles.hSubRow} wrapper`}>
         {/* Building switcher */}
         <div className={styles.buildingBar}>
           {BUILDINGS.map((b) => (
@@ -399,7 +264,132 @@ function HeaderBar({
           ))}
         </div>
 
-        <span className={styles.hSpacer} />
+        <div className={styles.hRow}>
+          {/* Settings icon buttons — SVG icons, always visible */}
+          <div className={styles.hIcons}>
+            {/* Accessibility toggle */}
+            <button
+              className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
+              onClick={toggleAccessMode}
+              title={t.accessBanner}
+            >
+              {/* <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="4" r="2" />
+              <path d="M12 9v5M9 21l1.5-5M15 21l-1.5-5" />
+              <path d="M7 12l5-3 5 3" />
+            </svg> */}
+              Rolstoel vriendelijk
+            </button>
+
+            {/* Language toggle — clean text pill */}
+            <button
+              className={styles.hLangBtn}
+              onClick={toggleLang}
+              title={
+                lang === "nl" ? "Switch to English" : "Schakel naar Nederlands"
+              }
+            >
+              {lang === "nl" ? "NL" : "EN"}
+            </button>
+
+            {/* Kiosk mode */}
+            {!kioskMode && (
+              <button
+                className={styles.hIconBtn}
+                onClick={toggleKiosk}
+                title={t.kioskMode}
+              >
+                {/* <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
+              </svg> */}
+                Fullscreen
+              </button>
+            )}
+
+            {/* Theme toggle — sun / moon SVG */}
+            <button
+              className={styles.hIconBtn}
+              onClick={toggleTheme}
+              title={theme === "light" ? "Donkere modus" : "Lichte modus"}
+            >
+              {theme === "light" ? (
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                </svg>
+
+              ) : (
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              )}
+            </button>
+
+            {/* Help button — opens the feature explanation popup */}
+            <button
+              className={styles.hHelpBtn}
+              onClick={onShowHelp}
+              title="Uitleg over alle knoppen"
+            >
+              {/* <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> */}
+              Legenda
+            </button>
+          </div>
+        </div>
 
         {/* Tool buttons */}
         <div className={styles.hTools}>
@@ -1434,9 +1424,7 @@ export default function IndoorMap() {
       )}
 
       <main className={styles.main}>
-        <div className={styles.card}>
-          <div className={styles.mapTitle}>Mediacollege Amsterdam</div>
-
+        <div className={`${styles.card} wrapper`}>
           {/* Map + floor selector */}
           <div className={styles.mapRow}>
             <div className={styles.mapWrap}>
@@ -1730,20 +1718,6 @@ export default function IndoorMap() {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Legend */}
-        <div className={styles.legend}>
-          <div className={styles.legendItem}>
-            <span className={styles.legendSquare} />
-            <span>{t.normaal}</span>
-          </div>
-          <div className={styles.legendItem}>
-            <span
-              className={`${styles.legendSquare} ${styles.legendUnavail}`}
-            />
-            <span>{t.nietBeschikbaar}</span>
-          </div>
         </div>
       </main>
 

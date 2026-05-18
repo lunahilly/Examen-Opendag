@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Setting;
 use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,12 +15,18 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Story::with('course')->latest()->get();
-        $courses = Course::all();
-        return Inertia::render('Stories/Stories', [
-            'stories' => $stories,
-            'courses' => $courses
-        ]);
+        $settings = Setting::find(1);
+        if($settings->stories == true){
+            $stories = Story::with('course')->latest()->get();
+            $courses = Course::all();
+            return Inertia::render('Stories/Stories', [
+                'stories' => $stories,
+                'courses' => $courses
+            ]);
+        }
+        else{
+            return redirect('/');
+        }
     }
 
     /**
@@ -38,6 +45,13 @@ class StoryController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
+        $request->validate([
+            'image' => 'required'
+        ]);
+        $path = $request->file('image')->store('students', 'public');
+        // dd($path);
+        $request['image'] = $path;
         $data = $this->validateData($request);
         $story = new Story($data);
         $story->save();
@@ -81,7 +95,8 @@ class StoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $story = Story::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){

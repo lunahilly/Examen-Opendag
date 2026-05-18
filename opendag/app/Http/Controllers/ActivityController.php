@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\ActivityType;
 use App\Models\Course;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,10 +16,16 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::with(['course', 'activityType'])->get();
-        return Inertia::render('Activities/Activities', [
-            'activities' => $activities
-        ]);
+        $settings = Setting::find(1);
+        if($settings->activities == true){
+            $activities = Activity::with(['course', 'activityType'])->get();
+            return Inertia::render('Activities/Activities', [
+                'activities' => $activities
+            ]);
+        }
+        else{
+        return redirect('/');
+        }
     }
 
     /**
@@ -74,7 +81,8 @@ class ActivityController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $activity = Activity::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){
