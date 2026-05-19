@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
 import { computeRoute, getPositionAtProgress } from "../utils/routing";
-import MapCanvas from "../Components/MapCanvas";
-import FloorSelector from "../Components/FloorSelector";
+import MapCanvas from "../components/MapCanvas";
+import FloorSelector from "../components/FloorSelector";
 import styles from "../../scss/IndoorMap.module.scss";
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
@@ -167,11 +167,12 @@ const T = {
 
 // Maps a route step type to a display emoji icon
 const STEP_ICONS = {
-  start: "📍",
-  walk: "🚶",
+  start:    "📍",
+  walk:     "🚶",
   elevator: "🛗",
-  enter: "🚪",
-  arrive: "✅",
+  stairs:   "🪜",
+  enter:    "🚪",
+  arrive:   "✅",
 };
 
 // Maps a room status key to its fill colour used on the SVG map canvas
@@ -183,12 +184,43 @@ const BUILDINGS = [
   { id: 1, label: "Silver bullet" },
 ];
 
-// POI id of the demo route start point (Radio Studio, floor 3)
-const DEMO_ORIGIN_ID = "poi-radio"; // Radio Studio, floor 3
-// POI id of the demo route end point (Kantine, floor 0)
-const DEMO_DEST_ID = "poi-kantine"; // Kantine, floor 0
-// Total duration of one demo loop in milliseconds at 1× speed
-const DEMO_BASE_DURATION = 14000; // ms at 1× speed
+// Duration of one full demo loop in milliseconds at 1× speed
+const DEMO_BASE_DURATION = 14000;
+
+/**
+ * Picks two random non-transport POIs that are guaranteed to be on
+ * DIFFERENT floors, then builds a stair route between them.
+ * Returns { route, originPoi, destPoi } or null.
+ *
+ * Strategy: group POIs by floor first, pick two distinct floors at random,
+ * then pick one random POI from each floor. This is 100 % guaranteed to
+ * produce a cross-floor pair — no shuffle-and-hope required.
+ */
+function pickDemoRoute() {
+  // Build a map of floor → [poi, poi, …]
+  const byFloor = GRID_POIS.reduce((acc, p) => {
+    (acc[p.floor] = acc[p.floor] || []).push(p);
+    return acc;
+  }, {});
+
+  const floorKeys = Object.keys(byFloor);
+  if (floorKeys.length < 2) return null; // need at least 2 floors
+
+  // Pick two distinct floor indices
+  const i = Math.floor(Math.random() * floorKeys.length);
+  let j   = Math.floor(Math.random() * (floorKeys.length - 1));
+  if (j >= i) j++; // shift so j never equals i
+
+  const originPool = byFloor[floorKeys[i]];
+  const destPool   = byFloor[floorKeys[j]];
+
+  // Random POI from each floor
+  const originPoi = originPool[Math.floor(Math.random() * originPool.length)];
+  const destPoi   = destPool[Math.floor(Math.random() * destPool.length)];
+
+  const route = computeRoute(originPoi.id, destPoi.id, { transport: "stairs" });
+  return route ? { route, originPoi, destPoi } : null;
+}
 
 // ── Guided tour stops (Open dag rondleiding) ──────────────────────────────────
 // Each stop has a POI id and a short tip shown in the tour banner.
@@ -215,6 +247,79 @@ const TOUR_STOPS = [
     tip: "De Radio Studio op de 3e verdieping! 🎙️ Hier worden echte radioprogramma's gemaakt. Misschien hoor je Mediacollege Radio vandaag live.",
   },
 ];
+
+// ── QR Scan Welcome Overlay ───────────────────────────────────────────────────
+// Shown when the visitor opens the app by scanning a room QR code (?hier=poi-id).
+// Displays a rich "you are here" card and lets them immediately pick a destination.
+function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
+  const floor = FLOORS.find((f) => f.id === poi.floor)
+
+  const statusColor =
+    poi.status === "vrij"     ? "scanBadgeGreen"
+    : poi.status === "bezet"  ? "scanBadgeRed"
+    : poi.status === "gesloten" ? "scanBadgeAmber"
+    : ""
+
+  const statusLabel =
+    poi.status === "vrij"      ? "✅ Vrij"
+    : poi.status === "bezet"   ? "🔴 Bezet"
+    : poi.status === "gesloten"? "🔒 Gesloten"
+    : ""
+
+  return (
+    <div className={styles.scanOverlay} onClick={(e) => {
+      if (e.target === e.currentTarget) onExplore()
+    }}>
+      <div className={styles.scanCard}>
+
+        {/* Pulsing location ring + POI icon */}
+        <div className={styles.scanRing}>
+          <div className={styles.scanIcon}>{poi.icon}</div>
+        </div>
+
+        {/* "Je bent hier" label */}
+        <div className={styles.scanHere}>📍 Je bent hier</div>
+
+        {/* Room name */}
+        <div className={styles.scanName}>{poi.label}</div>
+
+        {/* Info badges */}
+        <div className={styles.scanBadges}>
+          {floor && (
+            <span className={styles.scanBadge}>
+              {floor.name}
+            </span>
+          )}
+          {statusLabel && (
+            <span className={`${styles.scanBadge} ${statusColor ? styles[statusColor] : ""}`}>
+              {statusLabel}
+            </span>
+          )}
+          {poi.category && (
+            <span className={styles.scanBadge}>
+              {poi.category}
+            </span>
+          )}
+        </div>
+
+        {/* Room description */}
+        {poi.desc && (
+          <div className={styles.scanDesc}>{poi.desc}</div>
+        )}
+
+        {/* Primary CTA */}
+        <button className={styles.scanCta} onClick={onNavigate}>
+          🗺️ Kies mijn bestemming
+        </button>
+
+        {/* Secondary link */}
+        <button className={styles.scanExplore} onClick={onExplore}>
+          Verken de kaart zonder route
+        </button>
+      </div>
+    </div>
+  )
+}
 
 // ── Header ────────────────────────────────────────────────────────────────────
 // Two-row header:
@@ -245,147 +350,13 @@ function HeaderBar({
   toggleKiosk,
   t,
 }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <header className={styles.header}>
-      {/* ── Top row: logo · nav · settings ─────────────────────────────── */}
-      <div className={styles.hRow}>
-        {/* Logo */}
-        <div className={styles.logo}>
-          <div className={styles.logoWords}>
-            <span className={styles.logoName}>Mediacollege</span>
-            <span className={styles.logoCity}>Amsterdam</span>
-          </div>
-        </div>
-
-       
-
-        {/* Settings icon buttons — SVG icons, always visible */}
-        <div className={styles.hIcons}>
-          {/* Accessibility toggle */}
-          <button
-            className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
-            onClick={toggleAccessMode}
-            title={t.accessBanner}
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="4" r="2" />
-              <path d="M12 9v5M9 21l1.5-5M15 21l-1.5-5" />
-              <path d="M7 12l5-3 5 3" />
-            </svg>
-          </button>
-
-          {/* Language toggle — clean text pill */}
-          <button
-            className={styles.hLangBtn}
-            onClick={toggleLang}
-            title={
-              lang === "nl" ? "Switch to English" : "Schakel naar Nederlands"
-            }
-          >
-            {lang === "nl" ? "NL" : "EN"}
-          </button>
-
-          {/* Kiosk mode */}
-          {!kioskMode && (
-            <button
-              className={styles.hIconBtn}
-              onClick={toggleKiosk}
-              title={t.kioskMode}
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
-              </svg>
-            </button>
-          )}
-
-          {/* Theme toggle — sun / moon SVG */}
-          <button
-            className={styles.hIconBtn}
-            onClick={toggleTheme}
-            title={theme === "light" ? "Donkere modus" : "Lichte modus"}
-          >
-            {theme === "light" ? (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-              </svg>
-            ) : (
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            )}
-          </button>
-
-          {/* Divider between settings and help */}
-          <span className={styles.hIconDivider} />
-
-          {/* Help button — opens the feature explanation popup */}
-          <button
-            className={styles.hHelpBtn}
-            onClick={onShowHelp}
-            title="Uitleg over alle knoppen"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
       {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
-      <div className={styles.hSubRow}>
+      <div className={`${styles.hSubRow} wrapper`}>
         {/* Building switcher */}
         <div className={styles.buildingBar}>
           {BUILDINGS.map((b) => (
@@ -399,7 +370,132 @@ function HeaderBar({
           ))}
         </div>
 
-        <span className={styles.hSpacer} />
+        <div className={styles.hRow}>
+          {/* Settings icon buttons — SVG icons, always visible */}
+          <div className={styles.hIcons}>
+            {/* Accessibility toggle */}
+            <button
+              className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
+              onClick={toggleAccessMode}
+              title={t.accessBanner}
+            >
+              {/* <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="4" r="2" />
+              <path d="M12 9v5M9 21l1.5-5M15 21l-1.5-5" />
+              <path d="M7 12l5-3 5 3" />
+            </svg> */}
+              Rolstoel vriendelijk
+            </button>
+
+            {/* Language toggle — clean text pill */}
+            <button
+              className={styles.hLangBtn}
+              onClick={toggleLang}
+              title={
+                lang === "nl" ? "Switch to English" : "Schakel naar Nederlands"
+              }
+            >
+              {lang === "nl" ? "NL" : "EN"}
+            </button>
+
+            {/* Kiosk mode */}
+            {!kioskMode && (
+              <button
+                className={styles.hIconBtn}
+                onClick={toggleKiosk}
+                title={t.kioskMode}
+              >
+                {/* <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
+              </svg> */}
+                Fullscreen
+              </button>
+            )}
+
+            {/* Theme toggle — sun / moon SVG */}
+            <button
+              className={styles.hIconBtn}
+              onClick={toggleTheme}
+              title={theme === "light" ? "Donkere modus" : "Lichte modus"}
+            >
+              {theme === "light" ? (
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                </svg>
+
+              ) : (
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              )}
+            </button>
+
+            {/* Help button — opens the feature explanation popup */}
+            <button
+              className={styles.hHelpBtn}
+              onClick={onShowHelp}
+              title="Uitleg over alle knoppen"
+            >
+              {/* <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> */}
+              Hoe werkt het?
+            </button>
+          </div>
+        </div>
 
         {/* Tool buttons */}
         <div className={styles.hTools}>
@@ -985,11 +1081,9 @@ export default function IndoorMap() {
   const progressRef = useRef(0);
   // mirror of demoSpeed — readable inside rAF without restarting it
   const demoSpeedRef = useRef(1);
-  // Pre-compute the demo route once; never changes so the animation loop can reuse it
-  const demoRoute = useMemo(
-    () => computeRoute(DEMO_ORIGIN_ID, DEMO_DEST_ID),
-    [],
-  );
+  // Holds the currently-playing demo pack { route, originPoi, destPoi }.
+  // Stored in a ref so the rAF loop can swap it without triggering a re-render.
+  const demoPackRef = useRef(null);
 
   // Keep the speed ref in sync with state (runs on every render, no extra effect needed)
   demoSpeedRef.current = demoSpeed;
@@ -1008,6 +1102,10 @@ export default function IndoorMap() {
   const [tourActive, setTourActive] = useState(false);
   // Index of the current tour stop (0-based)
   const [tourStep, setTourStep] = useState(0);
+
+  // ── QR scan welcome state ─────────────────────────────────────────────────────
+  // When the app opens with ?hier=poi-id (room QR scan), show a rich welcome card
+  const [scanWelcomePoi, setScanWelcomePoi] = useState(null);
 
   // ── QR modal state ────────────────────────────────────────────────────────────
   // Whether the QR code print modal is open
@@ -1040,16 +1138,17 @@ export default function IndoorMap() {
       setFloor(naar.floor);
     }
     if (van && naar) {
-      setRoute(computeRoute(van.id, naar.id, { lang }));
+      const transport = accessMode ? 'elevator' : 'stairs';
+      setRoute(computeRoute(van.id, naar.id, { lang, transport }));
       setSheetOpen(true);
     }
 
-    // "You are here" QR scan: pre-set origin and prompt user to pick a destination
+    // "You are here" QR scan: show the rich welcome overlay; origin is pre-set
+    // so the user just has to tap "Kies bestemming" to start routing.
     if (hier && !van && !naar) {
       setOrigin(hier);
       setFloor(hier.floor);
-      setSelectionMode("to");
-      showToast(`📍 Je bent bij ${hier.label}. Kies je bestemming!`);
+      setScanWelcomePoi(hier);   // opens the welcome overlay
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -1070,48 +1169,65 @@ export default function IndoorMap() {
   }, [origin, destination, kioskMode]);
 
   // ── Demo animation loop ──────────────────────────────────────────────────────
-  // Speed is read from demoSpeedRef (always current) so changing it never
-  // restarts the loop — the dot just moves faster/slower from where it is.
+  // Speed is read from demoSpeedRef so the slider never restarts the loop.
+  // A new random route is picked on every loop completion so the demo never
+  // shows the same path twice in a row.
   useEffect(() => {
-    if (!isDemo || !demoRoute) {
+    if (!isDemo) {
       setWalkerPos(null);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
-    // Set route visually when demo starts
-    const o = ALL_POIS.find((p) => p.id === DEMO_ORIGIN_ID);
-    const d = ALL_POIS.find((p) => p.id === DEMO_DEST_ID);
-    setOrigin(o);
-    setDestination(d);
-    setRoute(demoRoute);
-    setFloor(o?.floor ?? 0);
+
+    // Push a demo pack (route + POIs) to the visible map state
+    const applyPack = (pack) => {
+      if (!pack) return;
+      setOrigin(pack.originPoi);
+      setDestination(pack.destPoi);
+      setRoute(pack.route);
+      setFloor(pack.originPoi.floor);
+    };
+
+    applyPack(demoPackRef.current);
     progressRef.current = 0;
-    lastTsRef.current = null;
+    lastTsRef.current   = null;
 
-    // Called every animation frame; advances progress and updates walker position
     function tick(ts) {
-      // Delta-time: advance progress by the fraction of a loop that passed this frame
-      const dt = lastTsRef.current ? ts - lastTsRef.current : 0;
+      const dt       = lastTsRef.current ? ts - lastTsRef.current : 0;
       lastTsRef.current = ts;
-      const duration = DEMO_BASE_DURATION / demoSpeedRef.current; // reads latest speed
-      progressRef.current = (progressRef.current + dt / duration) % 1;
+      const duration = DEMO_BASE_DURATION / demoSpeedRef.current;
+      progressRef.current += dt / duration;
 
-      const pos = getPositionAtProgress(
-        demoRoute.waypoints,
-        progressRef.current,
-      );
-      if (pos) {
-        setWalkerPos(pos);
-        setFloor(pos.floor);
+      // Loop finished — swap in a fresh random route and restart progress
+      if (progressRef.current >= 1) {
+        progressRef.current = 0;
+        lastTsRef.current   = null;
+        const next = pickDemoRoute();
+        if (next) {
+          demoPackRef.current = next;
+          applyPack(next);
+        }
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      const pack = demoPackRef.current;
+      if (pack) {
+        const pos = getPositionAtProgress(pack.route.waypoints, progressRef.current);
+        if (pos) {
+          setWalkerPos(pos);
+          setFloor(pos.floor);
+        }
       }
       rafRef.current = requestAnimationFrame(tick);
     }
+
     rafRef.current = requestAnimationFrame(tick);
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       lastTsRef.current = null;
     };
-  }, [isDemo, demoRoute]); // ← demoSpeed intentionally omitted; ref handles it
+  }, [isDemo]); // demoSpeed intentionally omitted — ref handles it without restart
 
   // ── Toast ────────────────────────────────────────────────────────────────────
   // Shows a temporary toast message that disappears after 2.5 seconds
@@ -1131,18 +1247,19 @@ export default function IndoorMap() {
 
   // ── Route ────────────────────────────────────────────────────────────────────
   // Computes and stores a route when both endpoints are known; clears it otherwise
-  // Passes lang as option so routing.js can produce localised step text
+  // Uses stairs by default; elevator only when accessibility mode is on
   const applyRoute = useCallback(
     (o, d) => {
       if (o && d) {
-        setRoute(computeRoute(o.id, d.id, { lang }));
+        const transport = accessMode ? 'elevator' : 'stairs';
+        setRoute(computeRoute(o.id, d.id, { lang, transport }));
         setSheetOpen(true);
       } else {
         setRoute(null);
         setSheetOpen(false);
       }
     },
-    [lang],
+    [lang, accessMode],
   );
 
   // Handles a POI click from either the map or the list;
@@ -1156,7 +1273,12 @@ export default function IndoorMap() {
         setSelectionMode(null);
       } else if (selectionMode === "to") {
         setDestination(poi);
-        setFloor(poi.floor);
+        // Cross-floor route: stay on the origin floor so the user sees
+        // the path going FROM their position TO the staircase. They switch
+        // floors themselves to see the next segment start at the stairs.
+        if (!origin || poi.floor === origin.floor) {
+          setFloor(poi.floor);
+        }
         applyRoute(origin, poi);
         setSelectionMode(null);
       } else {
@@ -1167,7 +1289,10 @@ export default function IndoorMap() {
           setSelectionMode("to");
         } else {
           setDestination(poi);
-          setFloor(poi.floor);
+          // Same floor → follow destination. Cross-floor → stay on origin floor.
+          if (poi.floor === origin.floor) {
+            setFloor(poi.floor);
+          }
           applyRoute(origin, poi);
           setSelectionMode(null);
         }
@@ -1192,9 +1317,14 @@ export default function IndoorMap() {
     setSelectionMode((m) => (m === mode ? null : mode));
 
   // ── Demo helpers ─────────────────────────────────────────────────────────────
-  // Starts the demo animation
-  const startDemo = useCallback(() => setIsDemo(true), []);
-  // Stops the demo animation and removes the walker dot
+  // Picks a fresh random route and starts the animation
+  const startDemo = useCallback(() => {
+    const pack = pickDemoRoute();
+    if (!pack) return; // safety — shouldn't happen with real POI data
+    demoPackRef.current = pack;
+    setIsDemo(true);
+  }, []);
+  // Stops the animation and clears the walker dot
   const stopDemo = useCallback(() => {
     setIsDemo(false);
     setWalkerPos(null);
@@ -1301,7 +1431,8 @@ export default function IndoorMap() {
         setOrigin(o);
         setDestination(d);
         setFloor(o.floor);
-        setRoute(computeRoute(o.id, d.id, { lang }));
+        const transport = accessMode ? 'elevator' : 'stairs';
+        setRoute(computeRoute(o.id, d.id, { lang, transport }));
         setSheetOpen(true);
         showToast(t.opgeslagenRoute + " geladen");
       } else {
@@ -1310,7 +1441,7 @@ export default function IndoorMap() {
     } catch {
       showToast(t.geenOpgeslagen);
     }
-  }, [showToast, t, lang]);
+  }, [showToast, t, lang, accessMode]);
 
   // ── Feature 2+6: Filtered + sorted POIs ─────────────────────────────────────
   // Derives the visible POI list from search query, active category, programme, and favourites
@@ -1421,6 +1552,24 @@ export default function IndoorMap() {
       className={`${styles.app} ${accessMode ? styles.accessMode : ""} ${kioskMode ? styles.kioskMode : ""}`}
       data-theme={isDark ? "dark" : "light"}
     >
+      {/* ── QR scan welcome overlay ───────────────────────────────────────────
+          Shown when visitor opens the app from a room QR code (?hier=poi-id).
+          Origin is already set; overlay lets them choose destination or explore. */}
+      {scanWelcomePoi && (
+        <ScanWelcomeOverlay
+          poi={scanWelcomePoi}
+          t={t}
+          onNavigate={() => {
+            setScanWelcomePoi(null);
+            setSelectionMode("to");
+            showToast(`📍 Je start bij ${scanWelcomePoi.label}. Kies nu je bestemming!`);
+          }}
+          onExplore={() => {
+            setScanWelcomePoi(null);
+          }}
+        />
+      )}
+
       {/* Feature 7: kiosk mode swaps the full header for a minimal one */}
       {kioskMode ? (
         <KioskHeader onExit={toggleKiosk} t={t} />
@@ -1434,9 +1583,7 @@ export default function IndoorMap() {
       )}
 
       <main className={styles.main}>
-        <div className={styles.card}>
-          <div className={styles.mapTitle}>Mediacollege Amsterdam</div>
-
+        <div className={`${styles.card} wrapper`}>
           {/* Map + floor selector */}
           <div className={styles.mapRow}>
             <div className={styles.mapWrap}>
@@ -1469,6 +1616,14 @@ export default function IndoorMap() {
               onNext={nextTourStop}
               onCancel={cancelTour}
             />
+          )}
+
+          {/* ── "Je bent hier" chip ─────────────────────────────────────────── */}
+          {/* Shown when an origin POI is selected so users know their start */}
+          {origin && (
+            <div className={styles.youAreHere}>
+              📍 <strong>Je bent hier:</strong>&nbsp;{origin.label}
+            </div>
           )}
 
           {/* Route inputs */}
@@ -1730,20 +1885,6 @@ export default function IndoorMap() {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Legend */}
-        <div className={styles.legend}>
-          <div className={styles.legendItem}>
-            <span className={styles.legendSquare} />
-            <span>{t.normaal}</span>
-          </div>
-          <div className={styles.legendItem}>
-            <span
-              className={`${styles.legendSquare} ${styles.legendUnavail}`}
-            />
-            <span>{t.nietBeschikbaar}</span>
-          </div>
         </div>
       </main>
 

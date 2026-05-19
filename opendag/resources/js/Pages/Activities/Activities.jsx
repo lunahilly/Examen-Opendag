@@ -7,7 +7,6 @@ import { useMemo, useState } from "react";
 
 function Activities() {
     const activities = usePage().props.activities;
-    console.log(activities);
 
     const withoutCourse = activities.filter((item) => item.course_id == null);
 

@@ -2,7 +2,6 @@ import { usePage } from "@inertiajs/react";
 
 function Student({data}){
     const user = usePage().props.auth.user;
-    console.log(user);
     return(
         <article className="student">
             <figure className="student__figure">

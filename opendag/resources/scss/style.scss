@@ -8,10 +8,13 @@
 @use "components/title";
 @use "components/form";
 @use "components/map";
+@use "components/toggle";
+@use "components/pagination";
 
 @use "layout/navigation";
 
 @use "pages/welcome";
+@use "pages/dashboard";
 
 @use "pages/information/information";
 @use "pages/information/course";
@@ -20,6 +23,8 @@
 @use "pages/stories/student";
 
 @use "pages/activities/timeline";
+
+@use "pages/settings/settings";
 
 @use "abstracts/mediaqueries"; // deze moet altijd onderaan staan
 

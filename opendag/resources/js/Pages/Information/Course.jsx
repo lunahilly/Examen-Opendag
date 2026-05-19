@@ -28,14 +28,14 @@ function Course({ course }) {
                                     <p className="course__details--item-text">Duur:</p>
                                     <p className="course__details--item-text">{course.duration}</p>
                                 </span>
-                                <span className="course__details--item">
+                                {/* <span className="course__details--item">
                                     <p className="course__details--item-text">Stages:</p>
                                     <p className="course__details--item-text">{course.internships}</p>
                                 </span>
                                 <span className="course__details--item">
                                     <p className="course__details--item-text">Code:</p>
                                     <p className="course__details--item-text">{course.code}</p>
-                                </span>
+                                </span> */}
                             </article>
                         </div>
                     </span>

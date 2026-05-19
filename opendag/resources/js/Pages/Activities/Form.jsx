@@ -19,7 +19,6 @@ function ActivitiesForm(){
         post(route('activity.store'));
     }
 
-    console.log(data);
     return(
         <AuthenticatedLayout>
             <Head title="New activity"/>
