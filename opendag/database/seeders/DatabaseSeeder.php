@@ -22,11 +22,11 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        // Setting::insert([
-        //     'courses' => true,
-        //     'stories' => true,
-        //     'activities' => true,
-        //     'contact' => true
-        // ]);
+        Setting::insert([
+            'courses' => true,
+            'stories' => true,
+            'activities' => true,
+            'contact' => true
+        ]);
     }
 }
