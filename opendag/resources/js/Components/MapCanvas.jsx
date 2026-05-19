@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { SVG_W, SVG_H } from '../data/building'
 import { floorWaypoints, waypointsToPath } from '../utils/routing'
-import styles from './MapCanvas.module.scss'
+import styles from '../../scss/components/MapCanvas.module.scss'
 
 const FLOOR_IMAGES = {
   0: '/maps/floor-0.png',

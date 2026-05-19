@@ -1,5 +1,5 @@
 import { FLOORS } from '../data/building'
-import styles from './FloorSelector.module.scss'
+import styles from '../../scss/components/FloorSelector.module.scss'
 
 // Vertical column of buttons for switching between floors.
 // Floors are rendered top-to-bottom from highest to lowest (reversed).

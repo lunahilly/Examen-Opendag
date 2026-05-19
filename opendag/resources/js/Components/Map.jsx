@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { ALL_POIS, FLOORS, CATEGORIES } from "./data/building";
-import { computeRoute, getPositionAtProgress } from "./utils/routing";
-import MapCanvas from "./components/MapCanvas";
-import FloorSelector from "./components/FloorSelector";
-import styles from "./IndoorMap.module.scss";
+import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
+import { computeRoute, getPositionAtProgress } from "../utils/routing";
+import MapCanvas from "../components/MapCanvas";
+import FloorSelector from "../components/FloorSelector";
+import styles from "../../scss/IndoorMap.module.scss";
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
 const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
