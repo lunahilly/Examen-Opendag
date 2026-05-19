@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 function Stories(){
     const stories = usePage().props.stories;
     const courses = usePage().props.courses;
-    console.log(stories);
     const [filtered, setFiltered] = useState([]);
 
     useEffect(() => {
@@ -15,7 +14,6 @@ function Stories(){
     }, []);
 
     const filterCourses = (event) => {
-        console.log(event.target.value);
         if(event.target.value != ""){
             setFiltered(stories.filter((item) => item.course_id == event.target.value));
         }

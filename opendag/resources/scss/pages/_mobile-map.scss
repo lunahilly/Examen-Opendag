@@ -1,0 +1,160 @@
+// ── Mobile map fixes — alle schermen ≤ 600 px ────────────────────────────────
+//
+// Kernprobleem (geldt voor zowel 390 px als 593 px):
+//   mapWrap heeft min-height: 18rem (288 px) vanuit het 62em-breakpoint.
+//   Als mapRow een vaste hoogte kleiner dan 288 px krijgt, overflow de mapWrap
+//   én de floorCol en belanden de verdiepingstoetsen bóven de From/To-velden.
+//   Oplossing: height: auto op mapRow + expliciete hoogte op mapWrap +
+//   min-height: 0 om de 18rem te overschrijven.
+//
+// Sheet-achtergrond:
+//   var(--sheet-bg) is semi-transparant, waardoor de PROGRAMME-tabs er
+//   doorheen schijnen. Oplossing: opake achtergrond via var(--card).
+
+// ── Alle telefoonschermen (≤ 600 px / 37.5em) ────────────────────────────────
+@media screen and (max-width: 37.5em) {
+
+  // Header sub-bar: width: 80em overflows the viewport on narrow screens
+  .hSubRow {
+    width: 100%;
+  }
+
+  // Main: no horizontal padding, card goes edge-to-edge
+  .main {
+    padding: 0;
+    gap: 0;
+  }
+
+  // Card: no radius, padding-bottom reserves space for the peeked sheet handle
+  .card {
+    border-radius: 0;
+    padding-bottom: 4em;
+  }
+
+  // ── Map row / canvas ───────────────────────────────────────────────────────
+  // height: auto lets the row size to its children instead of overflowing them
+  .mapRow {
+    height: auto;
+  }
+
+  // Fix: override min-height: 18rem from 62em breakpoint that caused overflow
+  .mapWrap {
+    height: 15em;   // 240 px — good balance for screens up to 600 px
+    min-height: 0;
+  }
+
+  // ── Route box ──────────────────────────────────────────────────────────────
+  .routeBox {
+    margin: 0.5em 0.75em 0;
+  }
+
+  .routeField {
+    padding: 0.625em 0.875em;
+  }
+
+  .routeLabel {
+    font-size: 0.875em;
+    min-width: 2em;
+  }
+
+  .routeValue {
+    font-size: 0.875em;
+  }
+
+  // ── Bottom sheet: opaque background ───────────────────────────────────────
+  // var(--sheet-bg) is semi-transparent — PROGRAMME tabs bleed through.
+  .sheet {
+    background: var(--card, #111);
+  }
+
+  .sheetHandle {
+    padding: 0.625em 0.875em 0.375em;
+    min-height: 2.75em;
+  }
+
+  .sheetHandleLabel {
+    font-size: 0.625em;
+  }
+
+  // Keep the expanded sheet from covering map + From/To fields
+  .sheetContent {
+    max-height: 40vh;
+  }
+
+  // ── Step text ──────────────────────────────────────────────────────────────
+  .stepsMeta {
+    font-size: 0.6875em;
+  }
+
+  .step {
+    padding: 0 0.75em;
+    min-height: 1.875em;
+  }
+
+  .stepText {
+    font-size: 0.75em;
+    padding-top: 0.375em;
+  }
+
+  .stepIcon {
+    font-size: 0.8125em;
+    margin-top: 0.375em;
+  }
+}
+
+// ── Extra kleine telefoons (≤ 396 px / 24.75em) ───────────────────────────────
+// Bouwt voort op de regels hierboven — overschrijft alleen wat kleiner moet.
+@media screen and (max-width: 24.75em) {
+
+  // Smaller map on tiny screens
+  .mapWrap {
+    height: 12.5em;  // 200 px
+  }
+
+  .floorCol {
+    padding: 0.375em 0.75em;
+  }
+
+  .routeBox {
+    margin: 0.5em 0.625em 0;
+  }
+
+  .hint {
+    font-size: 0.625em;
+    padding: 0.25em 0.75em;
+  }
+
+  .searchWrap {
+    margin: 0.375em 0.625em 0;
+    padding: 0.375em 0.625em;
+  }
+
+  .progTabsRow,
+  .catTabsRow {
+    padding: 0.25em 0.625em 0;
+    margin: 0.375em 0;
+    gap: 0.25em;
+  }
+
+  .tabsLabel {
+    font-size: 0.875em;
+  }
+
+  .progTab,
+  .catTab {
+    font-size: 0.6875em;
+    padding: 0.25em 0.5em;
+  }
+
+  .poiBox {
+    margin: 0.375em 0.625em 0.625em;
+  }
+
+  .poiItem {
+    padding: 0.625em 0.375em;
+  }
+
+  .poiName {
+    font-size: 0.875em;
+  }
+}

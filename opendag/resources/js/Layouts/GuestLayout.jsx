@@ -1,3 +1,4 @@
+import { usePage } from "@inertiajs/react";
 import Navigation from "./Navigation";
 
 function GuestLayout({children}){

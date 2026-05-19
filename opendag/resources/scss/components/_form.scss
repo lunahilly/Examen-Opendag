@@ -5,6 +5,11 @@
     @include mixins.flexBox(center, center);
     flex-direction: column;
     gap: 1em;
+    width: 50%;
+    padding: map-get(variables.$padding, "padding-xl");
+    // border: 0.1em solid rgba(map-get(variables.$colors, "white"), 0.4);
+    border: 0.02em solid rgba(map-get(variables.$colors, "white"), 0.2);
+    border-radius: map-get(variables.$borders, "border-radius-s");
 
     &__title{
         font-size: 2em;
@@ -15,6 +20,18 @@
             content: attr(data-end);
             color: map-get(variables.$colors, "magenta");
         }
+    }
+
+    &__wrapper{
+        width: 100%;
+    }
+
+    &__file{
+        width: 100%;
+        @include mixins.flexBox(start, center);
+        gap: 1em;
+        font-family: inherit;
+        
     }
 
     // &__wrapper{

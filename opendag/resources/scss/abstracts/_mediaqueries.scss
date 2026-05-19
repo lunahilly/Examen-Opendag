@@ -1,3 +1,22 @@
+//1200 px
+@media screen and (max-width: 75em) {
+    .courses__item {
+        width: 100%;
+    }
+}
+
+// 911px
+@media screen and (max-width: 57em) {
+    .courses {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .course__wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 //830 px
 @media screen and (max-width: 51.875em) {
     .stories {
@@ -16,8 +35,43 @@
     }
 }
 
+@media screen and (max-width: 50em) {
+    .headlink{
+        width: 100%;
+    }
+    .dashboard{
+        width: 100%;
+    }
+    .settings{
+        width: 100%;
+    }
+}
+
 // 700 px
 @media screen and (max-width: 43.75em) {}
+
+//678 px
+@media screen and (max-width: 42.375em) {
+    .course__wrapper {
+        flex-direction: column-reverse;
+    }
+
+}
+
+//650px
+@media screen and (max-width: 40.625em) {
+    .course__details {
+        flex-direction: column;
+        align-items: start;
+    }
+}
+
+//528 px
+@media screen and (max-width: 33em) {
+    .courses {
+        grid-template-columns: 1fr 1fr;
+    }
+}
 
 //480 px
 @media screen and (max-width: 30em) {
@@ -25,20 +79,43 @@
         &__image {
             aspect-ratio: 2.8/2.2;
         }
+
+        .course__button {
+            height: 3em;
+        }
     }
 }
 
-// hier komen alle mediaqueries
+//440px
+@media screen and (max-width: 27.5em) {
+    .dashboard{
+        font-size: 80%;
+    }
+}
 
-@media screen and (max-width: 75em) {
+//360 px
+@media screen and (max-width: 22.5em) {
+    .courses {
+        grid-template-columns: 1fr;
+    }
+
     .courses__item {
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 42.375em) {
-    .course__wrapper {
-        flex-direction: column-reverse;
+        height: 5em;
     }
 
+    .headlink{
+        font-size: 90%;
+    }
+
+    .dashboard{
+        &__header{
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        &__options{
+            justify-content: center;
+            font-size: 80%;
+        }
+    }
 }

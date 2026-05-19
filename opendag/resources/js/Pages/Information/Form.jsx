@@ -17,7 +17,6 @@ function InformationForm(){
         code: course ? course.code : 0
     });
     
-    console.log(data.careers);
 
     const submit = (event) => {
         event.preventDefault();
@@ -30,7 +29,6 @@ function InformationForm(){
     }
 
     const addCareers = (event) => {
-        console.log('thisa');
         event.preventDefault();
         if(!data.careers.includes(value)){
             setData('careers', [...data.careers, value]);
