@@ -4,10 +4,10 @@ import { floorWaypoints, waypointsToPath } from '../utils/routing'
 import styles from '../../scss/components/MapCanvas.module.scss'
 
 const FLOOR_IMAGES = {
-  0: '/maps/floor-0.png',
-  1: '/maps/floor-1.png',
-  2: '/maps/floor-2.png',
-  3: '/maps/floor-3.png',
+  0: '/maps/Plattegrond Vloer 1.png',
+  1: '/maps/Plattegrond Vloer 2.png',
+  2: '/maps/Plattegrond Vloer 3.png',
+  3: '/maps/Plattegrond Vloer 4.png',
 }
 
 // Calculates the Euclidean distance between two touch points for pinch-to-zoom
