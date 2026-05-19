@@ -6,6 +6,22 @@
   padding: 0.375em 0.25em;
 }
 
+// Horizontal layout on phone — saves vertical space inside the floor strip
+@media screen and (max-width: 24.75em) {
+  .panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.375em;
+    padding: 0.25em 0;
+  }
+
+  .btn {
+    width: 2.25em;
+    height: 2.25em;
+    font-size: 0.75em;
+  }
+}
+
 // Individual floor button (e.g. "BG", "1e", "2e", "3e")
 .btn {
   width: 1.75em;
