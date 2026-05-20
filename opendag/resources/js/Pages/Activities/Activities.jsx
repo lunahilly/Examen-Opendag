@@ -22,9 +22,7 @@ function Activities() {
                     withoutCourse.map((activity, index) =>
                         <>
                             {
-                                open == withoutCourse[0].id ?
                                     <Activity data={activity} key={index} />
-                                    : null
                             }
                         </>
                     )
