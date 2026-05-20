@@ -56,7 +56,32 @@ export function diag3X(y) {
   return Math.round(DIAG3_X0 + DIAG3_SLOPE * (y - DIAG3_Y0))
 }
 
-// Room rectangle definitions per floor (for SVG overlay / minimap, NOT used for routing)
+// ── Kamer-definities per verdieping ──────────────────────────────────────────
+//
+// Elk kamer-object heeft twee optionele icoon-velden die je hier in de code kunt
+// zetten — zonder de UI-editor te hoeven openen:
+//
+//   icon    – een emoji,  bijv.  icon: '💻'
+//   iconSrc – een pad naar een afbeelding of SVG in de /public map,
+//             bijv.  iconSrc: '/icons/software.svg'
+//
+// Prioriteitsvolgorde (hoogste wint):
+//   1. Eigen afbeelding geüpload via de UI-editor  (opgeslagen in localStorage)
+//   2. Emoji gekozen via de UI-editor              (opgeslagen in localStorage)
+//   3. iconSrc  ingesteld in deze code             (altijd zichtbaar)
+//   4. icon     ingesteld in deze code             (altijd zichtbaar)
+//   5. ✏️ potlood-fallback                         (niets ingesteld)
+//
+// Tip: zet een afbeelding in de map  public/icons/  en gebruik  iconSrc: '/icons/naam.svg'
+// Tip: laat icon en iconSrc weg als je alleen via de UI wilt instellen.
+// ── Kamer-definities per verdieping ──────────────────────────────────────────
+//
+// Om een icoon (foto) te wijzigen:
+//   1. Zet je afbeelding in de map  public/icons/
+//   2. Verander het pad in iconSrc, bijv:  iconSrc: '/icons/mijn-foto.jpg'
+//
+// Ondersteunde bestandstypen: JPG, PNG, SVG, GIF, WebP
+// Geen iconSrc → geen badge zichtbaar op de kaart.
 export const FLOOR_ROOMS = {
   0: [
     { id: 'bg-gang-ns', type: 'corridor', x: 248, y: 0, w: 60, h: 300, label: '' },
@@ -79,31 +104,45 @@ export const FLOOR_ROOMS = {
     { id: 'bg-gang', type: 'corridor', x: 40, y: 295, w: 755, h: 40, label: '' },
     { id: 'bg-rn1', type: 'room', x: 395, y: 155, w: 80, h: 140, label: 'Lokaal' },
     { id: 'bg-rn2', type: 'room', x: 475, y: 155, w: 80, h: 140, label: 'Lokaal' },
-    { id: 'bg-rn3', type: 'room', x: 555, y: 155, w: 80, h: 140, label: 'Lokaal' },
+
+    // ▼ Verander '/icons/kantine.jpg' naar jouw eigen foto
+    { id: 'bg-rn3', type: 'room', x: 555, y: 155, w: 80, h: 140, label: 'Kantine', iconSrc: '/icons/kantine.svg' },
+
     { id: 'bg-rn4', type: 'room', x: 635, y: 155, w: 80, h: 140, label: 'Lokaal' },
     { id: 'bg-rn5', type: 'room', x: 715, y: 155, w: 80, h: 140, label: 'Lokaal' },
     { id: 'bg-rs1', type: 'room', x: 160, y: 335, w: 140, h: 180, label: 'Lokaal' },
-    { id: 'bg-rs2', type: 'room', x: 300, y: 335, w: 140, h: 180, label: 'Lokaal' },
+
+    // ▼ Verander '/icons/aula.jpg' naar jouw eigen foto
+    { id: 'bg-rs2', type: 'room', x: 300, y: 335, w: 140, h: 180, label: 'Aula', iconSrc: '/icons/aula.svg' },
+
     { id: 'bg-rs3', type: 'room', x: 440, y: 335, w: 140, h: 180, label: 'Lokaal' },
     { id: 'bg-rs4', type: 'room', x: 580, y: 335, w: 140, h: 180, label: 'Lokaal' },
   ],
   1: [
-    { id: '1e-sd', label: 'Software Dev', x: 5, y: 5, w: 350, h: 190, type: 'room' },
-    { id: '1e-av', label: 'Audio Visueel', x: 355, y: 5, w: 210, h: 95, type: 'room' },
-    { id: '1e-ga', label: 'Game Artist', x: 355, y: 100, w: 210, h: 95, type: 'room' },
-    { id: '1e-mv', label: 'Media Vormgever', x: 565, y: 5, w: 230, h: 190, type: 'room' },
+    // ▼ Verander de iconSrc-paden naar jouw eigen foto's
+    { id: '1e-sd', label: 'Software Dev', x: 5, y: 5, w: 350, h: 190, type: 'room', iconSrc: '/icons/software-dev.svg' },
+    { id: '1e-av', label: 'Audio Visueel', x: 355, y: 5, w: 210, h: 95, type: 'room', iconSrc: '/icons/audio-visueel.svg' },
+    { id: '1e-ga', label: 'Game Artist', x: 355, y: 100, w: 210, h: 95, type: 'room', iconSrc: '/icons/game-artist.svg' },
+    { id: '1e-mv', label: 'Media Vormgever', x: 565, y: 5, w: 230, h: 190, type: 'room', iconSrc: '/icons/media-vormgever.svg' },
     { id: '1e-gang', label: '', x: 5, y: 195, w: 790, h: 130, type: 'corridor' },
     { id: '1e-trap-l', label: 'Trap', x: 5, y: 195, w: 80, h: 130, type: 'stairs' },
     { id: '1e-lift', label: 'Lift', x: 360, y: 195, w: 80, h: 130, type: 'elevator' },
     { id: '1e-trap-r', label: 'Trap', x: 715, y: 195, w: 80, h: 130, type: 'stairs' },
     { id: '1e-lokaal', label: 'Lokaal 1.01', x: 5, y: 325, w: 175, h: 190, type: 'room' },
-    { id: '1e-pet', label: 'Podium & Event', x: 180, y: 325, w: 255, h: 190, type: 'room' },
+
+    // ▼ Verander '/icons/podium-event.jpg' naar jouw eigen foto
+    { id: '1e-pet', label: 'Podium & Event', x: 180, y: 325, w: 255, h: 190, type: 'room', iconSrc: '/icons/podium-event.svg' },
+
     { id: '1e-ss', label: 'Sign Specialist', x: 435, y: 325, w: 360, h: 190, type: 'room' },
   ],
   2: [
-    { id: '2e-mr', label: 'Media Redactie', x: 5, y: 5, w: 440, h: 190, type: 'room' },
+    // ▼ Verander de iconSrc-paden naar jouw eigen foto's
+    { id: '2e-mr', label: 'Media Redactie', x: 5, y: 5, w: 440, h: 190, type: 'room', iconSrc: '/icons/media-redactie.svg' },
     { id: '2e-cp', label: 'Creatieve Prod.', x: 445, y: 5, w: 350, h: 320, type: 'room' },
-    { id: '2e-id', label: 'Immersive Design', x: 5, y: 195, w: 440, h: 130, type: 'room' },
+
+    // ▼ Verander '/icons/immersive-design.jpg' naar jouw eigen foto
+    { id: '2e-id', label: 'Immersive Design', x: 5, y: 195, w: 440, h: 130, type: 'room', iconSrc: '/icons/immersive-design.svg' },
+
     { id: '2e-gang', label: '', x: 5, y: 325, w: 790, h: 90, type: 'corridor' },
     { id: '2e-trap-l', label: 'Trap', x: 5, y: 325, w: 80, h: 90, type: 'stairs' },
     { id: '2e-lift', label: 'Lift', x: 360, y: 325, w: 80, h: 90, type: 'elevator' },
@@ -113,33 +152,15 @@ export const FLOOR_ROOMS = {
     { id: '2e-aam', label: 'All Around Media', x: 445, y: 415, w: 350, h: 100, type: 'room' },
   ],
   3: [
-    { id: '3e-gang-ns', type: 'corridor', x: 248, y: 0, w: 60, h: 300, label: '' },
-    { id: '3e-nw1', type: 'room', x: 160, y: 0, w: 88, h: 77, label: 'Studio' },
-    { id: '3e-nw2', type: 'room', x: 160, y: 77, w: 88, h: 77, label: 'Studio' },
-    { id: '3e-nw3', type: 'room', x: 160, y: 154, w: 88, h: 77, label: 'Studio' },
-    { id: '3e-ne1', type: 'room', x: 308, y: 0, w: 87, h: 77, label: 'Studio' },
-    { id: '3e-ne2', type: 'room', x: 308, y: 77, w: 87, h: 77, label: 'Studio' },
-    { id: '3e-ne3', type: 'room', x: 308, y: 154, w: 87, h: 77, label: 'Studio' },
-    { id: '3e-lw-o1', type: 'room', x: 0, y: 155, w: 60, h: 90, label: 'Lokaal' },
-    { id: '3e-lw-o2', type: 'room', x: 0, y: 245, w: 60, h: 90, label: 'Lokaal' },
-    { id: '3e-lw-o3', type: 'room', x: 0, y: 335, w: 60, h: 90, label: 'Lokaal' },
-    { id: '3e-lw-o4', type: 'room', x: 0, y: 425, w: 60, h: 90, label: 'Lokaal' },
-    { id: '3e-lw-i1', type: 'room', x: 60, y: 155, w: 100, h: 180, label: 'Lokaal' },
-    { id: '3e-lw-i2', type: 'room', x: 60, y: 335, w: 100, h: 180, label: 'Lokaal' },
-    { id: '3e-wc', type: 'room', x: 160, y: 295, w: 60, h: 40, label: 'WC' },
-    { id: '3e-trap-l', type: 'stairs', x: 220, y: 287, w: 56, h: 56, label: 'Trap' },
-    { id: '3e-lift', type: 'elevator', x: 372, y: 287, w: 56, h: 56, label: 'Lift' },
-    { id: '3e-trap-r', type: 'stairs', x: 730, y: 287, w: 56, h: 56, label: 'Trap' },
-    { id: '3e-gang', type: 'corridor', x: 40, y: 295, w: 755, h: 40, label: '' },
-    { id: '3e-rn1', type: 'room', x: 395, y: 155, w: 80, h: 140, label: 'Studio' },
-    { id: '3e-rn2', type: 'room', x: 475, y: 155, w: 80, h: 140, label: 'Studio' },
-    { id: '3e-rn3', type: 'room', x: 555, y: 155, w: 80, h: 140, label: 'Studio' },
-    { id: '3e-rn4', type: 'room', x: 635, y: 155, w: 80, h: 140, label: 'Studio' },
-    { id: '3e-rn5', type: 'room', x: 715, y: 155, w: 80, h: 140, label: 'Studio' },
-    { id: '3e-rs1', type: 'room', x: 160, y: 335, w: 140, h: 180, label: 'Studio' },
-    { id: '3e-rs2', type: 'room', x: 300, y: 335, w: 140, h: 180, label: 'Studio' },
-    { id: '3e-rs3', type: 'room', x: 440, y: 335, w: 140, h: 180, label: 'Studio' },
-    { id: '3e-rs4', type: 'room', x: 580, y: 335, w: 140, h: 180, label: 'Studio' },
+    { id: '3e-diag-gang', type: 'corridor', x: 310, y: 140, w: 80, h: 310, label: '' },
+
+    // ▼ Verander '/icons/radio-studio.jpg' naar jouw eigen foto
+    { id: '3e-left-top', type: 'room', x: 225, y: 155, w: 85, h: 155, label: 'Radio Studio', iconSrc: '/icons/radio-studio.svg' },
+
+    { id: '3e-left-mid', type: 'room', x: 245, y: 310, w: 95, h: 135, label: 'Podcaststudio' },
+    { id: '3e-right-top', type: 'room', x: 390, y: 155, w: 85, h: 155, label: 'TV Studio' },
+    { id: '3e-right-mid', type: 'room', x: 410, y: 310, w: 90, h: 135, label: 'Post-productie' },
+    { id: '3e-right-bot', type: 'room', x: 430, y: 395, w: 90, h: 105, label: 'XR Lab' },
   ],
 }
 
@@ -163,28 +184,34 @@ export const ROOM_DOORS = {
   3: [],
 }
 
-// All Points of Interest (POIs) in the building.
-// Fields: id, label, icon, floor, x/y (map position), jx (corridor junction x),
-// roomId (which FLOOR_ROOMS entry this belongs to), category, desc, status.
-
+// ── Points of Interest ────────────────────────────────────────────────────────
+// Fields: id, label, icon, floor, x/y (map marker position),
+//         jx (corridor junction x — the x where the POI's path meets the
+//             horizontal corridor; on floor 3 this is the diagonal-corridor x
+//             at the POI's y level),
+//         roomId, category, desc, status.
+//
+// Corridor Y reference:  floor 0/1 = 378 | floor 2 = 475 | floor 3 = diagonal
+// Alleen de 10 icoontjes-lokalen + trappen/liften (nodig voor multi-verdieping routing).
+// Voeg hier een lokaal toe als je het wilt kunnen navigeren.
 export const ALL_POIS = [
   //opleidingen
-  { id: 'poi-sd', label: 'Creative software developer', icon: '💻', floor: 2, x: 180, y: 95, jx: 180, roomId: '1e-sd', category: 'onderwijs', desc: 'Creative Software Development' },
-  { id: 'poi-mv', label: 'Mediavormgever', icon: '🎨', floor: 1, x: 680, y: 95, jx: 680, roomId: '1e-mv', category: 'onderwijs', desc: 'Media Vormgever' },
-  { id: 'poi-id', label: 'Immersive designer', icon: '🥽', floor: 0, x: 225, y: 260, jx: 225, roomId: '2e-id', category: 'onderwijs', desc: 'Immersive Designer' },
-  { id: 'poi-pet', label: 'Podium- en evententechnicus', icon: '🎤', floor: 0, x: 307, y: 420, jx: 307, roomId: '1e-pet', category: 'onderwijs', desc: 'Podium & Evenementen Technicus' },
-  { id: 'poi-cp', label: 'Medewerker creatieve productie', icon: '🎞️', floor: 1, x: 620, y: 162, jx: 620, roomId: '2e-cp', category: 'onderwijs', desc: 'Medewerker Creatieve Productie' },
-  { id: 'poi-aam', label: 'All around mediamaker (dtp-er)', icon: '📡', floor: 0, x: 620, y: 460, jx: 620, roomId: '2e-aam', category: 'onderwijs', desc: 'All Around Mediamaker' },
-  { id: 'poi-ss', label: 'Signspecialist', icon: '🖼️', floor: 1, x: 615, y: 420, jx: 615, roomId: '1e-ss', category: 'onderwijs', desc: 'Sign Specialist' },
-  { id: 'poi-mr', label: 'Mediaredactiemedewerker', icon: '📰', floor: 0, x: 225, y: 95, jx: 225, roomId: '2e-mr', category: 'onderwijs', desc: 'Media Redactie medewerker' },
-  { id: 'poi-ed', label: 'E-commerce designer', icon: '🎞️', floor: 1, x: 595, y: 225, jx: 595, roomId: '1e-ed', category: 'onderwijs', desc: 'Video editing & color grading' },
-  { id: 'poi-rv', label: 'Ruimtelijk Vormgever', icon: '🏗️', floor: 0, x: 322, y: 460, jx: 322, roomId: '2e-rv', category: 'onderwijs', desc: 'Ruimtelijk Vormgever' },
-  { id: 'poi-meemip', label: 'Media- en eventproducer & Music industry professional', icon: '🎞️', floor: 3, x: 595, y: 225, jx: 595, roomId: '3e-rn3', category: 'onderwijs', desc: 'Viedia- en eventproducer & Music industry professional' },
-  { id: 'poi-av', label: 'Audiovisueel', icon: '🎬', floor: 1, x: 460, y: 52, jx: 460, roomId: '1e-av', category: 'onderwijs', desc: 'Audio Visueel' },
-  { id: 'poi-pd', label: 'Photograpic designer', icon: '🎞️', floor: 1, x: 595, y: 225, jx: 595, roomId: '1e-pd', category: 'onderwijs', desc: 'ViPhotograpic designer' },
-  { id: 'poi-ga', label: 'Game artist', icon: '🎮', floor: 3, x: 460, y: 147, jx: 460, roomId: '1e-ga', category: 'onderwijs', desc: 'Game Artist' },
-  { id: 'poi-aidev', label: 'Applied AI software developer', icon: '🎞️', floor: 3, x: 595, y: 225, jx: 595, roomId: '3e-aidev', category: 'onderwijs', desc: 'Applied AI software developer' },
-  { id: 'poi-fa', label: 'Filmacteur', icon: '🎞️', floor: 3, x: 595, y: 225, jx: 595, roomId: '3e-fa', category: 'onderwijs', desc: 'Filmacteur' },
+  { id: 'poi-sd', label: 'Creative software developer', icon: '💻', floor: 2, x: 655, y: 280, jx: 180, roomId: '1e-sd', category: 'onderwijs', desc: 'Creative Software Development' },
+  { id: 'poi-mv', label: 'Mediavormgever', icon: '🎨', floor: 1, x: 280, y: 150, jx: 680, roomId: '1e-mv', category: 'onderwijs', desc: 'Media Vormgever' },
+  { id: 'poi-id', label: 'Immersive designer', icon: '🥽', floor: 0, x: 700, y: 210, jx: 225, roomId: '2e-id', category: 'onderwijs', desc: 'Immersive Designer' },
+  { id: 'poi-pet', label: 'Podium- en evententechnicus', icon: '🎤', floor: 0, x: 500, y: 405, jx: 307, roomId: '1e-pet', category: 'onderwijs', desc: 'Podium & Evenementen Technicus' },
+  { id: 'poi-cp', label: 'Medewerker creatieve productie', icon: '🎞️', floor: 1, x: 100, y: 350, jx: 620, roomId: '2e-cp', category: 'onderwijs', desc: 'Medewerker Creatieve Productie' },
+  { id: 'poi-aam', label: 'All around mediamaker (dtp-er)', icon: '📡', floor: 1, x: 310, y: 300, jx: 620, roomId: '2e-aam', category: 'onderwijs', desc: 'All Around Mediamaker' },
+  { id: 'poi-ss', label: 'Signspecialist', icon: '🖼️', floor: 1, x: 320, y: 420, jx: 615, roomId: '1e-ss', category: 'onderwijs', desc: 'Sign Specialist' },
+  { id: 'poi-mr', label: 'Mediaredactiemedewerker', icon: '📰', floor: 2, x: 430, y: 460, jx: 225, roomId: '2e-mr', category: 'onderwijs', desc: 'Media Redactie medewerker' },
+  { id: 'poi-ed', label: 'E-commerce designer', icon: '🎞️', floor: 0, x: 100, y: 300, jx: 595, roomId: '1e-ed', category: 'onderwijs', desc: 'Video editing & color grading' },
+  { id: 'poi-rv', label: 'Ruimtelijk Vormgever', icon: '🏗️', floor: 0, x: 400, y: 150, jx: 322, roomId: '2e-rv', category: 'onderwijs', desc: 'Ruimtelijk Vormgever' },
+  { id: 'poi-meemip', label: 'Media- en eventproducer & Music industry professional', icon: '🎞️', floor: 2, x: 430, y: 505, jx: 595, roomId: '3e-rn3', category: 'onderwijs', desc: 'Viedia- en eventproducer & Music industry professional' },
+  { id: 'poi-av', label: 'Audiovisueel', icon: '🎬', floor: 0, x: 630, y: 270, jx: 460, roomId: '1e-av', category: 'onderwijs', desc: 'Audio Visueel' },
+  { id: 'poi-pd', label: 'Photograpic designer', icon: '🎞️', floor: 0, x: 650, y: 320, jx: 595, roomId: '1e-pd', category: 'onderwijs', desc: 'ViPhotograpic designer' },
+  { id: 'poi-ga', label: 'Game artist', icon: '🎮', floor: 3, x: 400, y: 310, jx: 460, roomId: '1e-ga', category: 'onderwijs', desc: 'Game Artist' },
+  { id: 'poi-aidev', label: 'Applied AI software developer', icon: '🎞️', floor: 0, x: 595, y: 225, jx: 595, roomId: '3e-aidev', category: 'onderwijs', desc: 'Applied AI software developer' },
+  { id: 'poi-fa', label: 'Filmacteur', icon: '🎞️', floor: 0, x: 200, y: 600, jx: 595, roomId: '3e-fa', category: 'onderwijs', desc: 'Filmacteur' },
 
   //verdiepings dingen
   // begane grond
@@ -200,24 +227,28 @@ export const ALL_POIS = [
   { id: 'poi-trap-2l', label: 'Trap West', icon: '🪜', floor: 2, x: 45, y: 370, jx: 45, roomId: '2e-trap-l', category: 'transport', desc: 'Trappenhuis west' },
   { id: 'poi-trap-2r', label: 'Trap Oost', icon: '🪜', floor: 2, x: 755, y: 370, jx: 755, roomId: '2e-trap-r', category: 'transport', desc: 'Trappenhuis oost' },
   //3e verdieping
-  { id: 'poi-lift-3', label: 'Lift', icon: '🛗', floor: 3, x: 400, y: 315, jx: 400, roomId: '3e-lift', category: 'transport', desc: 'Lift naar alle verdiepingen' },
+  { id: 'poi-lift-3', label: 'Lift', icon: '🛗', floor: 3, x: 385, y: 390, jx: 400, roomId: '3e-lift', category: 'transport', desc: 'Lift naar alle verdiepingen' },
   { id: 'poi-trap-3l', label: 'Trap West', icon: '🪜', floor: 3, x: 248, y: 315, jx: 248, roomId: '3e-trap-l', category: 'transport', desc: 'Trappenhuis west' },
   { id: 'poi-trap-3r', label: 'Trap Oost', icon: '🪜', floor: 3, x: 758, y: 315, jx: 758, roomId: '3e-trap-r', category: 'transport', desc: 'Trappenhuis oost' },
 
   //studio's
   { id: 'poi-radio', label: 'Radio Studio', icon: '🎙️', floor: 0, x: 204, y: 38, jx: 278, roomId: '3e-nw1', category: 'onderwijs', desc: 'Radio productie studio', status: 'vrij' },
-  { id: 'poi-pod', label: 'Podcaststudio', icon: '🎧', floor: 3, x: 370, y: 425, jx: 370, roomId: '3e-rs2', category: 'onderwijs', desc: 'Podcast opnamestudio', status: 'vrij' },
-  { id: 'poi-xr', label: 'XR Lab', icon: '🥽', floor: 3, x: 650, y: 425, jx: 650, roomId: '3e-rs4', category: 'onderwijs', desc: 'Extended reality lab (VR/AR)', status: 'gesloten' },
+  { id: 'poi-pod', label: 'Podcaststudio', icon: '🎧', floor: 1, x: 370, y: 425, jx: 370, roomId: '3e-rs2', category: 'onderwijs', desc: 'Podcast opnamestudio', status: 'vrij' },
+  { id: 'poi-xr', label: 'XR Lab', icon: '🥽', floor: 1, x: 650, y: 425, jx: 650, roomId: '3e-rs4', category: 'onderwijs', desc: 'Extended reality lab (VR/AR)', status: 'gesloten' },
 
   //toiletten
-  { id: 'poi-wc-bg', label: 'Toiletten Beganegrond', icon: '🚻', floor: 0, x: 230, y: 280, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
+  { id: 'poi-wc-bg1', label: 'Toiletten Beganegrond1', icon: '🚻', floor: 0, x: 125, y: 365, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
+  { id: 'poi-wc-bg2', label: 'Toiletten Beganegrond2', icon: '🚻', floor: 0, x: 230, y: 365, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
+  { id: 'poi-wc-bg3', label: 'Toiletten Beganegrond3', icon: '🚻', floor: 0, x: 223, y: 195, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
+  { id: 'poi-wc-bg4', label: 'Toiletten Beganegrond4', icon: '🚻', floor: 0, x: 655, y: 255, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
+  { id: 'poi-wc-bg5', label: 'Toiletten Beganegrond5', icon: '🚻', floor: 0, x: 630, y: 370, jx: 190, roomId: 'bg-wc', category: 'faciliteiten', desc: 'Toiletten begane grond', status: 'vrij' },
   { id: 'poi-wc-2', label: 'Toiletten 2e', icon: '🚻', floor: 2, x: 102, y: 460, jx: 102, roomId: '2e-toiletten', category: 'faciliteiten', desc: 'Toiletten tweede verdieping', status: 'vrij' },
-  { id: 'poi-wc-3', label: 'Toiletten 3e', icon: '🚻', floor: 3, x: 190, y: 315, jx: 190, roomId: '3e-wc', category: 'faciliteiten', desc: 'Toiletten derde verdieping', status: 'vrij' },
+  { id: 'poi-wc-3', label: 'Toiletten 3e', icon: '🚻', floor: 3, x: 400, y: 470, jx: 190, roomId: '3e-wc', category: 'faciliteiten', desc: 'Toiletten derde verdieping', status: 'vrij' },
 
   //overig
-  { id: 'poi-portier', label: 'Ingang', icon: '🛡️', floor: 0, x: 370, y: 500, jx: 110, roomId: 'bg-lw-i2', category: 'faciliteiten', desc: 'Toegangscontrole & beveiliging', status: 'vrij' },
-  { id: 'poi-receptie', label: 'Receptie', icon: 'ℹ️', floor: 0, x: 420, y: 400, jx: 278, roomId: 'bg-nw1', category: 'faciliteiten', desc: 'Ontvangst, info & loketdiensten', status: 'vrij' },
-  { id: 'poi-kantine', label: 'Kantine', icon: '🍽️', floor: 0, x: 295, y: 225, jx: 595, roomId: 'bg-rn3', category: 'eten', desc: 'Kantine & foodcourt 08:00–17:00', status: 'vrij' },
+  { id: 'poi-portier', label: 'Ingang', icon: '🛡️', floor: 0, x: 295, y: 455, jx: 110, roomId: 'bg-lw-i2', category: 'faciliteiten', desc: 'Toegangscontrole & beveiliging', status: 'vrij' },
+  { id: 'poi-receptie', label: 'Receptie', icon: 'ℹ️', floor: 0, x: 320, y: 410, jx: 278, roomId: 'bg-nw1', category: 'faciliteiten', desc: 'Ontvangst, info & loketdiensten', status: 'vrij' },
+  { id: 'poi-kantine', label: 'Kantine', icon: '🍽️', floor: 0, x: 295, y: 290, jx: 595, roomId: 'bg-rn3', category: 'eten', desc: 'Kantine & foodcourt 08:00–17:00', status: 'vrij' },
 
   // { id: 'poi-aula', label: 'Aula', icon: '🎭', floor: 0, x: 370, y: 425, jx: 370, roomId: 'bg-rs2', category: 'onderwijs', desc: 'Grote aula, evenementen & presentaties', status: 'bezet' },
   // { id: 'poi-info', label: 'Informatiedesk', icon: '📋', floor: 0, x: 510, y: 425, jx: 510, roomId: 'bg-rs3', category: 'faciliteiten', desc: 'Open dag informatiepunt', status: 'vrij' },
@@ -232,6 +263,28 @@ export const ALL_POIS = [
 // main building.  See routing.js for how this gap is handled.
 export const EAST_WING_2 = { entryX: 653, entryY: 410 }
 
+// ── Room slots ────────────────────────────────────────────────────────────────
+// One clickable slot per visible room block on every floor.
+// Position = centre of the FLOOR_ROOMS rectangle in SVG coordinates (0–800, 0–686).
+// Only type==='room' entries receive a slot; corridors/stairs/elevators are excluded.
+// Used by the class-label feature: click a slot → floating text input → label saved.
+export const ROOM_SLOTS = Object.fromEntries(
+  Object.entries(FLOOR_ROOMS).map(([floorId, rooms]) => [
+    Number(floorId),
+    rooms
+      .filter(r => r.type === 'room')
+      .map(r => ({
+        id: r.id,
+        x: Math.round(r.x + r.w / 2),
+        y: Math.round(r.y + r.h / 2),
+        // Statische icoon-velden uit building.js (overschrijfbaar via UI-editor)
+        icon: r.icon ?? null,   // emoji, bijv. '💻'
+        iconSrc: r.iconSrc ?? null,   // afbeeldingspad, bijv. '/icons/software.svg'
+        label: r.label ?? null,   // tekst onder het icoon, bijv. 'Software Dev'
+      })),
+  ])
+)
+
 // Category definitions for the filter tab strip
 export const CATEGORIES = [
   { id: 'all', label: 'Alles', icon: '🔍' },
@@ -240,3 +293,5 @@ export const CATEGORIES = [
   { id: 'faciliteiten', label: 'Faciliteiten', icon: '🛠️' },
   { id: 'transport', label: 'Transport', icon: '🚶' },
 ]
+
+
