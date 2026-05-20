@@ -380,8 +380,8 @@ $red: #f44336;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(224,64,251,0.15);
-  background: rgba(224,64,251,0.04);
+  border-left: 1px solid rgba(224, 64, 251, 0.15);
+  background: rgba(224, 64, 251, 0.04);
   transition: background 250ms;
 }
 
@@ -396,7 +396,7 @@ $red: #f44336;
   overflow: hidden;
   position: relative;
   background: var(--input-bg);
-  box-shadow: 0 0.125em 0.75em rgba(224,64,251,0.12);
+  box-shadow: 0 0.125em 0.75em rgba(224, 64, 251, 0.12);
   transition: background 250ms;
 }
 
@@ -445,7 +445,7 @@ $red: #f44336;
 .routeDivider {
   width: 1.5px;
   align-self: stretch;
-  background: rgba(224,64,251,0.4);
+  background: rgba(224, 64, 251, 0.4);
   flex-shrink: 0;
   margin: 0.5em 0;
   border-radius: 1px;
@@ -492,19 +492,19 @@ $red: #f44336;
   font-weight: 500;
   color: $pink;
   padding: 0.4em 1.125em;
-  background: rgba(224,64,251,0.06);
-  border-top: 1px solid rgba(224,64,251,0.15);
+  background: rgba(224, 64, 251, 0.06);
+  border-top: 1px solid rgba(224, 64, 251, 0.15);
 }
 
 // ── Route stappen ─────────────────────────────────────────────────────────────
 // Container for the step-by-step navigation instructions (desktop view)
 .stepsBox {
   margin: 0.5em 1em 0;
-  border: 1px solid rgba(224,64,251,0.18);
+  border: 1px solid rgba(224, 64, 251, 0.18);
   border-radius: 1em;
   overflow: hidden;
   background: var(--steps-bg);
-  box-shadow: 0 0.125em 0.625em rgba(0,0,0,0.04);
+  box-shadow: 0 0.125em 0.625em rgba(0, 0, 0, 0.04);
   transition: background 250ms;
 }
 
@@ -514,7 +514,7 @@ $red: #f44336;
   align-items: center;
   justify-content: space-between;
   padding: 0.5em 1em;
-  border-bottom: 1px solid rgba(224,64,251,0.12);
+  border-bottom: 1px solid rgba(224, 64, 251, 0.12);
   background: var(--steps-hd);
   transition: background 250ms;
 }
@@ -651,7 +651,7 @@ $red: #f44336;
   border-color: $pink;
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(224,64,251,0.3);
+  box-shadow: 0 2px 8px rgba(224, 64, 251, 0.3);
 }
 
 // ── POI grid ──────────────────────────────────────────────────────────────────
@@ -678,7 +678,7 @@ $red: #f44336;
   cursor: pointer;
   text-align: left;
   transition: all 150ms;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
 
@@ -712,7 +712,7 @@ $red: #f44336;
 .checkActive {
   background: $pink;
   border-color: $pink;
-  box-shadow: 0 0 0 2px rgba(224,64,251,0.2);
+  box-shadow: 0 0 0 2px rgba(224, 64, 251, 0.2);
 }
 
 // POI name with icon; truncates with ellipsis if too long
@@ -786,14 +786,18 @@ $red: #f44336;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(224,64,251,0.08);
+  background: rgba(224, 64, 251, 0.08);
   border: none;
   border-radius: 50%;
   font-size: 0.9em;
   cursor: pointer;
   color: var(--muted);
   transition: all 150ms;
-  &:hover { background: rgba(224,64,251,0.18); color: $pink; }
+
+  &:hover {
+    background: rgba(224, 64, 251, 0.18);
+    color: $pink;
+  }
 }
 
 // Large centred emoji icon at the top of the detail card

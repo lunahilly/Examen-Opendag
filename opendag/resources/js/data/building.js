@@ -6,12 +6,12 @@ export const FLOORS = [
   { id: 0, label: 'BG', name: 'Begane grond' },
   { id: 1, label: '1e', name: '1e Verdieping' },
   { id: 2, label: '2e', name: '2e Verdieping' },
-  { id: 3, label: '3e', name: 'Derde verdieping' },
+  { id: 3, label: '3e', name: '3e verdieping' },
 ]
 
 // Width and height of the SVG canvas in user-space units
 export const SVG_W = 800
-export const SVG_H = 686
+export const SVG_H = 510
 
 // Y-coordinate of the main horizontal corridor on each floor (routing anchor).
 // Floor 3 uses a diagonal corridor — CORRIDOR_Y[3] is the Y of the stair entry
