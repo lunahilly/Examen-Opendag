@@ -17,4 +17,13 @@ class ContactController extends Controller
             return redirect('/');
         }
     }
+        public function add(){
+        $settings = Setting::find(1);
+        if($settings->contact == true){
+            return Inertia::render('Contact/Form');
+        }
+        else{
+            return redirect('/');
+        }
+    }
 }

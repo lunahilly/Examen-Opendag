@@ -13,6 +13,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\BeaconController;
+
 Route::get('/', function () {
     $settings = Setting::find(1);
     return Inertia::render('Welcome', [
@@ -24,6 +26,13 @@ Route::get('/', function () {
     ]);
 });
 
+// Route voor het scannen (hadden we al)
+Route::post('/beacon-check', [BeaconController::class, 'check']);
+
+// NIEUW: Route voor het opslaan van een nieuwe of geüpdatete beacon
+Route::post('/beacons/store', [BeaconController::class, 'store'])->name('beacons.store');
+
+Route::post('/api/beacon-check', [BeaconController::class, 'check']);
 // Route::get('/dashboard', function () {
 //     // return Inertia::render('Dashboard');
 //     // return route();
@@ -51,5 +60,6 @@ Route::get('/information', [CourseController::class, 'index'])->name('informatio
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/beacons', [ContactController::class, 'add'])->name('contact.add');
 
 require __DIR__.'/auth.php';
