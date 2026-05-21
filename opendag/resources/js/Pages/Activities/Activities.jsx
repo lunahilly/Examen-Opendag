@@ -8,7 +8,8 @@ import { useMemo, useState } from "react";
 function Activities() {
     const activities = usePage().props.activities;
 
-    const withoutCourse = activities.filter((item) => item.course_id == null);
+    // const withoutCourse = activities.filter((item) => item.course_id == null);
+    const withoutCourse = activities.filter((item) => item.is_general == false);
 
 
     // De JS logica direct binnen de component
@@ -20,11 +21,7 @@ function Activities() {
             <section className="activities__general">
                 {
                     withoutCourse.map((activity, index) =>
-                        <>
-                            {
-                                    <Activity data={activity} key={index} />
-                            }
-                        </>
+                        <Activity data={activity} key={index} />    
                     )
                 }
             </section>

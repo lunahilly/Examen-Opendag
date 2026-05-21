@@ -1227,6 +1227,21 @@ body {
     width: 100%;
   }
 }
+@media screen and (max-width: 46.75em) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1em;
+  }
+  .header__navigation {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: center;
+  }
+}
 @media screen and (max-width: 42.375em) {
   .course__wrapper {
     flex-direction: column-reverse;

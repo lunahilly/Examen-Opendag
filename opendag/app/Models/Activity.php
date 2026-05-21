@@ -12,12 +12,4 @@ class Activity extends Model
         return $this->belongsTo(ActivityCourse::class);
     }
 
-    // public function course(){
-    //     return $this->belongsTo(Course::class);
-    // }
-
-    // public function activityType(){
-    //     return $this->belongsTo(ActivityType::class);
-    // }
-
 }

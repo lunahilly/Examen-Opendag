@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
-use App\Models\ActivityType;
 use App\Models\Course;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -18,7 +17,7 @@ class ActivityController extends Controller
     {
         $settings = Setting::find(1);
         if($settings->activities == true){
-            $activities = Activity::with(['course', 'activityType'])->get();
+            $activities = Activity::all();
             return Inertia::render('Activities/Activities', [
                 'activities' => $activities
             ]);
@@ -33,12 +32,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
-        $types = ActivityType::all();
-        return Inertia::render('Activities/Form', [
-            'courses' => $courses,
-            'types' => $types
-        ]);
+        return Inertia::render('Activities/Form');
     }
 
     /**
