@@ -61,7 +61,7 @@ export default function Dashboard() {
                                 {
                                     items.data.map((item, index) => 
                                         <tr className="dashboard__row" key={index}>
-                                            <td className="dashboard__row--title">{item.name ?? item.activity_type.name}</td>
+                                            <td className="dashboard__row--title">{item.name ?? item.title}</td>
                                             <td className="dashboard__row--edit">
                                                 <a href={route(`${format(type, false)}.edit`, item.id)} className="dashboard__row--edit-link">X</a>
                                             </td>
