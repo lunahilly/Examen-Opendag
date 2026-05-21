@@ -40,9 +40,28 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
-        $activity = new Activity($data);
-        $activity->save();
+        // $data = $this->validateData($request);
+        // $activity = new Activity($data);
+        // $activity->save();
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            // dd('queen');
+            $path = $request->file('image')->store('activities', 'public'); // also here public_html voor de live
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'uploads/'.$path; // uploads naar storage als live whatevhgor
+
+        }
+        else{
+            $data = $this->validateData($request);
+            // dd('no queen');
+        }
+        // $path = $request->file('image')->store('activities', 'public');
+        // $request['image'] = '/'.'uploads'.$path;
+        // $data['image'] = '/'.'uploads/'.$path;
+        $story = new Activity($data);
+        $story->save();
         return redirect(route('activities.index'));
     }
 
