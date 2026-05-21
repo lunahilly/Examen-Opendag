@@ -113,11 +113,6 @@ function Navigation(){
                     : null
                 }
                 {
-                    settings.contact ? 
-                        <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
-                    : null
-                }
-                {
                     user != null ? 
                     <Button label="Dashboard" route={route('dashboard', 'courses')}/>
                         // <div className="header__dropdown">
