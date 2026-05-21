@@ -1,7 +1,7 @@
-import floorZero from "../../../Plattegrond/Plattegrond_begane-grond.svg";
-import floorOne from "../../../Plattegrond/Plattegrond_verdieping1.svg";
-import floorTwo from "../../../Plattegrond/Plattegrond_verdieping2.svg";
-import floorThree from "../../../Plattegrond/Plattegrond_verdieping3.svg";
+const floorZero = '/maps/Plattegrond_begane-grond.svg'
+const floorOne = '/maps/Plattegrond_verdieping1.svg'
+const floorTwo = '/maps/Plattegrond_verdieping2.svg'
+const floorThree = '/maps/Plattegrond_verdieping3.svg'
 
 const floorWalkableAreas = {
     "floor-0": [

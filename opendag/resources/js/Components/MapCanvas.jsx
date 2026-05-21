@@ -3,11 +3,12 @@ import { SVG_W, SVG_H } from '../data/building'
 import { floorWaypoints, waypointsToPath } from '../utils/routing'
 import styles from '../../scss/components/MapCanvas.module.scss'
 
+//BENTE DEBUG
 const FLOOR_IMAGES = {
-  0: '/maps/Plattegrond Vloer 1.png',
-  1: '/maps/Plattegrond Vloer 2.png',
-  2: '/maps/Plattegrond Vloer 3.png',
-  3: '/maps/Plattegrond Vloer 4.png',
+  0: '/maps/Plattegrond_begane-grond.svg',
+  1: '/maps/Plattegrond_verdieping1.svg',
+  2: '/maps/Plattegrond_verdieping2.svg',
+  3: '/maps/Plattegrond_verdieping3.svg',
 }
 
 // Calculates the Euclidean distance between two touch points for pinch-to-zoom
@@ -24,29 +25,36 @@ export default function MapCanvas({
   centerOn, isDark, walkerPos,
   highlightPoiIds,
   accessMode,
+  walkableAreas,
 }) {
   // Ref to the outer wrapper div — used to attach wheel and touch listeners
-  const wrapRef  = useRef(null)
+  const wrapRef = useRef(null)
   // Pan and zoom transform state: x/y offset in pixels, s = scale factor
   const [tx, setTx] = useState({ x: 0, y: 0, s: 1 })
   // Holds the mouse-down anchor point { sx, sy } while dragging
-  const drag     = useRef(null)
+  const drag = useRef(null)
   // Records where the drag started so we can distinguish a click from a pan
   const dragStart = useRef(null)
   // True if the pointer moved far enough during a drag to count as a pan (not a click)
-  const didDrag  = useRef(false)
+  const didDrag = useRef(false)
 
   // ── Feature 4: Pinch-to-zoom refs ─────────────────────────────────────────
   // { sx, sy } for single-finger pan
-  const touchPan   = useRef(null)   // { sx, sy } for single-finger pan
+  const touchPan = useRef(null)   // { sx, sy } for single-finger pan
   // { startDist, startScale } for two-finger zoom
-  const pinch      = useRef(null)   // { startDist, startScale } for two-finger zoom
+  const pinch = useRef(null)   // { startDist, startScale } for two-finger zoom
 
   // Only POIs that belong to the currently visible floor
   const floorPois = (pois || []).filter(p => p.floor === floor)
 
+  //DEBUG BENTE
+  const COORDS_W = floor === 0 ? 1986.13 : 2050.72
+  const COORDS_H = 1704.1
+  const scaleX = SVG_W / COORDS_W
+  const scaleY = SVG_H / COORDS_H
+
   // Filter route waypoints to the current floor and convert them to an SVG path string
-  const routeWps  = route ? floorWaypoints(route.waypoints, floor) : []
+  const routeWps = route ? floorWaypoints(route.waypoints, floor) : []
   const routePath = waypointsToPath(routeWps)
 
   // ── Stair transition markers ───────────────────────────────────────────────
@@ -75,9 +83,9 @@ export default function MapCanvas({
   // Records the anchor position when the user starts dragging the map
   const onMouseDown = useCallback((e) => {
     if (e.button !== 0) return
-    drag.current     = { sx: e.clientX - tx.x, sy: e.clientY - tx.y }
+    drag.current = { sx: e.clientX - tx.x, sy: e.clientY - tx.y }
     dragStart.current = { x: e.clientX, y: e.clientY }
-    didDrag.current  = false
+    didDrag.current = false
   }, [tx])
 
   // Updates the pan offset while the mouse is held and moving
@@ -95,7 +103,7 @@ export default function MapCanvas({
 
   // Clears the drag anchor when the mouse button is released
   const onMouseUp = useCallback(() => {
-    drag.current      = null
+    drag.current = null
     dragStart.current = null
   }, [])
 
@@ -138,8 +146,8 @@ export default function MapCanvas({
         const t = e.touches[0]
         // Read current tx via closure captured in setTx updater instead
         touchPan.current = { sx: t.clientX, sy: t.clientY }
-        pinch.current    = null
-        didDrag.current  = false
+        pinch.current = null
+        didDrag.current = false
       } else if (e.touches.length === 2) {
         const dist = pinchDist(e.touches[0], e.touches[1])
         setTx(cur => {
@@ -154,14 +162,14 @@ export default function MapCanvas({
     const onTouchMove = (e) => {
       e.preventDefault()
       if (e.touches.length === 1 && touchPan.current) {
-        const t  = e.touches[0]
+        const t = e.touches[0]
         const dx = t.clientX - touchPan.current.sx
         const dy = t.clientY - touchPan.current.sy
         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag.current = true
         touchPan.current = { sx: t.clientX, sy: t.clientY }
         setTx(cur => ({ ...cur, x: cur.x + dx, y: cur.y + dy }))
       } else if (e.touches.length === 2 && pinch.current) {
-        const newDist  = pinchDist(e.touches[0], e.touches[1])
+        const newDist = pinchDist(e.touches[0], e.touches[1])
         const newScale = Math.max(0.3, Math.min(6,
           pinch.current.startScale * (newDist / pinch.current.startDist)
         ))
@@ -172,19 +180,19 @@ export default function MapCanvas({
     // Resets all touch state when fingers leave the screen
     const onTouchEnd = () => {
       touchPan.current = null
-      pinch.current    = null
+      pinch.current = null
     }
 
     el.addEventListener('touchstart', onTouchStart, { passive: false })
-    el.addEventListener('touchmove',  onTouchMove,  { passive: false })
-    el.addEventListener('touchend',   onTouchEnd,   { passive: false })
-    el.addEventListener('touchcancel',onTouchEnd,   { passive: false })
+    el.addEventListener('touchmove', onTouchMove, { passive: false })
+    el.addEventListener('touchend', onTouchEnd, { passive: false })
+    el.addEventListener('touchcancel', onTouchEnd, { passive: false })
 
     return () => {
       el.removeEventListener('touchstart', onTouchStart)
-      el.removeEventListener('touchmove',  onTouchMove)
-      el.removeEventListener('touchend',   onTouchEnd)
-      el.removeEventListener('touchcancel',onTouchEnd)
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+      el.removeEventListener('touchcancel', onTouchEnd)
     }
   }, [])
 
@@ -226,23 +234,23 @@ export default function MapCanvas({
             .wRing { animation: wPulse 1.1s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
           `}</style>
           <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <feGaussianBlur stdDeviation="3" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
           {/* Amber glow for programme-filter highlighted POIs */}
           <filter id="glowAmber" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feFlood floodColor="#f59e0b" floodOpacity="0.6" result="c"/>
-            <feComposite in="c" in2="b" operator="in" result="d"/>
-            <feMerge><feMergeNode in="d"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <feGaussianBlur stdDeviation="5" result="b" />
+            <feFlood floodColor="#f59e0b" floodOpacity="0.6" result="c" />
+            <feComposite in="c" in2="b" operator="in" result="d" />
+            <feMerge><feMergeNode in="d" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
           <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(192,96,224,0.3)" strokeWidth="1.5"/>
+            <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(192,96,224,0.3)" strokeWidth="1.5" />
           </pattern>
         </defs>
 
         {/* Fixed background */}
-        <rect width={SVG_W} height={SVG_H} fill="#2a2a2a"/>
+        <rect width={SVG_W} height={SVG_H} fill="#2a2a2a" />
 
         <g transform={`translate(${tx.x},${tx.y}) scale(${tx.s})`}>
 
@@ -253,27 +261,59 @@ export default function MapCanvas({
             width={SVG_W} height={SVG_H}
             preserveAspectRatio="none"
           />
+          {/* ── BENTE DEBUG: Walkable area overlay ─────────────────────── */}
+          {walkableAreas && walkableAreas.map((area, i) => {
+            const sharedProps = {
+              key: i,
+              fill: "rgba(0, 120, 255, 0.5)",
+              stroke: "blue",
+              strokeWidth: 2,
+              pointerEvents: "none",
+            }
 
+            //BENTE DEBUG
+            const scalePoints = (points) => {
+              const nums = points.trim().split(/[\s,]+/).map(Number)
+              const result = []
+              for (let i = 0; i + 1 < nums.length; i += 2) {
+                result.push(`${nums[i] * scaleX},${nums[i + 1] * scaleY}`)
+              }
+              return result.join(' ')
+            }
+
+            if (area.type === "rect")
+              return <rect {...sharedProps}
+                x={area.x * scaleX} y={area.y * scaleY}
+                width={area.width * scaleX} height={area.height * scaleY} />
+            if (area.type === "polygon")
+              return <polygon {...sharedProps} points={scalePoints(area.points)} />
+            if (area.type === "polyline")
+              return <polyline {...sharedProps} points={scalePoints(area.points)} />
+            if (area.type === "path")
+              return <path {...sharedProps} d={area.d}
+                transform={`scale(${scaleX}, ${scaleY})`} />
+            return null
+          })}
           {/* ── Route — Situm-style dots ────────────────────────────── */}
           {routePath && (
             <>
               <path d={routePath} fill="none"
                 stroke="rgba(224,64,251,0.18)" strokeWidth="14"
-                strokeLinecap="round" strokeLinejoin="round"/>
+                strokeLinecap="round" strokeLinejoin="round" />
               <path className="rDots" d={routePath} fill="none"
                 stroke="#e040fb" strokeWidth="5"
                 strokeLinecap="round" strokeLinejoin="round"
                 strokeDasharray="1 13"
-                filter="url(#glow)"/>
+                filter="url(#glow)" />
             </>
           )}
 
           {/* ── Demo walker ──────────────────────────────────────────────── */}
           {walkerPos && walkerPos.floor === floor && (
             <g transform={`translate(${walkerPos.x},${walkerPos.y})`} pointerEvents="none">
-              <circle className="wRing" r="14" fill="rgba(224,64,251,0.25)" stroke="none"/>
+              <circle className="wRing" r="14" fill="rgba(224,64,251,0.25)" stroke="none" />
               <circle r="6" fill="#e040fb" stroke="#fff" strokeWidth="2"
-                filter="url(#glow)"/>
+                filter="url(#glow)" />
             </g>
           )}
 
@@ -284,15 +324,15 @@ export default function MapCanvas({
             <g key={i} transform={`translate(${m.x},${m.y})`} pointerEvents="none">
               {/* Outer pulse ring */}
               <circle r="13" fill="rgba(255,200,0,0.15)"
-                stroke="#f59e0b" strokeWidth="1.5" className="pPulse"/>
+                stroke="#f59e0b" strokeWidth="1.5" className="pPulse" />
               {/* Inner badge */}
-              <circle r="8" fill="#f59e0b" opacity="0.9"/>
+              <circle r="8" fill="#f59e0b" opacity="0.9" />
               <text textAnchor="middle" dominantBaseline="central"
                 fontSize="9" dy="0.5" pointerEvents="none">🪜</text>
               {/* Label */}
               <g transform="translate(0,-22)" pointerEvents="none">
                 <rect x="-18" y="-7" width="36" height="13" rx="3"
-                  fill="#f59e0b" opacity="0.95"/>
+                  fill="#f59e0b" opacity="0.95" />
                 <text textAnchor="middle" y="0" dominantBaseline="central"
                   fontSize="7" fill="#1a1a1a"
                   fontFamily="'DM Sans',sans-serif" fontWeight="700">
@@ -304,22 +344,22 @@ export default function MapCanvas({
 
           {/* ── POI markers ────────────────────────────────────────── */}
           {floorPois.map(poi => {
-            const isOrigin   = origin?.id      === poi.id
-            const isDest     = destination?.id  === poi.id
-            const isHov      = hoveredPoi?.id   === poi.id
-            const isTransit  = poi.category === 'transport'
+            const isOrigin = origin?.id === poi.id
+            const isDest = destination?.id === poi.id
+            const isHov = hoveredPoi?.id === poi.id
+            const isTransit = poi.category === 'transport'
             // Amber/gold highlight for programme filter
             const isProgramHL = Array.isArray(highlightPoiIds) && highlightPoiIds.includes(poi.id)
 
-            const r      = isOrigin || isDest ? 12 : isHov ? 10 : 8
+            const r = isOrigin || isDest ? 12 : isHov ? 10 : 8
             const stroke = isOrigin ? '#4caf50' : isDest ? '#f44336'
               : isProgramHL ? '#f59e0b'
-              : isTransit ? '#c060e0' : '#e040fb'
-            const fill   = isOrigin ? 'rgba(76,175,80,0.15)'
-              : isDest    ? 'rgba(244,67,54,0.15)'
-              : isProgramHL ? 'rgba(245,158,11,0.20)'
-              : isTransit ? 'rgba(192,96,224,0.12)'
-              : 'rgba(224,64,251,0.12)'
+                : isTransit ? '#c060e0' : '#e040fb'
+            const fill = isOrigin ? 'rgba(76,175,80,0.15)'
+              : isDest ? 'rgba(244,67,54,0.15)'
+                : isProgramHL ? 'rgba(245,158,11,0.20)'
+                  : isTransit ? 'rgba(192,96,224,0.12)'
+                    : 'rgba(224,64,251,0.12)'
 
             const lw = Math.max(poi.label.length * 5.8 + 14, 50)
 
@@ -334,16 +374,16 @@ export default function MapCanvas({
                 {/* Outer expanding pulse — origin only, "you are here" signal */}
                 {isOrigin && (
                   <circle className="pPulse2" r="22"
-                    fill="rgba(76,175,80,0.18)" stroke="#4caf50" strokeWidth="1"/>
+                    fill="rgba(76,175,80,0.18)" stroke="#4caf50" strokeWidth="1" />
                 )}
 
                 {(isOrigin || isDest) && (
                   <circle className="pPulse" r="18"
-                    fill="none" stroke={stroke} strokeWidth="1.5"/>
+                    fill="none" stroke={stroke} strokeWidth="1.5" />
                 )}
 
                 <circle r={r} fill={fill} stroke={stroke} strokeWidth="1.5"
-                  filter={isOrigin || isDest ? 'url(#glow)' : isProgramHL ? 'url(#glowAmber)' : undefined}/>
+                  filter={isOrigin || isDest ? 'url(#glow)' : isProgramHL ? 'url(#glowAmber)' : undefined} />
 
                 <text textAnchor="middle" dominantBaseline="central"
                   fontSize={isOrigin || isDest ? '10' : '9'} dy="0.5"
@@ -353,10 +393,10 @@ export default function MapCanvas({
 
                 {(isHov || isOrigin || isDest) && (
                   <g transform="translate(0,-20)" pointerEvents="none">
-                    <rect x={-lw/2} y="-9" width={lw} height="16" rx="3"
+                    <rect x={-lw / 2} y="-9" width={lw} height="16" rx="3"
                       fill={isDark ? '#2a2a2a' : '#fff'}
                       stroke={isOrigin ? '#4caf50' : isDest ? '#f44336' : '#e040fb'}
-                      strokeWidth="1"/>
+                      strokeWidth="1" />
                     <text textAnchor="middle" y="0" dominantBaseline="central"
                       fontSize="8"
                       fill={isOrigin ? '#4caf50' : isDest ? '#f44336' : '#e040fb'}

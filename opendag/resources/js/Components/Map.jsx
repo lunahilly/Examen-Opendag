@@ -5,6 +5,10 @@ import { computeRoute, getPositionAtProgress } from "../utils/routing";
 import MapCanvas from "../components/MapCanvas";
 import FloorSelector from "../components/FloorSelector";
 import styles from "../../scss/IndoorMap.module.scss";
+//BENTE DEBUG
+import { floors } from '../data/campusWayfinding'
+
+
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
 const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
@@ -167,16 +171,13 @@ const T = {
 
 // Maps a route step type to a display emoji icon
 const STEP_ICONS = {
-  start:    "📍",
-  walk:     "🚶",
+  start: "📍",
+  walk: "🚶",
   elevator: "🛗",
-  stairs:   "🪜",
-  enter:    "🚪",
-  arrive:   "✅",
+  stairs: "🪜",
+  enter: "🚪",
+  arrive: "✅",
 };
-
-// Maps a room status key to its fill colour used on the SVG map canvas
-const STATUS_COLOR = { vrij: "#4caf50", bezet: "#f44336", gesloten: "#999999" };
 
 // The two buildings available in the building switcher
 const BUILDINGS = [
@@ -208,15 +209,15 @@ function pickDemoRoute() {
 
   // Pick two distinct floor indices
   const i = Math.floor(Math.random() * floorKeys.length);
-  let j   = Math.floor(Math.random() * (floorKeys.length - 1));
+  let j = Math.floor(Math.random() * (floorKeys.length - 1));
   if (j >= i) j++; // shift so j never equals i
 
   const originPool = byFloor[floorKeys[i]];
-  const destPool   = byFloor[floorKeys[j]];
+  const destPool = byFloor[floorKeys[j]];
 
   // Random POI from each floor
   const originPoi = originPool[Math.floor(Math.random() * originPool.length)];
-  const destPoi   = destPool[Math.floor(Math.random() * destPool.length)];
+  const destPoi = destPool[Math.floor(Math.random() * destPool.length)];
 
   const route = computeRoute(originPoi.id, destPoi.id, { transport: "stairs" });
   return route ? { route, originPoi, destPoi } : null;
@@ -255,16 +256,16 @@ function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
   const floor = FLOORS.find((f) => f.id === poi.floor)
 
   const statusColor =
-    poi.status === "vrij"     ? "scanBadgeGreen"
-    : poi.status === "bezet"  ? "scanBadgeRed"
-    : poi.status === "gesloten" ? "scanBadgeAmber"
-    : ""
+    poi.status === "vrij" ? "scanBadgeGreen"
+      : poi.status === "bezet" ? "scanBadgeRed"
+        : poi.status === "gesloten" ? "scanBadgeAmber"
+          : ""
 
   const statusLabel =
-    poi.status === "vrij"      ? "✅ Vrij"
-    : poi.status === "bezet"   ? "🔴 Bezet"
-    : poi.status === "gesloten"? "🔒 Gesloten"
-    : ""
+    poi.status === "vrij" ? "✅ Vrij"
+      : poi.status === "bezet" ? "🔴 Bezet"
+        : poi.status === "gesloten" ? "🔒 Gesloten"
+          : ""
 
   return (
     <div className={styles.scanOverlay} onClick={(e) => {
@@ -1010,6 +1011,8 @@ export default function IndoorMap() {
   // ── Map state ─────────────────────────────────────────────────────────────────
   // Currently visible floor (0 = begane grond … 3 = derde verdieping)
   const [floor, setFloor] = useState(0);
+  //BENTE DEBUG
+  const currentFloor = floors.find(f => f.value === `floor-${floor}`)
   // The POI chosen as route start
   const [origin, setOrigin] = useState(null);
   // The POI chosen as route end
@@ -1190,10 +1193,10 @@ export default function IndoorMap() {
 
     applyPack(demoPackRef.current);
     progressRef.current = 0;
-    lastTsRef.current   = null;
+    lastTsRef.current = null;
 
     function tick(ts) {
-      const dt       = lastTsRef.current ? ts - lastTsRef.current : 0;
+      const dt = lastTsRef.current ? ts - lastTsRef.current : 0;
       lastTsRef.current = ts;
       const duration = DEMO_BASE_DURATION / demoSpeedRef.current;
       progressRef.current += dt / duration;
@@ -1201,7 +1204,7 @@ export default function IndoorMap() {
       // Loop finished — swap in a fresh random route and restart progress
       if (progressRef.current >= 1) {
         progressRef.current = 0;
-        lastTsRef.current   = null;
+        lastTsRef.current = null;
         const next = pickDemoRoute();
         if (next) {
           demoPackRef.current = next;
@@ -1602,7 +1605,10 @@ export default function IndoorMap() {
                 walkerPos={walkerPos}
                 highlightPoiIds={highlightPoiIds}
                 accessMode={accessMode}
+                //BENTE DEBUG
+                walkableAreas={currentFloor?.walkableAreas ?? []}
               />
+
             </div>
             <div className={styles.floorCol}>
               <FloorSelector floor={floor} onChange={setFloor} />
