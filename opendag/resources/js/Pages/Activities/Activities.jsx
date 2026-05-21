@@ -8,7 +8,8 @@ import { useMemo, useState } from "react";
 function Activities() {
     const activities = usePage().props.activities;
 
-    const withoutCourse = activities.filter((item) => item.course_id == null);
+    // const withoutCourse = activities.filter((item) => item.course_id == null);
+    const withoutCourse = activities.filter((item) => item.is_general == false);
 
 
     // De JS logica direct binnen de component

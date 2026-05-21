@@ -1,14 +1,7 @@
 function Activity({data}){
     return(
-        <article className={`activity ${data.course_id != null   ? 'activity_timeline' : 'activity_general'}`}>
-            <h2>
-                {
-                    data.course !== null ? `${data.course.name} : ` : null
-                }
-                {
-                    data.activity_type.name
-                }
-            </h2>
+        <article className="activity">
+            <h2 className="activity__title">{Activity.title}</h2>
         </article>
     )
 }
