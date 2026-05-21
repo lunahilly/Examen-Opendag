@@ -87,9 +87,10 @@ class ActivityController extends Controller
 
     protected function validateData(Request $request){
         $data = $request->validate([
-            'course_id' => 'nullable',
-            'activity_type_id' => '',
-            'time' => 'nullable'
+            'title' => 'required',
+            'is_general' => 'required',
+            'image' => '',
+            'description' => ''
         ]);
         return $data;
     }
