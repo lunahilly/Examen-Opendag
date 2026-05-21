@@ -63,11 +63,15 @@ export default function Dashboard() {
                                         <tr className="dashboard__row" key={index}>
                                             <td className="dashboard__row--title">{item.name ?? item.title}</td>
                                             <td className="dashboard__row--edit">
-                                                <a href={route(`${format(type, false)}.edit`, item.id)} className="dashboard__row--edit-link">X</a>
+                                                <a href={route(`${format(type, false)}.edit`, item.id)} className="dashboard__row--edit-link">
+                                                    <i className="fa-solid fa-pen dashboard__row--edit-icon"/>
+                                                </a>
                                             </td>
                                             <td className="dashboard__row--delete">
                                                 <form onSubmit={(event) => deleteItem(event, item.id)} className="dashboard__row--delete-form">
-                                                    <button className="dashboard__row--delete-submit" type='submit'>X</button>
+                                                    <button className="dashboard__row--delete-submit" type='submit'>
+                                                        <i className="fa-solid fa-trash-can dashboard__row--delete-icon"/>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>

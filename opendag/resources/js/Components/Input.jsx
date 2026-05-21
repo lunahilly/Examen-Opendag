@@ -1,7 +1,7 @@
-const InputField = ({label, value, onChange, type, error, onClick, children}) => {
+const InputField = ({label, value, onChange, type, error, onClick, children, required}) => {
     return(
         <div className="input">
-            <label className="input__label">{label}</label>
+            <label className={required ? 'input__label input__label--required' : 'input__label'} data-end={required ? ' *' : null}>{label}</label>
             <span className="input__wrapper">
                 <input type={type != null ? type : 'text'} value={value} onChange={onChange} className="input__field" />
                 {

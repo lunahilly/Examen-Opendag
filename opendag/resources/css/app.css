@@ -28,40 +28,48 @@ body {
   margin: 0 auto;
 }
 
-.button {
+.button, .form__file::file-selector-button {
   border: none;
   background: #FF00E6;
-  padding: 0.75em 1.25em;
+  padding: 0.25em 0.75em;
   color: white;
   border-radius: 0.25em;
   font-weight: 600;
   font-size: 100%;
   font-family: inherit;
+  box-shadow: inset 0 -0.1rem 0 0 rgba(0, 0, 0, 0.2);
+  transition: 0.4s all;
+  text-decoration: none;
 }
-.button:disabled {
+.button:disabled, .form__file::file-selector-button:disabled {
   background: rgba(255, 0, 230, 0.2);
   color: rgba(255, 255, 255, 0.2);
 }
-.button:hover {
-  background: black;
+.button:disabled:hover, .form__file::file-selector-button:disabled:hover {
+  cursor: not-allowed;
+  background: rgba(255, 0, 230, 0.2);
 }
-.button:hover .button__arrow {
+.button:hover, .form__file::file-selector-button:hover {
+  cursor: pointer;
+  background: rgb(229.5, 0, 207);
+}
+.button:hover .button__arrow, .form__file::file-selector-button:hover .button__arrow {
   transform: translateX(0.25em);
 }
-.button:focus {
+.button:focus, .form__file::file-selector-button:focus {
   outline: none;
 }
-.button__logout {
+.button__logout, .form__file::file-selector-button__logout {
   background: #fa6767;
 }
-.button__logout:disabled {
+.button__logout:disabled, .form__file::file-selector-button__logout:disabled {
   background: rgba(250, 103, 103, 0.2);
 }
-.button__logout:disabled:hover {
+.button__logout:disabled:hover, .form__file::file-selector-button__logout:disabled:hover {
   cursor: not-allowed;
   background: rgba(250, 103, 103, 0.2);
 }
-.button__logout:hover {
+.button__logout:hover, .form__file::file-selector-button__logout:hover {
   background: rgb(249.6751592357, 93.1248407643, 93.1248407643);
 }
 
@@ -127,6 +135,10 @@ body {
   align-items: start;
   gap: 0.25em;
   width: 100%;
+}
+.input__label--required::after {
+  content: attr(data-end);
+  color: #fa6767;
 }
 .input__wrapper {
   width: 100%;
@@ -838,6 +850,9 @@ body {
   text-decoration: none;
   color: white;
 }
+.dashboard__row--edit-icon {
+  font-size: 0.8em;
+}
 .dashboard__row--delete {
   padding: 0.5em;
   text-align: center;
@@ -851,6 +866,9 @@ body {
 }
 .dashboard__row--delete:last-child {
   border-radius: 0 0 0.25em 0;
+}
+.dashboard__row--delete-icon {
+  font-size: 0.8em;
 }
 
 .headlink {
