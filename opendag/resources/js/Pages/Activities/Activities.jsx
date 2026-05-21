@@ -21,11 +21,7 @@ function Activities() {
             <section className="activities__general">
                 {
                     withoutCourse.map((activity, index) =>
-                        <>
-                            {
-                                    <Activity data={activity} key={index} />
-                            }
-                        </>
+                        <Activity data={activity} key={index} />    
                     )
                 }
             </section>
