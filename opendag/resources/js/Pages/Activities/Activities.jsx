@@ -26,7 +26,7 @@ function Activities() {
                     )
                 }
             </section>
-            <Footer/>
+
         </GuestLayout>
     );
 }
