@@ -2,6 +2,7 @@ import PageTitle from "@/Components/Title";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, usePage } from "@inertiajs/react";
 import Activity from "./Activity";
+import Footer from "../../../js/Layouts/Footer"
 
 import { useMemo, useState } from "react";
 
@@ -25,6 +26,7 @@ function Activities() {
                     )
                 }
             </section>
+            <Footer/>
         </GuestLayout>
     );
 }
