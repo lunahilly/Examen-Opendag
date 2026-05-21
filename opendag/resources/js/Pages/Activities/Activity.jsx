@@ -1,7 +1,7 @@
 function Activity({ data, index }) {
     return (
         <article className="activity">
-            <img className="activity__img" src="../../public/img/image.jpg" alt="vul in" />
+            <img className="activity__img" src={data.image} alt="vul in" />
             <div className="activity__text">
                 <h2 className="activity__title">{data.title}</h2>
                 <p className="activity__description">{data.description}</p>

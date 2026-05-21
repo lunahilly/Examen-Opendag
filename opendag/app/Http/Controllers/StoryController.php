@@ -87,13 +87,18 @@ class StoryController extends Controller
     {
         // $data = $this->validateData($request);
         $request->validate([
-            'image' => 'required'
+            'image' => ''
         ]);
-        $path = $request->file('image')->store('students', 'public'); // change to public_html 4 live, niet vergeten cuz anders not work:) x
+        if($request->file('image')){
+            $path = $request->file('image')->store('students', 'public'); // change to public_html 4 live, niet vergeten cuz anders not work:) x
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; // same thing here, uploads 4 live in plaats van storage. again niet vergeten cuz anders werkt het niet x
+        }
+        else{
+            $data = $this->validateData($request);
+        }
         // dd($path);
         // $request['image'] = '/'.'uploads'.$path;
-        $data = $this->validateData($request);
-        $data['image'] = '/'.'storage/'.$path; // same thing here, uploads 4 live in plaats van storage. again niet vergeten cuz anders werkt het niet x
         $story = Story::find($id);
         $story->update($data);
         return redirect(route('stories.index'));

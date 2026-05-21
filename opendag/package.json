@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "jszip": "^3.10.1",
-        "qrcode.react": "^4.2.0"
+        "qrcode.react": "^4.2.0",
+        "react-markdown": "^10.1.0"
     }
 }

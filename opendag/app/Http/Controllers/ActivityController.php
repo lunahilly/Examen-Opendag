@@ -50,7 +50,7 @@ class ActivityController extends Controller
             // dd('queen');
             $path = $request->file('image')->store('activities', 'public'); // also here public_html voor de live
             $data = $this->validateData($request);
-            $data['image'] = '/'.'uploads/'.$path; // uploads naar storage als live whatevhgor
+            $data['image'] = '/'.'storage/'.$path; // storage naar uploads als live whatevhgor
 
         }
         else{

@@ -3,7 +3,8 @@ import InputField from "@/Components/Input";
 import Textarea from "@/Components/Textarea";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import Markdown, { MarkdownHooks } from "react-markdown";
 
 function StoryForm(){
     const story = usePage().props.story;
@@ -13,9 +14,11 @@ function StoryForm(){
         course_id: story ? story.course_id : '',
         // image: story ? story.image : '',
         image: path != null ? `storage/${path}` : story ? story.image : '',
-        story: story ? story.story : ''
+        story: story ? story.story : 'iodnwldw __owinlmfw__ hojfehj k* k*'
     });
     const courses = usePage().props.courses;
+    const ref = useRef();
+    console.log(ref.current);
     const submit = (event) => {
         event.preventDefault();
         // if(path != null && disable){
@@ -69,9 +72,17 @@ function StoryForm(){
                         </select>
                     </span>
                     <input type="file" onChange={(event) => setData('image', event.target.files[0])} className="form__file" />
-                    <Textarea value={data.story} onChange={(event) => setData('story', event.target.value)} formatChange={(value) => setData('story', value)}/>
+                    {/* <Textarea value={data.story} onChange={(event) => setData('story', event.target.value)} formatChange={(value) => setData('story', value)}/> */}
+                    {/* <div contentEditable onChange={(event) => setData(event.target.value)} ref={ref} className="form__textarea">
+                            <MarkdownHooks>
+                                {data.story}
+                            </MarkdownHooks>
+                    </div> */}
+                    {/* <textarea name="" id="">
+                        
+                    </textarea> */}
                     {/* <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image}/> */}
-                    {/* <InputField label="Story" value={data.story} onChange={(event) => setData('story', event.target.value)} error={errors.story}/> */}
+                    <InputField label="Story" value={data.story} onChange={(event) => setData('story', event.target.value)} error={errors.story}/>
                     <Button type="submit" label={story ? 'Update' : 'Save'} isDisabled={processing}/>
                 </form>
             </main>
