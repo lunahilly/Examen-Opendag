@@ -1,7 +1,14 @@
-function Activity({data}){
-    return(
+function Activity({ data, index }) {
+    return (
         <article className="activity">
-            <h2 className="activity__title">{Activity.title}</h2>
+            <img className="activity__img" src="../../public/img/image.jpg" alt="vul in" />
+            <div className="activity__text">
+                <h2 className="activity__title">{data.title}</h2>
+                <p className="activity__description">{data.description}</p>
+            </div>
+            <button className="activity__button">
+                Bekijk <p>{data.title}</p> op de plattegrond!
+            </button>
         </article>
     )
 }
