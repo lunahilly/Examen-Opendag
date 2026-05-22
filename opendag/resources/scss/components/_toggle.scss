@@ -1,0 +1,46 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.toggle{
+    position: relative;
+    width: 2.5em;
+    height: 1.4em;
+    border-radius: map-get(variables.$borders, "border-radius-l");
+    
+
+    &__checkbox{
+        appearance: none;
+    }
+    &__slider{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(map-get(variables.$colors, "magenta"), 0.4);
+        border-radius: map-get(variables.$borders, "border-radius-l");
+        transition: 0.2s all;
+
+        &:before{
+            content: "";
+            position: absolute;
+            width: 1.2em;
+            height: 1.2em;
+            left: 0.1em;
+            bottom: 0.1em;
+            background: rgba(map-get(variables.$colors, "white"), 0.8);
+            border-radius: 100%;
+            transition: 0.2s all;
+        }
+    }
+
+    &__checkbox:checked + &__slider{
+        background: map-get(variables.$colors, "magenta");
+    }
+
+    &__checkbox:checked + &__slider:before{
+        transform: translateX(1.1em);
+        background: map-get(variables.$colors, "white");
+    }
+
+}

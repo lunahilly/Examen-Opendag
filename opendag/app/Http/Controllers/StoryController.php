@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\Setting;
 use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,12 +15,18 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Story::with('course')->latest()->get();
-        $courses = Course::all();
-        return Inertia::render('Stories/Stories', [
-            'stories' => $stories,
-            'courses' => $courses
-        ]);
+        $settings = Setting::find(1);
+        if($settings->stories == true){
+            $stories = Story::with('course')->latest()->get();
+            $courses = Course::all();
+            return Inertia::render('Stories/Stories', [
+                'stories' => $stories,
+                'courses' => $courses
+            ]);
+        }
+        else{
+            return redirect('/');
+        }
     }
 
     /**
@@ -38,7 +45,15 @@ class StoryController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
+        $request->validate([
+            'image' => 'required'
+        ]);
+        $path = $request->file('image')->store('students', 'public'); // public_html 4 live
+        // dd($path);
+        // $request['image'] = '/'.'uploads'.$path;
         $data = $this->validateData($request);
+        $data['image'] = '/'.'storage/'.$path; // terug naar uploads als live is, zo not forget
         $story = new Story($data);
         $story->save();
         return redirect(route('stories.index'));
@@ -70,7 +85,20 @@ class StoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $this->validateData($request);
+        // $data = $this->validateData($request);
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            $path = $request->file('image')->store('students', 'public'); // change to public_html 4 live, niet vergeten cuz anders not work:) x
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; // same thing here, uploads 4 live in plaats van storage. again niet vergeten cuz anders werkt het niet x
+        }
+        else{
+            $data = $this->validateData($request);
+        }
+        // dd($path);
+        // $request['image'] = '/'.'uploads'.$path;
         $story = Story::find($id);
         $story->update($data);
         return redirect(route('stories.index'));
@@ -81,7 +109,8 @@ class StoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $story = Story::find($id)->delete();
+        return back();
     }
 
     protected function validateData(Request $request){

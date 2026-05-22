@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityType;
+use App\Models\Activity;
+use App\Models\Course;
+use App\Models\Setting;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ActivityTypeController extends Controller
+class SettingsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('Settings/Settings');
+        // $settings = Setting::find(1);
+        // $courses = Course::paginate(10);
+        // $stories = Story::paginate(10);
+        // $activities = Activity::paginate(10);
+        // return Inertia::render('Dashboard', [
+        //     'settings' => $settings,
+        //     'courses' => $courses,
+        //     'stories' => $stories,
+        //     'activities' => $activities
+        // ]);
     }
 
     /**
@@ -21,7 +34,7 @@ class ActivityTypeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('ActivityType/Form');
+        //
     }
 
     /**
@@ -29,10 +42,7 @@ class ActivityTypeController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
-        $type = new ActivityType($data);
-        $type->save();
-        return back();
+        //
     }
 
     /**
@@ -57,8 +67,8 @@ class ActivityTypeController extends Controller
     public function update(Request $request, string $id)
     {
         $data = $this->validateData($request);
-        $type = ActivityType::find($id);
-        $type->update($data);
+        $settings = Setting::find(1);
+        $settings->update($data);
         return back();
     }
 
@@ -69,10 +79,13 @@ class ActivityTypeController extends Controller
     {
         //
     }
-
+    
     protected function validateData(Request $request){
         $data = $request->validate([
-            'name' => 'required'
+            'courses' => 'required',
+            'stories' => 'required',
+            'activities' => 'required',
+            'contact' => 'required'
         ]);
         return $data;
     }

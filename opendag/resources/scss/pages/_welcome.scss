@@ -1,32 +1,33 @@
 @use "../abstracts/variables";
 
-.welcome{
+.welcome {
     padding: map-get(variables.$padding, "padding-xl");
     text-align: center;
 
-    &__content{
+
+    &__content {
         max-width: 60rem;
         margin: 0 auto;
     }
 
-    &__title{
+    &__title {
         margin-bottom: map-get(variables.$padding, "padding-l");
     }
 
-    &__dropdown{
+    &__dropdown {
         margin-bottom: map-get(variables.$padding, "padding-l");
         padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
         border: 0.0625em solid map-get(variables.$colors, "white");
         background: map-get(variables.$colors, "black");
         color: map-get(variables.$colors, "white");
-        font-family: inherit;
+        // font-family: inherit;
 
-        &:focus{
+        &:focus {
             outline: none;
         }
     }
 
-    &__image{
+    &__image {
         display: block;
         width: 100%;
         max-width: 50rem;

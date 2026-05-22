@@ -7,8 +7,11 @@
   background: var(--map-bg);
   cursor: grab;
   transition: background 250ms;
+
   // Switch to grabbing cursor while actively dragging
-  &:active { cursor: grabbing; }
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 // The SVG element itself — fills the wrapper and blocks text selection during drag
@@ -38,18 +41,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--card);
-  border: 0.094em solid #e0b0f0;
+  background: black;
+  border: 0.094em solid #FF00E3;
   border-radius: 0.25em;
-  color: #e040fb;
+  color: white;
   font-size: 0.875em;
   cursor: pointer;
   transition: all 120ms;
 
-  &:hover {
-    background: var(--pink-hover);
-    border-color: #e040fb;
-  }
   // Slightly darker background while the button is pressed
-  &:active { background: var(--steps-hd); }
+  &:active {
+    background: var(--steps-hd);
+  }
 }

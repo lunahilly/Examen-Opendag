@@ -1,0 +1,150 @@
+@use "../abstracts/variables";
+@use "../abstracts/mixins";
+
+.dashboard{
+    width: 60%;
+    @include mixins.flexBox(center, center);
+    flex-direction: column;
+    gap: 1.5em;
+
+    &__options{
+        width: 100%;
+        @include mixins.flexBox(start, center);
+        gap: 1em;
+
+        &--button{
+            border: 0.1em solid rgba(map-get(variables.$colors, "white"), 0.2);
+            padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+            border-radius: map-get(variables.$borders, "border-radius-s");
+            font-family: inherit;
+            color: rgba(map-get(variables.$colors, "white"), 0.2);
+            font-size: 100%;
+            text-decoration: none;
+
+            &-active{
+                color: map-get(variables.$colors, "white");
+                border-color: map-get(variables.$colors, "magenta");
+            }
+        }
+    }
+
+    &__wrapper{
+        width: 100%;
+        @include mixins.flexBox(start, start);
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    &__header{
+        @include mixins.flexBox(space-between, center);
+        width: 100%;
+
+        &--text{
+            font-size: 1.5em;
+        }
+    }
+
+    &__table{
+        width: 100%;
+        // border: 0.1em solid rgba(map-get(variables.$colors, "white"), 0.2);
+        background: rgba(map-get(variables.$colors, "white"), 0.1);
+        border-radius: map-get(variables.$borders, "border-radius-s");
+    }
+
+    &__head{
+        // background: rgba(map-get(variables.$colors, "black"), 0.2);
+        // font-size: 0.7em;
+        &--item{
+            padding: map-get(variables.$padding, "padding-s") map-get(variables.$padding, "padding-m");
+
+            &:first-child{
+                text-align: start;
+            }
+        }
+    }
+
+    // &__body{
+    //     // background: orangered;
+    //     border-radius: map-get(variables.$borders, );
+    // }
+
+    &__row{
+        // background: yellowgreen;
+        background: map-get(variables.$colors, "black");
+        // border-radius: 2em;
+        // background: red;
+        font-size: 1.2em;
+
+        &:nth-child(even){
+            background: rgba(map-get(variables.$colors, "black"), 0.7);
+            // border-radius: map-get(variables.$borders, "border-radius-s");
+        }
+        
+        &--title{
+            width: 75%;
+            padding: map-get(variables.$padding, "padding-m");
+        }
+
+        &--edit{
+            padding: map-get(variables.$padding, "padding-m");
+            text-align: center;
+
+            &-link{
+                text-decoration: none;
+                color: map-get(variables.$colors, "white");
+            }
+            &-icon{
+                font-size: 0.8em;
+            }
+        }
+
+        &--delete{
+            padding: map-get(variables.$padding, "padding-m");
+            text-align: center;
+            &-submit{
+                color: map-get(variables.$colors, "error-red");
+                background: none;
+                border: none;
+                font-family: inherit;
+                font-size: 100%;
+            }
+            &:last-child{
+                border-radius: 0 0 map-get(variables.$borders, "border-radius-s") 0;
+            }
+            &-icon{
+                font-size: 0.8em;
+            }
+        }
+    }
+}
+
+.headlink{
+    @include mixins.flexBox(start, center);
+    gap: 0.25em;
+    width: 60%;
+    font-size: 1.4em;
+
+    &__link{
+        text-decoration: none;
+        color: rgba(map-get(variables.$colors, "white"), 0.4);
+        transition: 0.2s all;
+
+        &:hover{
+            color: map-get(variables.$colors, "magenta");
+        }
+    }
+
+}
+
+// .dashboard{
+//     @include mixins.flexBox(center, center);
+//     flex-direction: column;
+//     gap: 1em;
+//     padding: map-get(variables.$padding, "padding-xl");
+//     width: 55%;
+
+//     &__wrapper{
+//         width: 100%;
+//         @include mixins.flexBox(space-between, center);
+//     }
+// }
