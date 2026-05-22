@@ -73,13 +73,6 @@ function Navigation(){
                                     : null
                                 }
                                 {
-                                    settings.contact ? 
-                                        <li className="header__sidebar--item">
-                                            <a href={route('contact.index')} className={`header__sidebar--item-link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
-                                        </li>
-                                    : null
-                                }
-                                {
                                 user != null ? 
                                     <Button label="Dashboard" route={route('dashboard', 'courses')}/>
                                 : null
