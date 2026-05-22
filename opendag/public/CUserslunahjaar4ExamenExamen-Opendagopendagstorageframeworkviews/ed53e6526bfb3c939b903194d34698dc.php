@@ -1,7 +1,11 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+<?php use Illuminate\View\AnonymousComponent;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+
+$attributes ??= new ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['frame']));
+$__propNames = ComponentAttributeBag::extractPropNames((['frame']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -11,7 +15,7 @@ foreach ($attributes->all() as $__key => $__value) {
     }
 }
 
-$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+$attributes = new ComponentAttributeBag($__newAttributes);
 
 unset($__propNames);
 unset($__newAttributes);
@@ -46,7 +50,7 @@ unset($__defined_vars, $__key, $__value); ?>
         }"
         @click="hasCode && (expanded = !expanded)"
     >
-        
+
         <div class="flex size-3 items-center justify-center flex-shrink-0">
           <div
           class="size-2 rounded-full"
@@ -65,9 +69,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['frame' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($frame)]); ?>
+<?php $component->withAttributes(['frame' => BladeCompiler::sanitizeComponentAttribute($frame)]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc33171fb5f34409a0ad661ae1625dcb2)): ?>
@@ -85,9 +89,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['frame' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($frame),'direction' => 'rtl']); ?>
+<?php $component->withAttributes(['frame' => BladeCompiler::sanitizeComponentAttribute($frame),'direction' => 'rtl']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalfe2bc8d0a6d110d41fdc8740012cee8d)): ?>
@@ -117,7 +121,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['x-show' => 'expanded']); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -137,7 +141,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['x-show' => '!expanded']); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -162,9 +166,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($snippet),'highlightedLine' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($frame->line()),'x-show' => 'expanded','x-cloak' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(!$frame->isMain())]); ?>
+<?php $component->withAttributes(['code' => BladeCompiler::sanitizeComponentAttribute($snippet),'highlightedLine' => BladeCompiler::sanitizeComponentAttribute($frame->line()),'x-show' => 'expanded','x-cloak' => BladeCompiler::sanitizeComponentAttribute(!$frame->isMain())]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginala7df34c267a7ce6efa01f63b793ef234)): ?>

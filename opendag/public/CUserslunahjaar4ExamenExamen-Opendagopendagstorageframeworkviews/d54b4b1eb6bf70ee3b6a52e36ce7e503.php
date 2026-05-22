@@ -1,7 +1,11 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+<?php use Illuminate\View\AnonymousComponent;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+
+$attributes ??= new ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['code', 'highlightedLine']));
+$__propNames = ComponentAttributeBag::extractPropNames((['code', 'highlightedLine']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -11,7 +15,7 @@ foreach ($attributes->all() as $__key => $__value) {
     }
 }
 
-$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+$attributes = new ComponentAttributeBag($__newAttributes);
 
 unset($__propNames);
 unset($__newAttributes);
@@ -40,9 +44,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($code),'language' => 'php','editor' => true,'starting-line' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(max(1, $highlightedLine - 5)),'highlighted-line' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(min(5, $highlightedLine - 1)),'class' => 'overflow-x-auto']); ?>
+<?php $component->withAttributes(['code' => BladeCompiler::sanitizeComponentAttribute($code),'language' => 'php','editor' => true,'starting-line' => BladeCompiler::sanitizeComponentAttribute(max(1, $highlightedLine - 5)),'highlighted-line' => BladeCompiler::sanitizeComponentAttribute(min(5, $highlightedLine - 1)),'class' => 'overflow-x-auto']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal12cb286571f553eebcbe98210b217f94)): ?>

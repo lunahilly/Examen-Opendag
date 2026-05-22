@@ -1,7 +1,11 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+<?php use Illuminate\View\AnonymousComponent;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+
+$attributes ??= new ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['exception']));
+$__propNames = ComponentAttributeBag::extractPropNames((['exception']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -11,7 +15,7 @@ foreach ($attributes->all() as $__key => $__value) {
     }
 }
 
-$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+$attributes = new ComponentAttributeBag($__newAttributes);
 
 unset($__propNames);
 unset($__newAttributes);
@@ -38,9 +42,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['frame' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($exception->frames()->first()),'class' => '-mt-3 text-xs']); ?>
+<?php $component->withAttributes(['frame' => BladeCompiler::sanitizeComponentAttribute($exception->frames()->first()),'class' => '-mt-3 text-xs']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalfe2bc8d0a6d110d41fdc8740012cee8d)): ?>
@@ -75,7 +79,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['type' => 'error']); ?>
             <?php if (isset($component)) { $__componentOriginalebc8ec9a834a8051f56913d6745a7050 = $component; } ?>
@@ -85,7 +89,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['class' => 'w-2.5 h-2.5']); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -116,7 +120,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['type' => 'error','variant' => 'solid']); ?>
             CODE <?php echo e($exception->code()); ?>
@@ -140,9 +144,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['exception' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($exception),'request' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($exception->request()),'class' => 'relative z-50']); ?>
+<?php $component->withAttributes(['exception' => BladeCompiler::sanitizeComponentAttribute($exception),'request' => BladeCompiler::sanitizeComponentAttribute($exception->request()),'class' => 'relative z-50']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalb581a7e3a55d371fae986833ecafa668)): ?>

@@ -1,7 +1,11 @@
-<?php $attributes ??= new \Illuminate\View\ComponentAttributeBag;
+<?php use Illuminate\View\AnonymousComponent;
+use Illuminate\View\Compilers\BladeCompiler;
+use Illuminate\View\ComponentAttributeBag;
+
+$attributes ??= new ComponentAttributeBag;
 
 $__newAttributes = [];
-$__propNames = \Illuminate\View\ComponentAttributeBag::extractPropNames((['exception']));
+$__propNames = ComponentAttributeBag::extractPropNames((['exception']));
 
 foreach ($attributes->all() as $__key => $__value) {
     if (in_array($__key, $__propNames)) {
@@ -11,7 +15,7 @@ foreach ($attributes->all() as $__key => $__value) {
     }
 }
 
-$attributes = new \Illuminate\View\ComponentAttributeBag($__newAttributes);
+$attributes = new ComponentAttributeBag($__newAttributes);
 
 unset($__propNames);
 unset($__newAttributes);
@@ -38,7 +42,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['class' => 'w-2.5 h-2.5 text-blue-500 dark:text-emerald-500']); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -58,7 +62,7 @@ unset($__defined_vars, $__key, $__value); ?>
     <div class="flex flex-col">
         <?php $__currentLoopData = $exception->previousExceptions(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $previous): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="flex gap-2.5 px-2">
-                
+
                 <?php if($exception->previousExceptions()->count() > 1): ?>
                     <div class="flex flex-col items-center w-6 flex-shrink-0 self-stretch">
                         <?php if($index > 0): ?>
@@ -77,7 +81,7 @@ unset($__defined_vars, $__key, $__value); ?>
                     </div>
                 <?php endif; ?>
 
-                
+
                 <div
                     x-data="{ expanded: false }"
                     class="group/exception flex-1 min-w-0 rounded-lg my-1.5"
@@ -90,7 +94,7 @@ unset($__defined_vars, $__key, $__value); ?>
                         <?php endif; ?>
                     }"
                 >
-                    
+
                     <div
                         class="flex gap-2.5 p-3 cursor-pointer rounded-lg"
                         :class="{ 'hover:bg-white/50 dark:hover:bg-white/2': !expanded }"
@@ -121,7 +125,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['x-show' => 'expanded']); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -141,7 +145,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['x-show' => '!expanded','x-cloak' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
@@ -157,7 +161,7 @@ unset($__defined_vars, $__key, $__value); ?>
                         </button>
                     </div>
 
-                    
+
                     <div x-show="expanded" x-cloak class="flex flex-col gap-1.5 p-3">
                         <?php $__currentLoopData = $previous->frameGroups(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php if($group['is_vendor']): ?>
@@ -168,9 +172,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['frames' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($group['frames'])]); ?>
+<?php $component->withAttributes(['frames' => BladeCompiler::sanitizeComponentAttribute($group['frames'])]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal449787012edfba29f0e80f325065fad5)): ?>
@@ -190,9 +194,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php $attributes = $attributes->except(AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['frame' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($frame)]); ?>
+<?php $component->withAttributes(['frame' => BladeCompiler::sanitizeComponentAttribute($frame)]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalc7c58c6d16fe849872fb25ad6e9b8407)): ?>
