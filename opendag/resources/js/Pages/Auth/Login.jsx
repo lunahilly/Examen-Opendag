@@ -4,7 +4,7 @@ import InputField from "@/Components/Input";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, useForm } from "@inertiajs/react";
 
-function Login(){
+function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -17,15 +17,15 @@ function Login(){
             onFinish: () => reset('password')
         });
     }
-    return(
+    return (
         <GuestLayout>
-            <Head title="Login"/>
+            <Head title="Login" />
             <form onSubmit={submit} className="form">
                 <h2 className="form__title" data-end="." >Login</h2>
-                <InputField label="Email" value={data.email} onChange={(event) => setData('email', event.target.value)} error={errors.email} type="email"/>
-                <InputField label="Password" value={data.password} onChange={(event) => setData('password', event.target.value)} error={errors.password} type="password"/>
-                <Checkbox label="Remember me" value={data.remember} onChange={(event) => setData('remember', event.target.checked)}/>
-                <Button label="Login" type="submit"/>
+                <InputField label="Email" value={data.email} onChange={(event) => setData('email', event.target.value)} error={errors.email} type="email" />
+                <InputField label="Password" value={data.password} onChange={(event) => setData('password', event.target.value)} error={errors.password} type="password" />
+                <Checkbox label="Remember me" value={data.remember} onChange={(event) => setData('remember', event.target.checked)} />
+                <Button label="Login" type="submit" />
             </form>
         </GuestLayout>
     );
