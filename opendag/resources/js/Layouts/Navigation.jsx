@@ -73,13 +73,6 @@ function Navigation() {
                                         : null
                                 }
                                 {
-                                    settings.contact ?
-                                        <li className="header__sidebar--item">
-                                            <a href={route('contact.index')} className={`header__sidebar--item-link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
-                                        </li>
-                                        : null
-                                }
-                                {
                                     user != null ?
                                         <Button label="Dashboard" route={route('dashboard', 'courses')} />
                                         : null
@@ -110,11 +103,6 @@ function Navigation() {
                 {
                     settings.activities ?
                         <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
-                        : null
-                }
-                {
-                    settings.contact ?
-                        <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
                         : null
                 }
                 {

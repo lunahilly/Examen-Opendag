@@ -93,20 +93,26 @@
                 text-decoration: none;
                 color: map-get(variables.$colors, "white");
             }
+            &-icon{
+                font-size: 0.8em;
+            }
         }
 
         &--delete{
             padding: map-get(variables.$padding, "padding-m");
             text-align: center;
-                &-submit{
-                    color: map-get(variables.$colors, "error-red");
-                    background: none;
-                    border: none;
-                    font-family: inherit;
-                    font-size: 100%;
-                }
+            &-submit{
+                color: map-get(variables.$colors, "error-red");
+                background: none;
+                border: none;
+                font-family: inherit;
+                font-size: 100%;
+            }
             &:last-child{
                 border-radius: 0 0 map-get(variables.$borders, "border-radius-s") 0;
+            }
+            &-icon{
+                font-size: 0.8em;
             }
         }
     }

@@ -12,6 +12,7 @@
 @use "components/pagination";
 
 @use "layout/navigation";
+@use "layout/footer";
 
 @use "pages/welcome";
 @use "pages/dashboard";
@@ -22,10 +23,11 @@
 @use "pages/stories/stories";
 @use "pages/stories/student";
 
-@use "pages/activities/timeline";
+@use "pages/activities/activities";
 
 @use "pages/settings/settings";
 
 @use "abstracts/mediaqueries"; // deze moet altijd onderaan staan
 
 // hier worden alle bestanden gelinkt
+//test
