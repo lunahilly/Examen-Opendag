@@ -73,10 +73,10 @@ function Navigation() {
                                         : null
                                 }
                                 {
-                                    user != null ?
-                                        <Button label="Dashboard" route={route('dashboard', 'courses')} />
-                                        : null
-                                }
+                                user != null ? 
+                                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
+                                : null
+                            }
                             </ul>
                         </nav>
                     </>
