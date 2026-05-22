@@ -7,7 +7,7 @@ export default function Dashboard() {
     const settings = usePage().props.settings;
     const items = usePage().props.data;
     const type = usePage().props.type;
-    const {delete: destroy} = useForm();
+    const { delete: destroy } = useForm();
 
     const submit = (event) => {
         event.preventDefault();
@@ -15,13 +15,13 @@ export default function Dashboard() {
     }
 
     const format = (value, toDutch) => {
-        if(value == 'courses'){
+        if (value == 'courses') {
             return toDutch ? 'Opleidingen' : 'course';
         }
-        else if(value == 'stories'){
+        else if (value == 'stories') {
             return toDutch ? 'Verhalen' : 'story';
         }
-        else if(value == 'activities'){
+        else if (value == 'activities') {
             return toDutch ? 'Activiteiten' : 'activity';
         }
     }
@@ -33,7 +33,7 @@ export default function Dashboard() {
     return (
         <AuthenticatedLayout>
             <main className="main">
-                <Head title='Dashboard'/>
+                <Head title='Dashboard' />
                 <span className="headlink">
                     <p className="headlink__title">Dashboard / </p>
                     <a href={route('settings.index')} className="headlink__link">Settings</a>
@@ -47,7 +47,7 @@ export default function Dashboard() {
                     <div className="dashboard__wrapper">
                         <div className="dashboard__header">
                             <h3 className="dashboard__header--text">Beheer {format(type, true)}</h3>
-                            <Button label="+ Nieuwe aanmaken" route={route(`${format(type, false)}.create`)}/>
+                            <Button label="+ Nieuwe aanmaken" route={route(`${format(type, false)}.create`)} />
                         </div>
                         <table className="dashboard__table">
                             <thead className="dashboard__head">
@@ -59,7 +59,7 @@ export default function Dashboard() {
                             </thead>
                             <tbody className="dashboard__body">
                                 {
-                                    items.data.map((item, index) => 
+                                    items.data.map((item, index) =>
                                         <tr className="dashboard__row" key={index}>
                                             <td className="dashboard__row--title">{item.name ?? item.activity_type.name}</td>
                                             <td className="dashboard__row--edit">
@@ -76,7 +76,7 @@ export default function Dashboard() {
                             </tbody>
                         </table>
                         {
-                            items.last_page == 1 ? null : <Pagination data={items}/>
+                            items.last_page == 1 ? null : <Pagination data={items} />
                         }
                     </div>
                 </section>

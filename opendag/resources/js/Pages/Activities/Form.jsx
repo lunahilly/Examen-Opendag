@@ -4,8 +4,8 @@ import PageTitle from "@/Components/Title";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
 
-function ActivitiesForm(){
-    const {data, setData, post, processing, errors} = useForm({
+function ActivitiesForm() {
+    const { data, setData, post, processing, errors } = useForm({
         course_id: null,
         activity_type_id: 0,
         // activity: '',
@@ -19,22 +19,22 @@ function ActivitiesForm(){
         post(route('activity.store'));
     }
 
-    return(
+    return (
         <AuthenticatedLayout>
-            <Head title="New activity"/>
-            <PageTitle title="New activity"/>
+            <Head title="New activity" />
+            <PageTitle title="New activity" />
             <form onSubmit={submit} className="form">
                 <select onChange={(event) => setData('course_id', event.target.value == 'Geen opleiding' ? null : event.target.value)} className="dropdown">
                     <option value={null} className="dropdown__option">Geen opleiding</option>
                     {
-                        courses.map((item, index) => 
+                        courses.map((item, index) =>
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }
                 </select>
                 <select value={data.activity_type_id} onChange={(event) => setData('activity_type_id', event.target.value)} className="dropdown">
                     {
-                        types.map((item, index) => 
+                        types.map((item, index) =>
                             <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                         )
                     }
@@ -43,8 +43,8 @@ function ActivitiesForm(){
                 {
                     data.course_id !== null ? <input type="time" value={data.time} onChange={(event) => setData('time', event.target.value)} className="form__time" /> : null
                 }
-                
-                <Button type="submit" label='send' isDisabled={processing}/>
+
+                <Button type="submit" label='send' isDisabled={processing} />
             </form>
         </AuthenticatedLayout>
     );
