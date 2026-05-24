@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NFCController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImageController;
@@ -51,5 +52,6 @@ Route::get('/information', [CourseController::class, 'index'])->name('informatio
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/nfc', [NFCController::class, 'index'])->name('nfc.index');
 
 require __DIR__.'/auth.php';

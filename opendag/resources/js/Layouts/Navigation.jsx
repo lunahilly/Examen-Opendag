@@ -73,10 +73,15 @@ function Navigation() {
                                         : null
                                 }
                                 {
-                                user != null ? 
-                                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
-                                : null
-                            }
+                                    user != null ?
+                                        <Button label="Dashboard" route={route('dashboard', 'courses')} />
+                                        : null
+                                }
+                                {
+                                    <li className="header__sidebar--item">
+                                        <a href={route('nfc.index')} className={`header__sidebar--item-link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC instellen</a>
+                                    </li>
+                                }
                             </ul>
                         </nav>
                     </>
@@ -105,6 +110,12 @@ function Navigation() {
                         <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
                         : null
                 }
+                {
+                    <li className="header__sidebar--item">
+                        <a href={route('nfc.index')} className={`header__sidebar--item-link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC instellen</a>
+                    </li>
+                }
+
                 {
                     user != null ?
                         <Button label="Dashboard" route={route('dashboard', 'courses')} />
