@@ -620,6 +620,13 @@ body {
   color: #FF00E6;
 }
 
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .background {
   background: rgba(0, 0, 0, 0.4);
   width: 100%;

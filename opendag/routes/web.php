@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/nfc', function () {
         return Inertia::render('Nfc/Nfc');
-    });
+    })->name('nfc');
 });
 
 

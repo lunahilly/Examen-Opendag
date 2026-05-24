@@ -1,12 +1,15 @@
 import Button from "@/Components/Button";
 import InputField from "@/Components/Input";
+import ActivityCourseModal from "@/Components/Modals/ActivityCourseModal";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function InformationForm() {
     const course = usePage().props.course;
     const [value, setValue] = useState('');
+    const status = usePage().props.status;
+    const [openModal, setOpenModal] = useState(status !== null ? true : false);
     const { data, setData, post, patch, processing, errors } = useForm({
         name: course ? course.name : '',
         image: course ? course.image : '',
@@ -36,6 +39,12 @@ function InformationForm() {
         }
     }
 
+    // useEffect(() => {
+    //     if(openModal){
+
+    //     }
+    // }, [openModal]);
+
     return (
         <AuthenticatedLayout>
             <Head title="New course" />
@@ -58,11 +67,18 @@ function InformationForm() {
                     <InputField label="Code" value={data.code} onChange={(event) => setData('code', event.target.value)} error={errors.code} />
                     {/* <button className="form__submit">submit</button> */}
                     <span className="form__wrapper">
-                        <Button type="button" label="Voeg" />
+                        {
+                            course !== null ? 
+                                <Button onClick={() => setOpenModal(true)} type="button" label="Voeg" />
+                            : null
+                        }
                         <Button type="submit" label={course ? 'Update' : 'Save'} />
                     </span>
                 </form>
             </main>
+            {
+                openModal ? <ActivityCourseModal/> : null
+            }
         </AuthenticatedLayout>
     );
 }
