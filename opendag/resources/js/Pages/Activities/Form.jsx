@@ -6,18 +6,25 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
 
 function ActivitiesForm() {
-    const { data, setData, post, processing, errors } = useForm({
-        title: '',
-        is_general: false,
-        image: null,
-        description: null
+    const activity = usePage().props.activity;
+    console.log(activity);
+    const { data, setData, post, patch, processing, errors } = useForm({
+        title: activity ? activity.title : '',
+        is_general: activity ? activity.is_general : false,
+        image: activity ? activity.image : null,
+        description: activity ? activity.description : null
     });
     // const courses = usePage().props.courses;
     // const types = usePage().props.types;
 
     const submit = (event) => {
         event.preventDefault();
-        post(route('activity.store'));
+        if(activity){
+            patch(route('activity.update', activity.id));
+        }
+        else{
+            post(route('activity.store'));
+        }
     }
 
     return (

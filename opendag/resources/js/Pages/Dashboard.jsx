@@ -25,9 +25,16 @@ export default function Dashboard() {
             return toDutch ? 'Activiteiten' : 'activity';
         }
     }
+    
     const deleteItem = (event, id) => {
         event.preventDefault();
-        destroy(route(`${format(type, false)}.destroy`, id));
+        const answer = confirm('weet u zeker dat u dit wilt verwijderen?');
+        if(answer){
+            destroy(route(`${format(type, false)}.destroy`, id));
+        }
+        else{
+            return;
+        }
     }
 
     return (
