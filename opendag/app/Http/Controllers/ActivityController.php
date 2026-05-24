@@ -40,9 +40,6 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        // $data = $this->validateData($request);
-        // $activity = new Activity($data);
-        // $activity->save();
         $request->validate([
             'image' => ''
         ]);
@@ -60,8 +57,8 @@ class ActivityController extends Controller
         // $path = $request->file('image')->store('activities', 'public');
         // $request['image'] = '/'.'uploads'.$path;
         // $data['image'] = '/'.'uploads/'.$path;
-        $story = new Activity($data);
-        $story->save();
+        $activity = new Activity($data);
+        $activity->save();
         return redirect(route('activities.index'));
     }
 
@@ -78,7 +75,10 @@ class ActivityController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $activity = Activity::find($id);
+        return Inertia::render('Activities/Form', [
+            'activity' => $activity
+        ]);
     }
 
     /**
@@ -86,7 +86,20 @@ class ActivityController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            $path = $request->file('image')->store('activities', 'public'); //public_html 4 live
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; //uploads 4 live n storage 4 local
+        }
+        else{
+            $data = $this->validateData($request);
+        }
+        $activity = Activity::find($id);
+        $activity->update($data);
+        return redirect(route('activities.index'));
     }
 
     /**

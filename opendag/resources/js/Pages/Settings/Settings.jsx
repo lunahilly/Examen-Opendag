@@ -12,11 +12,11 @@ function Settings() {
         courses: settings.courses,
         stories: settings.stories,
         activities: settings.activities,
-        contact: settings.contact
+        contact: 0//settings.contact
     });
 
     useEffect(() => {
-        if (data.courses == settings.courses && data.stories == settings.stories && data.activities == settings.activities && data.contact == settings.contact) {
+        if (data.courses == settings.courses && data.stories == settings.stories && data.activities == settings.activities) { // && data.contact == settings.contact) {
             setIsChanged(false);
         }
         else {
@@ -65,10 +65,10 @@ function Settings() {
                                 <label className={`settings__label ${data.activities ? null : 'settings__label--blurred'}`}>Laat activiteiten zien</label>
                                 <Toggle value={data.activities} onChange={(event) => setData('activities', event.target.checked)} />
                             </span>
-                            <span className="settings__input">
+                            {/* <span className="settings__input">
                                 <label className={`settings__label ${data.contact ? null : 'settings__label--blurred'}`}>Laat contact zien</label>
                                 <Toggle value={data.contact} onChange={(event) => setData('contact', event.target.checked)} />
-                            </span>
+                            </span> */}
                         </div>
                         <Button label="Opslaan" type="submit" isDisabled={isChanged == false ? true : processing} />
                     </form>
