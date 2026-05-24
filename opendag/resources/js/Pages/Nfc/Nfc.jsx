@@ -4,6 +4,7 @@ import { Form, Head } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import { useState } from "react";
 import TextInput from "@/Components/TextInput";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 function NFC() {
     const [status, setStatus] = useState("");
@@ -94,7 +95,7 @@ function NFC() {
     }
 
     return (
-        <GuestLayout>
+        <AuthenticatedLayout>
             <Head title="NFC" />
             <PageTitle title="NFC instellen" />
 
@@ -114,7 +115,7 @@ function NFC() {
 
             <p>Status: {status}</p>
             <p>NFC data: {Message}</p>
-        </GuestLayout>
+        </AuthenticatedLayout>
     );
 }
 
