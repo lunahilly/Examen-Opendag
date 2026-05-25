@@ -67,7 +67,7 @@ function NFC() {
                 setStatus("Houd de tag tegen de telefoon om te schrijven...");
 
                 await ndef.write({
-                    records: [{ recordType: "url", data:  url  }]
+                    records: [{ recordType: "url", data: url }]
                 });
                 setStatus("Writing succesfull")
                 setMessage(url)
@@ -97,24 +97,32 @@ function NFC() {
     return (
         <AuthenticatedLayout>
             <Head title="NFC" />
-            <PageTitle title="NFC instellen" />
 
-            <Button label={'Scan'} onClick={Read} />
-            <form onSubmit={handleForm} className="space-y-4">
-                <h2>Fill in the data and click write to set NFC tag</h2>
-                <TextInput
-                    name="data"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="https://example.com"
-                />
-                <Button label={'write'} type="submit"/>
-            </form>
+            <div className="nfc__container">
+                <PageTitle title="NFC instellen" />
 
 
+                <form className="nfc__form" onSubmit={handleForm}>
+                    <p>Fill in the data and click write to set NFC tag</p>
+                    <TextInput
+                        name="data"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder="https://example.com"
+                    />
 
-            <p>Status: {status}</p>
-            <p>NFC data: {Message}</p>
+                    <div className="nfc__buttons">
+                        <Button label={'write'} type="submit" />
+                        <Button label={'Read NFC tag'} onClick={Read} />
+                    </div>
+
+                    <div className="nfc__textContainer">
+                        <p>Status: {status}</p>
+                        <p>NFC data: {Message}</p>
+                    </div>
+                </form>
+            </div>
+
         </AuthenticatedLayout>
     );
 }
