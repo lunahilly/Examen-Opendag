@@ -12,6 +12,7 @@ function InformationForm() {
     const [openModal, setOpenModal] = useState(status !== null ? true : false);
     const { data, setData, post, patch, processing, errors } = useForm({
         name: course ? course.name : '',
+        abbreviation: course ? course.abbreviation : '',
         image: course ? course.image : '',
         information: course ? course.information : '',
         careers: course ? course.careers : [],
@@ -51,6 +52,7 @@ function InformationForm() {
             <main className="main">
                 <form onSubmit={submit} className="form">
                     <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name} />
+                    <InputField label="Abbreviation" value={data.abbreviation} onChange={(event) => setData('abbreviation', event.target.value)} error={errors.abbreviation} />
                     <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image} />
                     <InputField label="Information" value={data.information} onChange={(event) => setData('information', event.target.value)} error={errors.information} />
                     <InputField label="Careers" value={value} onChange={(event) => setValue(event.target.value)} onClick={addCareers}>
@@ -77,7 +79,7 @@ function InformationForm() {
                 </form>
             </main>
             {
-                openModal ? <ActivityCourseModal/> : null
+                openModal ? <ActivityCourseModal course={course.id} onClick={() => setOpenModal(false)}/> : null
             }
         </AuthenticatedLayout>
     );
