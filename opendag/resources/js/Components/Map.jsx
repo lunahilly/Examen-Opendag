@@ -182,7 +182,6 @@ const STEP_ICONS = {
 // The two buildings available in the building switcher
 const BUILDINGS = [
   { id: 0, label: "Gebouw A" },
-  { id: 1, label: "Silver bullet" },
 ];
 
 // Duration of one full demo loop in milliseconds at 1× speed
@@ -330,8 +329,6 @@ function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
 function HeaderBar({
   activeBuilding,
   setActiveBuilding,
-  theme,
-  toggleTheme,
   isDemo,
   startDemo,
   stopDemo,
@@ -345,10 +342,6 @@ function HeaderBar({
   onRestoreRoute,
   accessMode,
   toggleAccessMode,
-  lang,
-  toggleLang,
-  kioskMode,
-  toggleKiosk,
   t,
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -397,81 +390,7 @@ function HeaderBar({
               Rolstoel vriendelijk
             </button>
 
-            {/* Language toggle — clean text pill */}
-            <button
-              className={styles.hLangBtn}
-              onClick={toggleLang}
-              title={
-                lang === "nl" ? "Switch to English" : "Schakel naar Nederlands"
-              }
-            >
-              {lang === "nl" ? "NL" : "EN"}
-            </button>
 
-            {/* Kiosk mode */}
-            {!kioskMode && (
-              <button
-                className={styles.hIconBtn}
-                onClick={toggleKiosk}
-                title={t.kioskMode}
-              >
-                {/* <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
-              </svg> */}
-                Fullscreen
-              </button>
-            )}
-
-            {/* Theme toggle — sun / moon SVG */}
-            <button
-              className={styles.hIconBtn}
-              onClick={toggleTheme}
-              title={theme === "light" ? "Donkere modus" : "Lichte modus"}
-            >
-              {theme === "light" ? (
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                >
-                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                </svg>
-
-              ) : (
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              )}
-            </button>
 
             {/* Help button — opens the feature explanation popup */}
             <button
@@ -506,7 +425,7 @@ function HeaderBar({
             onClick={startTour}
             title="Start de open dag rondleiding"
           >
-            🗺️ <span className={styles.hBtnLabel}>Tour</span>
+            <span className={styles.hBtnLabel}>Tour</span>
           </button>
 
           {/* Verras me */}
@@ -515,7 +434,7 @@ function HeaderBar({
             onClick={onSurprise}
             title={t.verrasMe}
           >
-            🎲 <span className={styles.hBtnLabel}>Verras</span>
+            <span className={styles.hBtnLabel}>Verras</span>
           </button>
 
           {/* Demo (toggle + inline speed slider when running) */}
@@ -523,7 +442,7 @@ function HeaderBar({
             className={`${styles.hToolBtn} ${isDemo ? styles.hToolBtnPink : ""}`}
             onClick={isDemo ? stopDemo : startDemo}
           >
-            {isDemo ? "⏹" : "▶"} <span className={styles.hBtnLabel}>Demo</span>
+            <span className={styles.hBtnLabel}>Demo</span>
           </button>
           {isDemo && (
             <div className={styles.demoSpeed}>
@@ -547,7 +466,7 @@ function HeaderBar({
             onClick={onShowQR}
             title="QR-codes voor elke ruimte"
           >
-            📱 <span className={styles.hBtnLabel}>QR</span>
+            <span className={styles.hBtnLabel}>QR</span>
           </button>
 
           {/* Saved route */}
@@ -556,7 +475,7 @@ function HeaderBar({
             onClick={onRestoreRoute}
             title={t.opgeslagenRoute}
           >
-            📂 <span className={styles.hBtnLabel}>Route</span>
+            <span className={styles.hBtnLabel}>Route</span>
           </button>
         </div>
       </div>
@@ -1044,9 +963,6 @@ export default function IndoorMap() {
   // The currently selected programme ('all' or a programme id)
   const [activeProgram, setActiveProgram] = useState("all");
 
-  // ── Feature 3: POI detail card ───────────────────────────────────────────────
-  // The POI whose detail card is currently shown (null = hidden)
-  const [selectedPoi, setSelectedPoi] = useState(null);
 
   // ── Feature 6: Favorites ──────────────────────────────────────────────────────
   // Array of favourite POI ids, persisted to localStorage
@@ -1783,7 +1699,6 @@ export default function IndoorMap() {
                     className={`${styles.poiItem} ${isOrigin ? styles.poiFrom : ""} ${isDest ? styles.poiTo : ""} ${isTourStop ? styles.poiTourStop : ""}`}
                     onClick={() => {
                       handlePoiClick(poi);
-                      setSelectedPoi(poi);
                     }}
                   >
                     <span
@@ -1832,65 +1747,6 @@ export default function IndoorMap() {
             </div>
           )}
 
-          {/* Feature 3: POI detail card */}
-          {selectedPoi && (
-            <div className={styles.detailCard}>
-              <button
-                className={styles.detailClose}
-                onClick={() => setSelectedPoi(null)}
-              >
-                ✕
-              </button>
-              <span className={styles.detailIcon}>{selectedPoi.icon}</span>
-              <div className={styles.detailName}>{selectedPoi.label}</div>
-              {selectedPoi.desc && (
-                <div className={styles.detailDesc}>{selectedPoi.desc}</div>
-              )}
-
-              <div className={styles.detailMeta}>
-                <span>
-                  {FLOORS.find((f) => f.id === selectedPoi.floor)?.name}
-                </span>
-              </div>
-              <div className={styles.detailActions}>
-                <button
-                  className={styles.detailAction}
-                  onClick={() => {
-                    setOrigin(selectedPoi);
-                    setFloor(selectedPoi.floor);
-                    applyRoute(selectedPoi, destination);
-                    setSelectionMode(null);
-                    setSelectedPoi(null);
-                  }}
-                >
-                  📍 Vertrek hier
-                </button>
-                <button
-                  className={styles.detailAction}
-                  onClick={() => {
-                    setDestination(selectedPoi);
-                    setFloor(selectedPoi.floor);
-                    applyRoute(origin, selectedPoi);
-                    setSelectionMode(null);
-                    setSelectedPoi(null);
-                  }}
-                >
-                  🏁 Navigeer hierheen
-                </button>
-                <button
-                  className={`${styles.detailFav} ${isFav(selectedPoi.id) ? styles.favActive : ""}`}
-                  onClick={() => toggleFav(selectedPoi.id)}
-                  title={
-                    isFav(selectedPoi.id)
-                      ? "Verwijder favoriet"
-                      : "Voeg toe aan favorieten"
-                  }
-                >
-                  {isFav(selectedPoi.id) ? "⭐" : "☆"}
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </main>
 
