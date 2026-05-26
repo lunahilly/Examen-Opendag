@@ -34,12 +34,12 @@ function Navigation() {
     return isSmaller ? (
         <header className="header">
             <span className="header__menu">
-                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
-                    <i className="fa-solid fa-bars header__menu--button-icon"/>
-                </button>
                 <a href="/" className="header__menu--logo">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
                 </a>
+                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
+                    <i className="fa-solid fa-bars header__menu--button-icon"/>
+                </button>
             </span>
             {
                 openMenu ?

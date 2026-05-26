@@ -1,13 +1,138 @@
 @use "../abstracts/variables";
 @use "../abstracts/mixins";
 
-.modal{
-    // background: red;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    // right: 0;
-    transform: translate(-50%, -50%);
-    // width: 100%;
-    // height: 20em;
+// ── Gedeeld overlay backdrop ──────────────────────────────────────────────────
+// Donker transparant scherm achter alle modals.
+// Gebruikt position: fixed zodat hij altijd het volledige scherm bedekt,
+// ook als de modal via een React portal buiten de app root wordt gerenderd.
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+// ── Help modal ────────────────────────────────────────────────────────────────
+// Popup met uitleg over alle knoppen en functies.
+.help-modal {
+    background: #111;
+    border: 1px solid rgba(map-get(variables.$colors, "magenta"), 0.2);
+    border-radius: 0.75em;
+    width: 100%;
+    max-width: 28em;
+    max-height: calc(100svh - 2em);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    position: relative;
+
+    @media (max-width: 37.5em) {
+        max-width: 100%;
+        border-radius: 0.5em;
+    }
+}
+
+// Bovenste balk van de modal: titel links, sluitknop rechts
+.help-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25em 1.25em 0;
+}
+
+// Grote titel "Uitleg & functies"
+.help-modal__title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.2em;
+}
+
+// Ondertitel onder de hoofdtitel
+.help-modal__subtitle {
+    font-size: 0.75em;
+    color: #aaa;
+    margin-bottom: 1em;
+}
+
+// Sluitknop rechtsboven — lichtrood, rond
+.help-modal__close-btn {
+    position: relative;
+    top: 0;
+    right: 0;
+    flex-shrink: 0;
+    width: 1.75em;
+    height: 1.75em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.4);
+    border-radius: 50%;
+    font-size: 1em;
+    font-weight: 700;
+    color: #ff5050;
+    cursor: pointer;
+    transition: all 150ms;
+
+    &:hover {
+        background: rgba(255, 80, 80, 0.3);
+        border-color: #ff5050;
+    }
+}
+
+// Scrollbare lijst met alle feature items
+.help-modal__list {
+    overflow-y: auto;
+    padding: 0.625em 0;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: map-get(variables.$colors, "magenta") transparent;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: map-get(variables.$colors, "magenta");
+        border-radius: 2px;
+    }
+}
+
+// Één rij in de lijst: naam + beschrijving
+.help-modal__item {
+    padding: 0.875em 1.25em;
+    border-bottom: 0.0625em solid rgba(255, 255, 255, 0.08);
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+// Naam van de functie (vetgedrukt)
+.help-modal__item-name {
+    font-size: 1em;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.25em;
+}
+
+// Beschrijvende tekst onder de naam
+.help-modal__item-desc {
+    font-size: 0.8em;
+    line-height: 1.5;
+    color: #aaa;
 }

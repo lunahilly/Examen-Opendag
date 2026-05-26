@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-// import JSZip from "jszip";
+import { createPortal } from "react-dom";
+import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
-import { computeRoute, getPositionAtProgress } from "../data/campusWayfinding";
+import { computeRoute, getPosisieOpRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
@@ -21,35 +22,35 @@ const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
 // ── Feature 2: Study programmes filter ────────────────────────────────────────
 // Maps programme ids to metadata; 'all' shows every POI
 const PROGRAMMES = [
-    { id: "all", label: "Alles", icon: "🔍", pois: [] },
+    { id: "all", label: "Alles", icon: "fa-solid fa-border-all", pois: [] },
     {
         id: "audio",
         label: "Audio & Podcast",
-        icon: "🎙️",
+        icon: "fa-solid fa-microphone",
         pois: ["poi-radio", "poi-pod", "poi-av", "poi-pet"],
     },
     {
         id: "video",
         label: "Video & Film",
-        icon: "🎬",
+        icon: "fa-solid fa-film",
         pois: ["poi-tv", "poi-post", "poi-cp"],
     },
     {
         id: "design",
         label: "Design & Media",
-        icon: "🎨",
+        icon: "fa-solid fa-palette",
         pois: ["poi-mv", "poi-mr", "poi-rv", "poi-id", "poi-aam"],
     },
     {
         id: "tech",
         label: "Tech & ICT",
-        icon: "💻",
+        icon: "fa-solid fa-laptop-code",
         pois: ["poi-sd", "poi-ga", "poi-xr"],
     },
     {
         id: "events",
         label: "Events & Live",
-        icon: "🎤",
+        icon: "fa-solid fa-music",
         pois: ["poi-pet", "poi-aula", "poi-ss"],
     },
 ];
@@ -259,6 +260,568 @@ const TOUR_STOPS = [
     },
 ];
 
+<<<<<<< HEAD
+=======
+// ── QR Scan Welcome Overlay ───────────────────────────────────────────────────
+// Shown when the visitor opens the app by scanning a room QR code (?hier=poi-id).
+// Displays a rich "you are here" card and lets them immediately pick a destination.
+function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
+    const floor = FLOORS.find((f) => f.id === poi.floor)
+
+    const statusColor =
+        poi.status === "vrij" ? "scanBadgeGreen"
+            : poi.status === "bezet" ? "scanBadgeRed"
+                : poi.status === "gesloten" ? "scanBadgeAmber"
+                    : ""
+
+    const statusLabel =
+        poi.status === "vrij" ? "✅ Vrij"
+            : poi.status === "bezet" ? "🔴 Bezet"
+                : poi.status === "gesloten" ? "🔒 Gesloten"
+                    : ""
+
+    return (
+        <div className={styles.scanOverlay} onClick={(e) => {
+            if (e.target === e.currentTarget) onExplore()
+        }}>
+            <div className={styles.scanCard}>
+
+                {/* Pulsing location ring + POI icon */}
+                <div className={styles.scanRing}>
+                    <div className={styles.scanIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></div>
+                </div>
+
+                {/* "Je bent hier" label */}
+                <div className={styles.scanHere}>📍 Je bent hier</div>
+
+                {/* Room name */}
+                <div className={styles.scanName}>{poi.label}</div>
+
+                {/* Info badges */}
+                <div className={styles.scanBadges}>
+                    {floor && (
+                        <span className={styles.scanBadge}>
+                            {floor.name}
+                        </span>
+                    )}
+                    {statusLabel && (
+                        <span className={`${styles.scanBadge} ${statusColor ? styles[statusColor] : ""}`}>
+                            {statusLabel}
+                        </span>
+                    )}
+                    {poi.category && (
+                        <span className={styles.scanBadge}>
+                            {poi.category}
+                        </span>
+                    )}
+                </div>
+
+                {/* Room description */}
+                {poi.desc && (
+                    <div className={styles.scanDesc}>{poi.desc}</div>
+                )}
+
+                {/* Primary CTA */}
+                <button className={styles.scanCta} onClick={onNavigate}>
+                    🗺️ Kies mijn bestemming
+                </button>
+
+                {/* Secondary link */}
+                <button className={styles.scanExplore} onClick={onExplore}>
+                    Verken de kaart zonder route
+                </button>
+            </div>
+        </div>
+    )
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+// Two-row header:
+//   Top row  — logo | spacer | nav links | settings icons (♿ 🇳🇱 ⊞ 🌙)
+//   Sub-bar  — building tabs | spacer | tool buttons (Tour Verras Demo QR Route)
+// On mobile the nav links hide and the sub-bar scrolls horizontally.
+function HeaderBar({
+  activeBuilding,
+  setActiveBuilding,
+  isDemo,
+  startDemo,
+  stopDemo,
+  demoSpeed,
+  setDemoSpeed,
+  tourActive,
+  startTour,
+  onShowQR,
+  onShowHelp,
+  onSurprise,
+  onRestoreRoute,
+  accessMode,
+  toggleAccessMode,
+  t,
+}) {
+    const [menuOpen, setMenuOpen] = useState(false)
+
+    return (
+        <header className={styles.header}>
+
+            {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
+            <div className={`${styles.hSubRow} wrapper`}>
+
+                <div className={styles.hRow}>
+                    {/* Settings icon buttons — SVG icons, always visible */}
+                    <div className={styles.hIcons}>
+                        {/* Accessibility toggle */}
+                        <button
+                            className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
+                            onClick={toggleAccessMode}
+                            title={t.accessBanner}
+                        >
+                            Rolstoel vriendelijk
+                        </button>
+
+
+                        {/* Help button — opens the feature explanation popup */}
+                        <button
+                            className={styles.hHelpBtn}
+                            onClick={onShowHelp}
+                            title="Uitleg over alle knoppen"
+                        >
+                            {/* <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg> */}
+                            Hoe werkt het?
+                        </button>
+                    </div>
+                </div>
+
+        {/* Tool buttons */}
+        <div className={styles.hTools}>
+          {/* Tour */}
+          <button
+            className={`${styles.hToolBtn} ${tourActive ? styles.hToolBtnGreen : ""}`}
+            onClick={startTour}
+            title="Start de open dag rondleiding"
+          >
+            <span className={styles.hBtnLabel}>Tour</span>
+          </button>
+
+          {/* Verras me */}
+          <button
+            className={styles.hToolBtn}
+            onClick={onSurprise}
+            title={t.verrasMe}
+          >
+            <span className={styles.hBtnLabel}>Verras</span>
+          </button>
+
+          {/* Demo (toggle + inline speed slider when running) */}
+          <button
+            className={`${styles.hToolBtn} ${isDemo ? styles.hToolBtnPink : ""}`}
+            onClick={isDemo ? stopDemo : startDemo}
+          >
+            <span className={styles.hBtnLabel}>Demo</span>
+          </button>
+          {isDemo && (
+            <div className={styles.demoSpeed}>
+              <span className={styles.demoSpeedLabel}>{demoSpeed}×</span>
+              <input
+                type="range"
+                min="0.5"
+                max="5"
+                step="0.5"
+                value={demoSpeed}
+                className={styles.demoSlider}
+                style={{ "--pct": `${((demoSpeed - 0.5) / 4.5) * 100}%` }}
+                onChange={(e) => setDemoSpeed(Number(e.target.value))}
+              />
+            </div>
+          )}
+
+          {/* QR codes */}
+          <button
+            className={styles.hToolBtn}
+            onClick={onShowQR}
+            title="QR-codes voor elke ruimte"
+          >
+            <span className={styles.hBtnLabel}>QR</span>
+          </button>
+
+          {/* Saved route */}
+          <button
+            className={styles.hToolBtn}
+            onClick={onRestoreRoute}
+            title={t.opgeslagenRoute}
+          >
+            <span className={styles.hBtnLabel}>Route</span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// ── Kiosk header ──────────────────────────────────────────────────────────────
+// Minimal header shown when kiosk mode is active: logo on left, clock in center, exit button on right
+function KioskHeader({ onExit, t }) {
+    const [time, setTime] = useState(() => {
+        const now = new Date();
+        return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    });
+    useEffect(() => {
+        const id = setInterval(() => {
+            const now = new Date();
+            setTime(
+                `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+            );
+        }, 1000);
+        return () => clearInterval(id);
+    }, []);
+    return (
+        <header className={styles.kioskHeader}>
+            {/* Logo left */}
+            <div className={styles.logo}>
+                <div className={styles.logoMark}>
+                    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                        <rect width="34" height="34" rx="7" fill="#e040fb" />
+                        <text
+                            x="17"
+                            y="24"
+                            textAnchor="middle"
+                            fill="white"
+                            fontSize="15"
+                            fontWeight="800"
+                            fontFamily="'DM Sans', sans-serif"
+                            letterSpacing="-0.5"
+                        >
+                            mA
+                        </text>
+                    </svg>
+                </div>
+                <div className={styles.logoWords}>
+                    <span className={styles.logoName}>Mediacollege</span>
+                    <span className={styles.logoCity}>Amsterdam</span>
+                </div>
+            </div>
+            {/* Clock center */}
+            <span className={styles.kioskClock}>{time}</span>
+            {/* Exit button right */}
+            <button className={styles.kioskExitBtn} onClick={onExit}>
+                {t.exitKiosk}
+            </button>
+        </header>
+    );
+}
+
+// ── Route steps list ──────────────────────────────────────────────────────────
+// Renders an ordered list of navigation steps with icon, connecting line, and text
+function StepsList({ route }) {
+    return (
+        <ol className={styles.stepsList}>
+            {route.steps.map((step, i) => (
+                <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
+                    <div className={styles.stepLeft}>
+                        <span className={styles.stepIcon}>
+                            {STEP_ICONS[step.icon] ?? step.icon}
+                        </span>
+                        {i < route.steps.length - 1 && <span className={styles.stepLine} />}
+                    </div>
+                    <span className={styles.stepText}>{step.text}</span>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+// ── Tour banner ───────────────────────────────────────────────────────────────
+// Shown below the map while a guided tour is active.
+// Displays progress dots, stop info, a tip, and the "Ik ben er" / cancel buttons.
+function TourBanner({ tourStep, onNext, onCancel }) {
+    const stop = TOUR_STOPS[tourStep];
+    const poi = ALL_POIS.find((p) => p.id === stop.id);
+    const isLast = tourStep === TOUR_STOPS.length - 1;
+
+    return (
+        <div className={styles.tourBar}>
+            {/* Progress dots */}
+            <div className={styles.tourDots}>
+                {TOUR_STOPS.map((_, i) => (
+                    <span
+                        key={i}
+                        className={`${styles.tourDot} ${i === tourStep ? styles.tourDotActive : ""} ${i < tourStep ? styles.tourDotDone : ""}`}
+                    />
+                ))}
+            </div>
+
+            {/* Stop counter + POI */}
+            <div className={styles.tourStop}>
+                <span className={styles.tourStopIcon}>{poi?.icon}</span>
+                <div className={styles.tourStopText}>
+                    <span className={styles.tourStopCounter}>
+                        Stop {tourStep + 1} van {TOUR_STOPS.length}
+                    </span>
+                    <span className={styles.tourStopName}>{poi?.label}</span>
+                </div>
+            </div>
+
+            {/* Tip text */}
+            <p className={styles.tourTip}>{stop.tip}</p>
+
+            {/* Actions */}
+            <div className={styles.tourActions}>
+                <button className={styles.tourCancelBtn} onClick={onCancel}>
+                    ✕ Annuleer
+                </button>
+                <button className={styles.tourNextBtn} onClick={onNext}>
+                    {isLast ? "🎉 Tour voltooid!" : "Ik ben er ✓"}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// ── QR Modal ──────────────────────────────────────────────────────────────────
+// Full-screen modal showing a grid of QR codes — one per non-transport POI.
+// Each QR encodes ?hier=[poi-id]. "Download alles" bundles every QR into a
+// single ZIP file. Clicking one card downloads just that QR as a PNG.
+function QRModal({ onClose }) {
+    const base = `${window.location.origin}${window.location.pathname}`;
+    const qrRefs = useRef({});
+    const [downloading, setDownloading] = useState(false);
+
+    // Render one POI's SVG into a labeled PNG Blob
+    const renderQRBlob = async (poi) => {
+        const svg = qrRefs.current[poi.id];
+        if (!svg) return null;
+
+        let svgString = new XMLSerializer().serializeToString(svg);
+        svgString = svgString.replace(/currentColor/g, "#000000");
+
+        const svgBlob = new Blob([svgString], {
+            type: "image/svg+xml;charset=utf-8",
+        });
+        const svgUrl = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = svgUrl;
+        });
+
+        const SIZE = 1024;
+        const PAD = 60;
+        const canvas = document.createElement("canvas");
+        canvas.width = SIZE;
+        canvas.height = SIZE + 140;
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, PAD, PAD, SIZE - 2 * PAD, SIZE - 2 * PAD);
+        URL.revokeObjectURL(svgUrl);
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 40px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(poi.label, SIZE / 2, SIZE + 60);
+
+        const floor = FLOORS.find((f) => f.id === poi.floor);
+        if (floor) {
+            ctx.font = "28px sans-serif";
+            ctx.fillStyle = "#666666";
+            ctx.fillText(floor.name, SIZE / 2, SIZE + 100);
+        }
+
+        return new Promise((resolve) =>
+            canvas.toBlob((blob) => resolve(blob), "image/png"),
+        );
+    };
+
+    // Trigger a file download from a Blob
+    const triggerDownload = (blob, filename) => {
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    };
+
+    // Build safe filename from POI label
+    const safeName = (poi) =>
+        poi.label
+            .replace(/[^a-z0-9]+/gi, "-")
+            .toLowerCase()
+            .replace(/^-|-$/g, "");
+
+    // Single QR download (per card click)
+    const downloadOne = async (poi) => {
+        const blob = await renderQRBlob(poi);
+        if (blob) triggerDownload(blob, `qr-${safeName(poi)}.png`);
+    };
+
+    // Bundle all QRs into one ZIP
+    const downloadAll = async () => {
+        if (downloading) return;
+        setDownloading(true);
+
+        const zip = new JSZip();
+        const folder = zip.folder("qr-codes");
+
+        for (const poi of GRID_POIS) {
+            const blob = await renderQRBlob(poi);
+            if (blob) folder.file(`qr-${safeName(poi)}.png`, blob);
+        }
+
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        triggerDownload(zipBlob, "Ma-OpenDag-QR-codes.zip");
+        setDownloading(false);
+    };
+
+    return (
+        <div
+            className={styles.qrOverlay}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div className={styles.qrModal}>
+                {/* Header */}
+                <div className={styles.qrModalHeader}>
+                    <div>
+                        <div className={styles.qrModalTitle}>📱 QR-codes per ruimte</div>
+                        <div className={styles.qrModalSub}>
+                            Download alle QR-codes als ZIP en plak ze op de deur van elke
+                            ruimte. Bezoekers scannen de code en de kaart opent automatisch
+                            met die ruimte als startpunt. Klik op één code voor losse
+                            download.
+                        </div>
+                    </div>
+                    <div className={styles.qrModalActions}>
+                        <button
+                            className={styles.qrPrintBtn}
+                            onClick={downloadAll}
+                            disabled={downloading}
+                        >
+                            {downloading ? "⏳ Bezig…" : "⬇️ Download alles (ZIP)"}
+                        </button>
+                        <button className={styles.qrCloseBtn} onClick={onClose}>
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                {/* Grid of QR codes — click any card to download just that one */}
+                <div className={styles.qrGrid}>
+                    {GRID_POIS.map((poi) => {
+                        const url = `${base}?hier=${poi.id}`;
+                        const floor = FLOORS.find((f) => f.id === poi.floor);
+                        return (
+                            <div
+                                key={poi.id}
+                                className={styles.qrItem}
+                                onClick={() => downloadOne(poi)}
+                                style={{ cursor: "pointer" }}
+                                title={`Download QR voor ${poi.label}`}
+                            >
+                                <QRCodeSVG
+                                    ref={(el) => {
+                                        if (el) qrRefs.current[poi.id] = el;
+                                    }}
+                                    value={url}
+                                    size={130}
+                                    bgColor="transparent"
+                                    fgColor="currentColor"
+                                    level="M"
+                                />
+                                <span className={styles.qrItemIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></span>
+                                <span className={styles.qrItemName}>{poi.label}</span>
+                                <span className={styles.qrItemFloor}>{floor?.name}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ── Help Modal ────────────────────────────────────────────────────────────────
+// Popup that explains every button and feature in plain language.
+// Opened via the ? icon in the header — useful for first-time visitors.
+function HelpModal({ onClose }) {
+    const items = [
+        {
+            name: "Route plannen",
+            desc: 'Klik op "Vanaf" en "Naar" om een startpunt en bestemming te kiezen. De route wordt op de kaart getekend met stap-voor-stap aanwijzingen.',
+        },
+        {
+            name: "Tour",
+            desc: 'Start een begeleide rondleiding langs 5 highlights: Receptie → Kantine → Aula → Podium & Events → Radio Studio. Druk op "Ik ben er" om naar de volgende stop te gaan.',
+        },
+        {
+            name: "Verras me",
+            desc: "Kiest een willekeurige ruimte en toont de route ernaartoe, inclusief een leuk weetje over die plek.",
+        },
+        {
+            name: "Demo",
+            desc: "Speelt een geanimeerde demo af van een loper die een route volgt. Gebruik de schuifregelaar om de snelheid aan te passen.",
+        },
+        {
+            name: "QR-codes",
+            desc: "Genereert een QR-code voor elke ruimte. Print ze uit en plak ze op de deur. Bezoekers scannen de code en de kaart opent met die ruimte als startpunt.",
+        },
+        {
+            name: "Opgeslagen route",
+            desc: "Laadt een eerder opgeslagen route — handig als je geen wifi hebt in het gebouw.",
+        },
+        {
+            name: "Rolstoel vriendelijk",
+            desc: "Routes lopen alleen via de lift (geen trappen). Ruimtes met liftacces worden extra gemarkeerd op de kaart.",
+        },
+    ];
+
+    return createPortal(
+        <div
+            className="modal-overlay"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div className="help-modal">
+                <div className="help-modal__header">
+                    <div>
+                        <div className="help-modal__title">Uitleg & functies</div>
+                        <div className="help-modal__subtitle">Een overzicht van alle knoppen en wat ze doen.</div>
+                    </div>
+                    <button className="help-modal__close-btn" onClick={onClose}>
+                        ✕
+                    </button>
+                </div>
+                <div className="help-modal__list">
+                    {items.map((item, i) => (
+                        <div key={i} className="help-modal__item">
+                            <div className="help-modal__item-name">{item.name}</div>
+                            <div className="help-modal__item-desc">{item.desc}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
+}
+
+>>>>>>> 0ef7e80a1e9754a28416848f371693ef4e5aac97
 // ── Main component ────────────────────────────────────────────────────────────
 // Root component for the indoor map application — manages all state and renders the full UI
 export default function IndoorMap() {    // ── Theme (Feature 1) ────────────────────────────────────────────────────────
@@ -368,9 +931,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // The currently selected programme ('all' or a programme id)
     const [activeProgram, setActiveProgram] = useState("all");
 
-    // ── Feature 3: POI detail card ───────────────────────────────────────────────
-    // The POI whose detail card is currently shown (null = hidden)
-    const [selectedPoi, setSelectedPoi] = useState(null);
 
     // ── Feature 6: Favorites ──────────────────────────────────────────────────────
     // Array of favourite POI ids, persisted to localStorage
@@ -545,7 +1105,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             const pack = demoPackRef.current;
             console.log(pack);
             if (pack) {
-                const pos = getPositionAtProgress(pack.route.waypoints, progressRef.current);
+                const pos = getPosisieOpRoute(pack.route.waypoints, progressRef.current);
                 if (pos) {
                     setWalkerPos(pos);
                     setFloor(pos.floor);
@@ -859,34 +1419,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         t,
     };
 
-    // ── Second building placeholder ──────────────────────────────────────────────
-    // Gebouw B is not yet mapped — show a placeholder screen instead
-    if (activeBuilding === 1) {
-        return (
-            <div
-                className={`${styles.app} ${accessMode ? styles.accessMode : ""} ${kioskMode ? styles.kioskMode : ""}`}
-                data-theme={isDark ? "dark" : "light"}
-            >
-                {kioskMode ? (
-                    <KioskHeader onExit={toggleKiosk} t={t} />
-                ) : (
-                    <HeaderBar {...headerProps} />
-                )}
-                <main className={styles.main}>
-                    <div className={styles.card}>
-                        <div className={styles.comingSoon}>
-                            <span className={styles.comingSoonIcon}>🏗️</span>
-                            <span className={styles.comingSoonTitle}>Gebouw B</span>
-                            <span className={styles.comingSoonSub}>
-                                Binnenkort beschikbaar
-                            </span>
-                        </div>
-                    </div>
-                </main>
-            </div>
-        );
-    }
-
     // ── Main render ───────────────────────────────────────────────────────────────
     return (
         <div
@@ -944,6 +1476,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 highlightPoiIds={highlightPoiIds}
                                 accessMode={accessMode}
                             />
+                            {/* <GraphDebugger floor={floor} /> */}
                         </div>
                         <div className={styles.floorCol}>
                             <FloorSelector floor={floor} onChange={setFloor} />
@@ -960,7 +1493,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                     )}
 
                     {/* ── "Je bent hier" chip ─────────────────────────────────────────── */}
-                    {/* Shown when an origin POI is selected so users know their start */}
                     {origin && (
                         <div className={styles.youAreHere}>
                             📍 <strong>Je bent hier:</strong>&nbsp;{origin.label}
@@ -1076,7 +1608,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     className={`${styles.progTab} ${activeProgram === prog.id ? styles.progTabActive : ""}`}
                                     onClick={() => setActiveProgram(prog.id)}
                                 >
-                                    {prog.icon} {prog.label}
+                                    <i className={prog.icon} /> {prog.label}
                                 </button>
                             ))}
                         </div>
@@ -1092,7 +1624,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     className={`${styles.catTab} ${activeCategory === cat.id ? styles.catTabActive : ""}`}
                                     onClick={() => setActiveCategory(cat.id)}
                                 >
-                                    {cat.icon} {cat.label}
+                                    <i className={cat.icon} /> {cat.label}
                                 </button>
                             ))}
                         </div>
@@ -1113,13 +1645,13 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     poi.category.value === "transport" && // poi.category => poi.category.value GAGA
                                     poi.label.toLowerCase().includes("lift");
                                 return (
-                                    <button
+                                    <div
                                         key={poi.id}
+                                        role="button"
+                                        tabIndex={0}
                                         className={`${styles.poiItem} ${isOrigin ? styles.poiFrom : ""} ${isDest ? styles.poiTo : ""} ${isTourStop ? styles.poiTourStop : ""}`}
-                                        onClick={() => {
-                                            handlePoiClick(poi);
-                                            setSelectedPoi(poi);
-                                        }}
+                                        onClick={() => handlePoiClick(poi)}
+                                        onKeyDown={(e) => e.key === "Enter" && handlePoiClick(poi)}
                                     >
                                         <span
                                             className={`${styles.checkBox} ${isOrigin || isDest ? styles.checkActive : ""}`}
@@ -1128,9 +1660,9 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                             console.log(poi)
                                         }
                                         <span className={styles.poiName}>
-                                            {poi.icon} {poi.label}
+                                            <img src={`/icons/${poi.icon}.webp`} alt="" className={styles.poiIcon} />
+                                            {poi.label}
                                         </span>
-                                        {/* Tour stop indicator */}
                                         {isTourStop && (
                                             <span
                                                 className={styles.tourStopBadge}
@@ -1139,13 +1671,11 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                                 📍
                                             </span>
                                         )}
-                                        {/* Feature 4: access note on lift POIs */}
                                         {isLift && (
                                             <span className={styles.accessNote}>
                                                 {t.liftBeschikbaar}
                                             </span>
                                         )}
-                                        {/* Feature 6: star in grid */}
                                         <button
                                             className={`${styles.favBtn} ${isFav(poi.value) ? styles.favActive : ""}`} //poi.id => poi.value GAGA
                                             onClick={(e) => {
@@ -1160,7 +1690,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                         >
                                             {isFav(poi.value) ? "⭐" : "☆"} {/*poi.id => poi.value GAGA*/}
                                         </button>
-                                    </button>
+                                    </div>
                                 );
                             })}
                         </div>
@@ -1293,7 +1823,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             {/* QR Code modal */}
             {showQR && <QRModal onClose={() => setShowQR(false)} />}
             {/* Help / feature explanation popup */}
-            {showHelp && <HelpModal onClose={() => setShowHelp(false)} lang={lang} />}
+            {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
         </div>
     );
 }

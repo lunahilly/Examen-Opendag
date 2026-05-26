@@ -1,3 +1,33 @@
+Simpele uitleg voor campusWayfinding.js:
+
+Dit bestand regelt de volledige routeberekening binnen een gebouw. Het is vergelijkbaar met Google Maps, maar dan voor binnen.
+
+De data
+floors — Een lijst van de vier verdiepingen (begane grond t/m 3e verdieping). Elke verdieping heeft een ID, een naam, en een SVG-plattegrond.
+graphNodes — Alle kruispunten in het gangenstelsel. Dit zijn geen bestemmingen, maar tussenhaltes die het algoritme gebruikt om een route te berekenen. Elk kruispunt heeft een verdieping en een x/y-coördinaat op de plattegrond. De namen zoals f0-mb betekenen: verdieping 0, midden, onderin.
+graphEdges — Alle verbindingen tussen kruispunten. Gewone gangen hebben geen extra info — de afstand wordt automatisch berekend. Trappen en liften krijgen een vaste waarde mee (weight: 300 of 350) zodat het algoritme weet dat overstappen extra tijd kost.
+
+De hulpfuncties
+verdiepingOpzoektabel — Zet de lijst van verdiepingen om naar een object zodat je een verdieping snel kunt opzoeken via zijn ID, zonder door de hele lijst te hoeven zoeken.
+afstand — Berekent de rechte lijn tussen twee punten op de plattegrond via de stelling van Pythagoras. Geeft een getal terug dat de afstand voorstelt.
+bouwVerbindingenOverzicht — Bouwt een opzoektabel op waarbij je per kruispunt direct kunt zien welke buren het heeft en hoe ver die weg zijn. Wordt één keer uitgevoerd bij het laden van het bestand, zodat het algoritme hier later snel in kan zoeken.
+vindDichtsteKruispunt — Een bestemming (zoals "Kamer 2.14") ligt zelden precies op een kruispunt. Deze functie zoekt het dichtstbijzijnde kruispunt op dezelfde verdieping, zodat de route daar kan beginnen of eindigen.
+kortsteRoute — Het hart van het systeem. Dit is het Dijkstra-algoritme: het begint bij het startkruispunt en verkent stap voor stap alle buren. Het houdt bij welke route tot nu toe het goedkoopst is, en gooit duurdere routes weg. Aan het einde geeft het de lijst van kruispunten terug die samen de kortste route vormen.
+
+De hoofdfuncties
+computeRoute — De publieke hoofdfunctie die alles aan elkaar knoopt. Dit is wat je aanroept als je een route wilt berekenen. Het doet het volgende:
+
+Zoekt de twee locaties op uit de lijst van alle locaties
+Koppelt elke locatie aan het dichtstbijzijnde kruispunt
+Berekent het kortste pad via kortsteRoute
+Bouwt een lijst van waypoints — coördinaten die op de kaart getekend worden als een lijn
+Bouwt een lijst van navigatiestappen — leesbare instructies zoals "Trap 3 naar Verdieping 2"
+Berekent de totale afstand in meters en de geschatte reistijd in minuten
+
+getPosisieOpRoute — Gegeven een voortgang tussen 0 en 1, berekent dit precies waar op de route je je bevindt. Bij 0 ben je aan het begin, bij 0.5 halverwege, bij 1 aan het einde. Dit wordt gebruikt voor animaties waarbij een icoontje over de route beweegt.
+
+
+
 # Handleiding — Kaart aanpassen
 
 > **Voor wie?** Iedereen die iconen wil wisselen, lokalen wil verplaatsen of begrijpt hoe de routing werkt.

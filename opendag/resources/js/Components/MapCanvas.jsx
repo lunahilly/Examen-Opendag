@@ -1,22 +1,20 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { SVG_W, SVG_H } from '../data/building'
+import { SVG_W, SVG_H, FLOORS } from '../data/building'
 import styles from '../../scss/components/MapCanvas.module.scss'
 
 const FLOOR_IMAGES = {
-    0: '/maps/Plattegrond_begane-grond.svg',
-    1: '/maps/Plattegrond_verdieping1.svg',
-    2: '/maps/Plattegrond_verdieping2.svg',
-    3: '/maps/Plattegrond_verdieping3.svg',
+    0: '/maps/floor-0.png',
+    1: '/maps/floor-1.png',
+    2: '/maps/floor-2.png',
+    3: '/maps/floor-3.png',
 }
 
-// Calculates the Euclidean distance between two touch points for pinch-to-zoom
 function pinchDist(t1, t2) {
     const dx = t1.clientX - t2.clientX
     const dy = t1.clientY - t2.clientY
     return Math.sqrt(dx * dx + dy * dy)
 }
 
-// Renders the SVG floor plan with pan, zoom, route overlay, and POI markers
 export default function MapCanvas({
     floor, pois, route, origin, destination,
     onPoiClick, hoveredPoi, onPoiHover,
@@ -27,56 +25,34 @@ export default function MapCanvas({
     console.log(floor); // GAGA
     // Ref to the outer wrapper div — used to attach wheel and touch listeners
     const wrapRef = useRef(null)
-    // Pan and zoom transform state: x/y offset in pixels, s = scale factor
     const [tx, setTx] = useState({ x: 0, y: 0, s: 1 })
-    // Holds the mouse-down anchor point { sx, sy } while dragging
     const drag = useRef(null)
-    // Records where the drag started so we can distinguish a click from a pan
     const dragStart = useRef(null)
-    // True if the pointer moved far enough during a drag to count as a pan (not a click)
     const didDrag = useRef(false)
+    const touchPan = useRef(null)
+    const pinch = useRef(null)
 
-    // ── Feature 4: Pinch-to-zoom refs ─────────────────────────────────────────
-    // { sx, sy } for single-finger pan
-    const touchPan = useRef(null)   // { sx, sy } for single-finger pan
-    // { startDist, startScale } for two-finger zoom
-    const pinch = useRef(null)   // { startDist, startScale } for two-finger zoom
+    // ── Derived values (all declared before the return) ──────────────────────
 
     // Only POIs that belong to the currently visible floor
     const floorPois = (pois || []).filter(p => p.floor_id === floor) // floor => floor_id GAGA
 
-    // const COORDS_W = floor === 0 ? 1986.13 : 2050.72
-    // const COORDS_H = 1704.1
-    // const scaleX = SVG_W / COORDS_W
-    // const scaleY = SVG_H / COORDS_H
-
-    // Bouw het routepad per verdieping, met een break (M) wanneer de route
-    // terugkomt op deze verdieping na een verdiepingswisseling
     const routePath = (() => {
-        if (!route?.waypoints || route.waypoints.length < 2) return '';
-        const alle = route.waypoints;
-        let d = '';
-
+        if (!route?.waypoints || route.waypoints.length < 2) return ''
+        const alle = route.waypoints
+        let d = ''
         for (let i = 0; i < alle.length; i++) {
-            const wp = alle[i];
-            if (wp.floor !== floor) continue;
-
-            const vorige = i > 0 ? alle[i - 1] : null;
-            const doorlopend = vorige && vorige.floor === floor;
-
-            d += `${doorlopend ? 'L' : 'M'}${wp.x},${wp.y} `;
+            const wp = alle[i]
+            if (wp.floor !== floor) continue
+            const vorige = i > 0 ? alle[i - 1] : null
+            const doorlopend = vorige && vorige.floor === floor
+            d += `${doorlopend ? 'L' : 'M'}${wp.x},${wp.y} `
         }
+        return d.trim()
+    })()
 
-        return d.trim();
-    })();
-    console.log("routePath floor", floor, ":", routePath);
-    console.log("waypoints:", route?.waypoints);
-
-    // ── Stair transition markers ───────────────────────────────────────────────
-    // When the route is multi-floor, mark the exact point where the path
-    // reaches the staircase on this floor (origin floor: last waypoint before the
-    // floor changes; destination floor: first waypoint where the floor begins).
-    // We collect positions that are on this floor but are adjacent to a different floor.
+    // Collect the points where the route crosses to/from this floor, including
+    // the floor number the user needs to travel to so the label is correct.
     const stairMarkers = (() => {
         if (!route || !route.multiFloor) return []
         const all = route.waypoints
@@ -86,16 +62,18 @@ export default function MapCanvas({
             if (wp.floor !== floor) continue
             const prev = all[i - 1]
             const next = all[i + 1]
-            // Entry from another floor: previous wp was on a different floor
-            if (prev && prev.floor !== floor) markers.push({ x: wp.x, y: wp.y, type: 'entry' })
-            // Exit to another floor: next wp is on a different floor
-            if (next && next.floor !== floor) markers.push({ x: wp.x, y: wp.y, type: 'exit' })
+            // Entry: coming FROM another floor onto this one
+            if (prev && prev.floor !== floor)
+                markers.push({ x: wp.x, y: wp.y, type: 'entry', doelFloor: prev.floor })
+            // Exit: leaving this floor FOR another one
+            if (next && next.floor !== floor)
+                markers.push({ x: wp.x, y: wp.y, type: 'exit', doelFloor: next.floor })
         }
         return markers
     })()
 
-    // ── Pan (mouse) ──────────────────────────────────────────────────────────
-    // Records the anchor position when the user starts dragging the map
+    // ── Event handlers ───────────────────────────────────────────────────────
+
     const onMouseDown = useCallback((e) => {
         if (e.button !== 0) return
         drag.current = { sx: e.clientX - tx.x, sy: e.clientY - tx.y }
@@ -103,7 +81,6 @@ export default function MapCanvas({
         didDrag.current = false
     }, [tx])
 
-    // Updates the pan offset while the mouse is held and moving
     const onMouseMove = useCallback((e) => {
         if (!drag.current) return
         if (dragStart.current) {
@@ -111,37 +88,42 @@ export default function MapCanvas({
             const dy = e.clientY - dragStart.current.y
             if (Math.abs(dx) > 4 || Math.abs(dy) > 4) didDrag.current = true
         }
-        const sx = drag.current.sx
-        const sy = drag.current.sy
-        setTx(t => ({ ...t, x: e.clientX - sx, y: e.clientY - sy }))
+        setTx(t => ({ ...t, x: e.clientX - drag.current.sx, y: e.clientY - drag.current.sy }))
     }, [])
 
-    // Clears the drag anchor when the mouse button is released
     const onMouseUp = useCallback(() => {
         drag.current = null
         dragStart.current = null
     }, [])
 
-    // ── Global mouse-up safety ───────────────────────────────────────────────
-    // Listens on the document so dragging outside the map element still stops the pan
+    const onWheel = useCallback((e) => {
+        if (!e.ctrlKey) return
+        e.preventDefault()
+        const f = e.deltaY > 0 ? 0.88 : 1.14
+        setTx(t => ({ ...t, s: Math.max(0.3, Math.min(6, t.s * f)) }))
+    }, [])
+
+    function handleClick(e) {
+        const svg = e.currentTarget
+        const pt = svg.createSVGPoint()
+        pt.x = e.clientX
+        pt.y = e.clientY
+        const svgPt = pt.matrixTransform(svg.getScreenCTM().inverse())
+        const x = (svgPt.x - tx.x) / tx.s
+        const y = (svgPt.y - tx.y) / tx.s
+        console.log('WORLD CLICK:', { x: Math.round(x), y: Math.round(y) })
+    }
+
+    const resetView = () => setTx({ x: 0, y: 0, s: 1 })
+
+    // ── Effects ──────────────────────────────────────────────────────────────
+
     useEffect(() => {
         const stop = () => { drag.current = null; dragStart.current = null }
         document.addEventListener('mouseup', stop)
         return () => document.removeEventListener('mouseup', stop)
     }, [])
 
-    // ── Zoom (wheel) ─────────────────────────────────────────────────────────
-    // Desktop: zoom only when Ctrl is held (Ctrl+scroll). Normal scroll passes through.
-    // Mobile: pinch gestures fire synthetic wheel events with ctrlKey=true, so
-    //         the same check naturally enables pinch-zoom without extra code.
-    const onWheel = useCallback((e) => {
-        if (!e.ctrlKey) return          // no Ctrl → let the page scroll normally
-        e.preventDefault()
-        const f = e.deltaY > 0 ? 0.88 : 1.14
-        setTx(t => ({ ...t, s: Math.max(0.3, Math.min(6, t.s * f)) }))
-    }, [])
-
-    // Attaches the wheel listener with { passive: false } so we can preventDefault
     useEffect(() => {
         const el = wrapRef.current
         if (!el) return
@@ -149,17 +131,13 @@ export default function MapCanvas({
         return () => el.removeEventListener('wheel', onWheel)
     }, [onWheel])
 
-    // ── Feature 4: Pinch-to-zoom (touch) ────────────────────────────────────
-    // Handles single-finger pan and two-finger pinch-to-zoom on touch devices
     useEffect(() => {
         const el = wrapRef.current
         if (!el) return
 
-        // Called when one or two fingers touch the screen
         const onTouchStart = (e) => {
             if (e.touches.length === 1) {
                 const t = e.touches[0]
-                // Read current tx via closure captured in setTx updater instead
                 touchPan.current = { sx: t.clientX, sy: t.clientY }
                 pinch.current = null
                 didDrag.current = false
@@ -173,7 +151,6 @@ export default function MapCanvas({
             }
         }
 
-        // Called while fingers are moving; handles both pan and pinch simultaneously
         const onTouchMove = (e) => {
             e.preventDefault()
             if (e.touches.length === 1 && touchPan.current) {
@@ -192,7 +169,6 @@ export default function MapCanvas({
             }
         }
 
-        // Resets all touch state when fingers leave the screen
         const onTouchEnd = () => {
             touchPan.current = null
             pinch.current = null
@@ -211,27 +187,6 @@ export default function MapCanvas({
         }
     }, [])
 
-    function handleClick(e) {
-        const svg = e.currentTarget
-        const pt = svg.createSVGPoint()
-
-        pt.x = e.clientX
-        pt.y = e.clientY
-
-        // 1. naar SVG coordinates (viewBox space)
-        const svgPt = pt.matrixTransform(svg.getScreenCTM().inverse())
-
-        // 2. undo pan + zoom
-        const x = (svgPt.x - tx.x) / tx.s
-        const y = (svgPt.y - tx.y) / tx.s
-
-        console.log("WORLD CLICK:", {
-            x: Math.round(x),
-            y: Math.round(y)
-        })
-    }
-
-    // ── Auto-center on selected POI ──────────────────────────────────────────
     useEffect(() => {
         if (!centerOn) return
         setTx(prev => {
@@ -240,8 +195,7 @@ export default function MapCanvas({
         })
     }, [centerOn])
 
-    // Resets pan and zoom to the default (no transform)
-    const resetView = () => setTx({ x: 0, y: 0, s: 1 })
+    // ── Render ───────────────────────────────────────────────────────────────
 
     return (
         <div
@@ -260,37 +214,32 @@ export default function MapCanvas({
             >
                 <defs>
                     <style>{`
-            @keyframes dotFlow { to { stroke-dashoffset: -14; } }
-            .rDots { animation: dotFlow 0.75s linear infinite; }
-            @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:0.1} }
-            .pPulse { animation: pulse 1.8s ease-in-out infinite; }
-            @keyframes pulse2 { 0%,100%{opacity:0.35;transform:scale(1)} 50%{opacity:0;transform:scale(1.6)} }
-            .pPulse2 { animation: pulse2 2.2s ease-out infinite; transform-origin:center; transform-box:fill-box; }
-            @keyframes wPulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:0.15;transform:scale(1.8)} }
-            .wRing { animation: wPulse 1.1s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
-          `}</style>
+                        @keyframes dotFlow { to { stroke-dashoffset: -14; } }
+                        .rDots { animation: dotFlow 0.75s linear infinite; }
+                        @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:0.1} }
+                        .pPulse { animation: pulse 1.8s ease-in-out infinite; }
+                        @keyframes pulse2 { 0%,100%{opacity:0.35;transform:scale(1)} 50%{opacity:0;transform:scale(1.6)} }
+                        .pPulse2 { animation: pulse2 2.2s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+                        @keyframes wPulse { 0%,100%{opacity:0.5;transform:scale(1)} 50%{opacity:0.15;transform:scale(1.8)} }
+                        .wRing { animation: wPulse 1.1s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+                    `}</style>
                     <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
                         <feGaussianBlur stdDeviation="3" result="b" />
                         <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
                     </filter>
-                    {/* Amber glow for programme-filter highlighted POIs */}
                     <filter id="glowAmber" x="-80%" y="-80%" width="260%" height="260%">
                         <feGaussianBlur stdDeviation="5" result="b" />
                         <feFlood floodColor="#f59e0b" floodOpacity="0.6" result="c" />
                         <feComposite in="c" in2="b" operator="in" result="d" />
                         <feMerge><feMergeNode in="d" /><feMergeNode in="SourceGraphic" /></feMerge>
                     </filter>
-                    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                        <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(192,96,224,0.3)" strokeWidth="1.5" />
-                    </pattern>
                 </defs>
 
-                {/* Fixed background */}
-                <rect width={SVG_W} height={SVG_H} fill="#2a2a2a" />
+                <rect width={SVG_W} height={SVG_H} fill="#353535" />
 
                 <g transform={`translate(${tx.x},${tx.y}) scale(${tx.s})`}>
 
-                    {/* ── Floor plan image ───────────────────────────────────── */}
+                    {/* Floor plan image */}
                     <image
                         href={FLOOR_IMAGES[floor]}
                         x="0" y="0"
@@ -298,7 +247,7 @@ export default function MapCanvas({
                         preserveAspectRatio="none"
                     />
 
-                    {/* ── Route — Situm-style dots ────────────────────────────── */}
+                    {/* Route dots */}
                     {routePath && (
                         <>
                             <path d={routePath} fill="none"
@@ -312,7 +261,7 @@ export default function MapCanvas({
                         </>
                     )}
 
-                    {/* ── Demo walker ──────────────────────────────────────────────── */}
+                    {/* Demo walker */}
                     {walkerPos && walkerPos.floor === floor && (
                         <g transform={`translate(${walkerPos.x},${walkerPos.y})`} pointerEvents="none">
                             <circle className="wRing" r="14" fill="rgba(224,64,251,0.25)" stroke="none" />
@@ -321,32 +270,36 @@ export default function MapCanvas({
                         </g>
                     )}
 
-                    {/* ── Stair transition markers ─────────────────────────────────── */}
-                    {/* Small 🪜 badge at the exact staircase waypoint so it's crystal-clear
-              where the route enters or leaves via the stairs on this floor. */}
-                    {stairMarkers.map((m, i) => (
-                        <g key={i} transform={`translate(${m.x},${m.y})`} pointerEvents="none">
-                            {/* Outer pulse ring */}
-                            <circle r="13" fill="rgba(255,200,0,0.15)"
-                                stroke="#f59e0b" strokeWidth="1.5" className="pPulse" />
-                            {/* Inner badge */}
-                            <circle r="8" fill="#f59e0b" opacity="0.9" />
-                            <text textAnchor="middle" dominantBaseline="central"
-                                fontSize="9" dy="0.5" pointerEvents="none">🪜</text>
-                            {/* Label */}
-                            <g transform="translate(0,-22)" pointerEvents="none">
-                                <rect x="-18" y="-7" width="36" height="13" rx="3"
-                                    fill="#f59e0b" opacity="0.95" />
-                                <text textAnchor="middle" y="0" dominantBaseline="central"
-                                    fontSize="7" fill="#1a1a1a"
-                                    fontFamily="'DM Sans',sans-serif" fontWeight="700">
-                                    Trap
-                                </text>
+                    {/* Stair/lift transition markers */}
+                    {stairMarkers.map((m, i) => {
+                        const floorObj = FLOORS.find(f => f.id === m.doelFloor)
+                        const tekst = floorObj
+                            ? `Ga naar ${floorObj.name}`
+                            : `Ga naar verdieping ${m.doelFloor}`
+                        const breedte = tekst.length * 5 + 16
+                        return (
+                            <g key={i} transform={`translate(${m.x},${m.y})`} pointerEvents="none">
+                                {m.type === 'exit' && (
+                                    <g transform="translate(0,-20)" pointerEvents="none">
+                                        <rect className={styles.stairMarkerBg}
+                                            x={-breedte / 2} y="-9" width={breedte} height="14" rx="4" />
+                                        <text
+                                            textAnchor="middle"
+                                            y="1"
+                                            fontSize="8"
+                                            fill="#ffffff"
+                                            fontFamily="'DM Sans', sans-serif"
+                                            fontWeight="500"
+                                        >
+                                            {tekst}
+                                        </text>
+                                    </g>
+                                )}
                             </g>
-                        </g>
-                    ))}
+                        )
+                    })}
 
-                    {/* ── POI markers ────────────────────────────────────────── */}
+                    {/* POI markers */}
                     {floorPois.map(poi => {
                         const isOrigin = origin?.value === poi.value // poi.id GAGA
                         const isDest = destination?.value === poi.value // poi.id GAGA
@@ -375,56 +328,41 @@ export default function MapCanvas({
                                 onMouseLeave={() => onPoiHover(null)}
                                 style={{ cursor: 'pointer' }}>
 
-                                {/* Outer expanding pulse — origin only, "you are here" signal */}
                                 {isOrigin && (
                                     <circle className="pPulse2" r="22"
                                         fill="rgba(76,175,80,0.18)" stroke="#4caf50" strokeWidth="1" />
                                 )}
-
                                 {(isOrigin || isDest) && (
                                     <circle className="pPulse" r="18"
                                         fill="none" stroke={stroke} strokeWidth="1.5" />
                                 )}
-
                                 <circle r={r} fill={fill} stroke={stroke} strokeWidth="1.5"
                                     filter={isOrigin || isDest ? 'url(#glow)' : isProgramHL ? 'url(#glowAmber)' : undefined} />
-
-                                <text textAnchor="middle" dominantBaseline="central"
-                                    fontSize={isOrigin || isDest ? '10' : '9'} dy="0.5"
-                                    pointerEvents="none">
-                                    {poi.icon}
-                                </text>
-
+                                <image
+                                    href={`/icons/${poi.icon}.webp`}
+                                    x={-10} y={-10} width={24} height={24}
+                                    pointerEvents="none"
+                                />
                                 {(isHov || isOrigin || isDest) && (
-                                    <g transform="translate(0,-20)" pointerEvents="none">
-                                        <rect x={-lw / 2} y="-9" width={lw} height="16" rx="3"
-                                            fill={isDark ? '#2a2a2a' : '#fff'}
-                                            stroke={isOrigin ? '#4caf50' : isDest ? '#f44336' : '#e040fb'}
-                                            strokeWidth="1" />
-                                        <text textAnchor="middle" y="0" dominantBaseline="central"
+                                    <g transform="translate(0,-28)" pointerEvents="none">
+                                        <rect x={-lw / 2} y="-9" width={lw} height="18" rx="4"
+                                            fill='#1a1a1a'
+                                            stroke='#FF00E3'
+                                            strokeWidth="1.5"
+                                            opacity="0.95"
+                                        />
+                                        <text
+                                            textAnchor="middle"
+                                            y="4"
                                             fontSize="8"
-                                            fill={isOrigin ? '#4caf50' : isDest ? '#f44336' : '#e040fb'}
-                                            fontFamily="'DM Sans',sans-serif" fontWeight="600"
-                                            pointerEvents="none">
+                                            fill={isDark ? '#ffffff' : '#1a1a1a'}
+                                            fontFamily="'DM Sans', sans-serif"
+                                            fontWeight="500"
+                                            pointerEvents="none"
+                                        >
                                             {poi.label}
                                         </text>
                                     </g>
-                                )}
-
-                                {/* "Je bent hier" badge — rendered last so it sits on top */}
-                                {isOrigin && (
-                                    <text
-                                        textAnchor="middle"
-                                        y="-46"
-                                        fontSize="6.5"
-                                        fill="#4caf50"
-                                        fontFamily="'DM Sans',sans-serif"
-                                        fontWeight="700"
-                                        letterSpacing="0.04em"
-                                        pointerEvents="none"
-                                    >
-                                        📍 Je bent hier
-                                    </text>
                                 )}
                             </g>
                         )
@@ -432,7 +370,6 @@ export default function MapCanvas({
                 </g>
             </svg>
 
-            {/* Zoom buttons */}
             <div className={styles.zoom}>
                 <button className={styles.zBtn}
                     onClick={() => setTx(t => ({ ...t, s: Math.min(6, t.s * 1.25) }))}>+</button>
@@ -442,5 +379,4 @@ export default function MapCanvas({
             </div>
         </div>
     )
-
 }
