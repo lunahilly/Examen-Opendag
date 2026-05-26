@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
-import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
-import { computeRoute, getPosisieOpRoute } from "../data/campusWayfinding";
+import { ALL_POIS, FLOORS } from "../data/building";
+import { computeRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
@@ -21,40 +21,6 @@ const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
 
 // ── Feature 2: Study programmes filter ────────────────────────────────────────
 // Maps programme ids to metadata; 'all' shows every POI
-const PROGRAMMES = [
-    { id: "all", label: "Alles", icon: "fa-solid fa-border-all", pois: [] },
-    {
-        id: "audio",
-        label: "Audio & Podcast",
-        icon: "fa-solid fa-microphone",
-        pois: ["poi-radio", "poi-pod", "poi-av", "poi-pet"],
-    },
-    {
-        id: "video",
-        label: "Video & Film",
-        icon: "fa-solid fa-film",
-        pois: ["poi-tv", "poi-post", "poi-cp"],
-    },
-    {
-        id: "design",
-        label: "Design & Media",
-        icon: "fa-solid fa-palette",
-        pois: ["poi-mv", "poi-mr", "poi-rv", "poi-id", "poi-aam"],
-    },
-    {
-        id: "tech",
-        label: "Tech & ICT",
-        icon: "fa-solid fa-laptop-code",
-        pois: ["poi-sd", "poi-ga", "poi-xr"],
-    },
-    {
-        id: "events",
-        label: "Events & Live",
-        icon: "fa-solid fa-music",
-        pois: ["poi-pet", "poi-aula", "poi-ss"],
-    },
-];
-
 // ── Feature 3: Surprise facts ────────────────────────────────────────────────
 // Fun facts shown as toast messages when the user clicks "Verras me"
 const SURPRISE_FACTS = {
@@ -191,48 +157,6 @@ const T = {
 //     { id: 1, label: "Silver bullet" },
 // ];
 
-// Duration of one full demo loop in milliseconds at 1× speed
-const DEMO_BASE_DURATION = 14000;
-
-/**
- * Picks two random non-transport POIs that are guaranteed to be on
- * DIFFERENT floors, then builds a stair route between them.
- * Returns { route, originPoi, destPoi } or null.
- *
- * Strategy: group POIs by floor first, pick two distinct floors at random,
- * then pick one random POI from each floor. This is 100 % guaranteed to
- * produce a cross-floor pair — no shuffle-and-hope required.
- */
-// cant work on this rn (wip) LADY
-function pickDemoRoute(gridpois) {
-    // Build a map of floor → [poi, poi, …]
-    // const byFloor = GRID_POIS.reduce((acc, p) => {
-    //     (acc[p.floor] = acc[p.floor] || []).push(p);
-    //     return acc;
-    // }, {}); // GAGA
-    const byFloor = gridpois.reduce((acc, p) => {
-        (acc[p.floor_id] = acc[p.floor_id] || []).push(p);
-        return acc;
-    }, {});
-
-    const floorKeys = Object.keys(byFloor);
-    if (floorKeys.length < 2) return null;
-
-    // Pick two distinct floor indices
-    const i = Math.floor(Math.random() * floorKeys.length);
-    let j = Math.floor(Math.random() * (floorKeys.length - 1));
-    if (j >= i) j++; // shift so j never equals i
-
-    const originPool = byFloor[floorKeys[i]];
-    const destPool = byFloor[floorKeys[j]];
-
-    // Random POI from each floor
-    const originPoi = originPool[Math.floor(Math.random() * originPool.length)];
-    const destPoi = destPool[Math.floor(Math.random() * destPool.length)];
-
-    const route = computeRoute(originPoi.value, destPoi.value, { transport: "stairs" }); // all id changed to value GAGA
-    return route ? { route, originPoi, destPoi } : null;
-}
 
 // ── Guided tour stops (Open dag rondleiding) ──────────────────────────────────
 // Each stop has a POI id and a short tip shown in the tour banner.
@@ -259,6 +183,470 @@ const TOUR_STOPS = [
         tip: "De Radio Studio op de 3e verdieping! 🎙️ Hier worden echte radioprogramma's gemaakt. Misschien hoor je Mediacollege Radio vandaag live.",
     },
 ];
+
+// ── QR Scan Welcome Overlay ───────────────────────────────────────────────────
+// Shown when the visitor opens the app by scanning a room QR code (?hier=poi-id).
+// Displays a rich "you are here" card and lets them immediately pick a destination.
+function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
+    const floor = FLOORS.find((f) => f.id === poi.floor)
+
+    const statusColor =
+        poi.status === "vrij" ? "scanBadgeGreen"
+            : poi.status === "bezet" ? "scanBadgeRed"
+                : poi.status === "gesloten" ? "scanBadgeAmber"
+                    : ""
+
+    const statusLabel =
+        poi.status === "vrij" ? "✅ Vrij"
+            : poi.status === "bezet" ? "🔴 Bezet"
+                : poi.status === "gesloten" ? "🔒 Gesloten"
+                    : ""
+
+    return (
+        <div className={styles.scanOverlay} onClick={(e) => {
+            if (e.target === e.currentTarget) onExplore()
+        }}>
+            <div className={styles.scanCard}>
+
+                {/* Pulsing location ring + POI icon */}
+                <div className={styles.scanRing}>
+                    <div className={styles.scanIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></div>
+                </div>
+
+                {/* "Je bent hier" label */}
+                <div className={styles.scanHere}>📍 Je bent hier</div>
+
+                {/* Room name */}
+                <div className={styles.scanName}>{poi.label}</div>
+
+                {/* Info badges */}
+                <div className={styles.scanBadges}>
+                    {floor && (
+                        <span className={styles.scanBadge}>
+                            {floor.name}
+                        </span>
+                    )}
+                    {statusLabel && (
+                        <span className={`${styles.scanBadge} ${statusColor ? styles[statusColor] : ""}`}>
+                            {statusLabel}
+                        </span>
+                    )}
+                    {poi.category && (
+                        <span className={styles.scanBadge}>
+                            {poi.category}
+                        </span>
+                    )}
+                </div>
+
+                {/* Room description */}
+                {poi.desc && (
+                    <div className={styles.scanDesc}>{poi.desc}</div>
+                )}
+
+                {/* Primary CTA */}
+                <button className={styles.scanCta} onClick={onNavigate}>
+                    🗺️ Kies mijn bestemming
+                </button>
+
+                {/* Secondary link */}
+                <button className={styles.scanExplore} onClick={onExplore}>
+                    Verken de kaart zonder route
+                </button>
+            </div>
+        </div>
+    )
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+// Two-row header:
+//   Top row  — logo | spacer | nav links | settings icons (♿ 🇳🇱 ⊞ 🌙)
+//   Sub-bar  — building tabs | spacer | tool buttons (Tour Verras Demo QR Route)
+// On mobile the nav links hide and the sub-bar scrolls horizontally.
+function HeaderBar({
+  activeBuilding,
+  setActiveBuilding,
+  tourActive,
+  startTour,
+  onShowQR,
+  onShowHelp,
+  t,
+}) {
+    const [menuOpen, setMenuOpen] = useState(false)
+
+    return (
+        <header className={styles.header}>
+
+            {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
+            <div className={`${styles.hSubRow} wrapper`}>
+
+        {/* Tool buttons */}
+        <div className={styles.hTools}>
+          {/* Tour */}
+          <button
+            className={`${styles.hToolBtn} ${tourActive ? styles.hToolBtnGreen : ""}`}
+            onClick={startTour}
+            title="Start de open dag rondleiding"
+          >
+            <span className={styles.hBtnLabel}>Tour</span>
+          </button>
+
+          {/* QR codes */}
+          <button
+            className={styles.hToolBtn}
+            onClick={onShowQR}
+            title="QR-codes voor elke ruimte"
+          >
+            <span className={styles.hBtnLabel}>QR</span>
+          </button>
+
+          {/* Help */}
+          <button
+            className={styles.hToolBtn}
+            onClick={onShowHelp}
+            title="Uitleg over alle knoppen"
+          >
+            <span className={styles.hBtnLabel}>Hoe werkt het?</span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// ── Kiosk header ──────────────────────────────────────────────────────────────
+// Minimal header shown when kiosk mode is active: logo on left, clock in center, exit button on right
+function KioskHeader({ onExit, t }) {
+    const [time, setTime] = useState(() => {
+        const now = new Date();
+        return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    });
+    useEffect(() => {
+        const id = setInterval(() => {
+            const now = new Date();
+            setTime(
+                `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+            );
+        }, 1000);
+        return () => clearInterval(id);
+    }, []);
+    return (
+        <header className={styles.kioskHeader}>
+            {/* Logo left */}
+            <div className={styles.logo}>
+                <div className={styles.logoMark}>
+                    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+                        <rect width="34" height="34" rx="7" fill="#e040fb" />
+                        <text
+                            x="17"
+                            y="24"
+                            textAnchor="middle"
+                            fill="white"
+                            fontSize="15"
+                            fontWeight="800"
+                            fontFamily="'DM Sans', sans-serif"
+                            letterSpacing="-0.5"
+                        >
+                            mA
+                        </text>
+                    </svg>
+                </div>
+                <div className={styles.logoWords}>
+                    <span className={styles.logoName}>Mediacollege</span>
+                    <span className={styles.logoCity}>Amsterdam</span>
+                </div>
+            </div>
+            {/* Clock center */}
+            <span className={styles.kioskClock}>{time}</span>
+            {/* Exit button right */}
+            <button className={styles.kioskExitBtn} onClick={onExit}>
+                {t.exitKiosk}
+            </button>
+        </header>
+    );
+}
+
+// ── Route steps list ──────────────────────────────────────────────────────────
+// Renders an ordered list of navigation steps with icon, connecting line, and text
+function StepsList({ route }) {
+    return (
+        <ol className={styles.stepsList}>
+            {route.steps.map((step, i) => (
+                <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
+                    <div className={styles.stepLeft}>
+                        <span className={styles.stepIcon}>
+                            {STEP_ICONS[step.icon] ?? step.icon}
+                        </span>
+                        {i < route.steps.length - 1 && <span className={styles.stepLine} />}
+                    </div>
+                    <span className={styles.stepText}>{step.text}</span>
+                </li>
+            ))}
+        </ol>
+    );
+}
+
+// ── Tour banner ───────────────────────────────────────────────────────────────
+// Shown below the map while a guided tour is active.
+// Displays progress dots, stop info, a tip, and the "Ik ben er" / cancel buttons.
+function TourBanner({ tourStep, onNext, onCancel }) {
+    const stop = TOUR_STOPS[tourStep];
+    const poi = ALL_POIS.find((p) => p.id === stop.id);
+    const isLast = tourStep === TOUR_STOPS.length - 1;
+
+    return (
+        <div className={styles.tourBar}>
+            {/* Progress dots */}
+            <div className={styles.tourDots}>
+                {TOUR_STOPS.map((_, i) => (
+                    <span
+                        key={i}
+                        className={`${styles.tourDot} ${i === tourStep ? styles.tourDotActive : ""} ${i < tourStep ? styles.tourDotDone : ""}`}
+                    />
+                ))}
+            </div>
+
+            {/* Stop counter + POI */}
+            <div className={styles.tourStop}>
+                <span className={styles.tourStopIcon}>{poi?.icon}</span>
+                <div className={styles.tourStopText}>
+                    <span className={styles.tourStopCounter}>
+                        Stop {tourStep + 1} van {TOUR_STOPS.length}
+                    </span>
+                    <span className={styles.tourStopName}>{poi?.label}</span>
+                </div>
+            </div>
+
+            {/* Tip text */}
+            <p className={styles.tourTip}>{stop.tip}</p>
+
+            {/* Actions */}
+            <div className={styles.tourActions}>
+                <button className={styles.tourCancelBtn} onClick={onCancel}>
+                    ✕ Annuleer
+                </button>
+                <button className={styles.tourNextBtn} onClick={onNext}>
+                    {isLast ? "🎉 Tour voltooid!" : "Ik ben er ✓"}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// ── QR Modal ──────────────────────────────────────────────────────────────────
+// Full-screen modal showing a grid of QR codes — one per non-transport POI.
+// Each QR encodes ?hier=[poi-id]. "Download alles" bundles every QR into a
+// single ZIP file. Clicking one card downloads just that QR as a PNG.
+function QRModal({ onClose }) {
+    const base = `${window.location.origin}${window.location.pathname}`;
+    const qrRefs = useRef({});
+    const [downloading, setDownloading] = useState(false);
+
+    // Render one POI's SVG into a labeled PNG Blob
+    const renderQRBlob = async (poi) => {
+        const svg = qrRefs.current[poi.id];
+        if (!svg) return null;
+
+        let svgString = new XMLSerializer().serializeToString(svg);
+        svgString = svgString.replace(/currentColor/g, "#000000");
+
+        const svgBlob = new Blob([svgString], {
+            type: "image/svg+xml;charset=utf-8",
+        });
+        const svgUrl = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+            img.src = svgUrl;
+        });
+
+        const SIZE = 1024;
+        const PAD = 60;
+        const canvas = document.createElement("canvas");
+        canvas.width = SIZE;
+        canvas.height = SIZE + 140;
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, PAD, PAD, SIZE - 2 * PAD, SIZE - 2 * PAD);
+        URL.revokeObjectURL(svgUrl);
+
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 40px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(poi.label, SIZE / 2, SIZE + 60);
+
+        const floor = FLOORS.find((f) => f.id === poi.floor);
+        if (floor) {
+            ctx.font = "28px sans-serif";
+            ctx.fillStyle = "#666666";
+            ctx.fillText(floor.name, SIZE / 2, SIZE + 100);
+        }
+
+        return new Promise((resolve) =>
+            canvas.toBlob((blob) => resolve(blob), "image/png"),
+        );
+    };
+
+    // Trigger a file download from a Blob
+    const triggerDownload = (blob, filename) => {
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    };
+
+    // Build safe filename from POI label
+    const safeName = (poi) =>
+        poi.label
+            .replace(/[^a-z0-9]+/gi, "-")
+            .toLowerCase()
+            .replace(/^-|-$/g, "");
+
+    // Single QR download (per card click)
+    const downloadOne = async (poi) => {
+        const blob = await renderQRBlob(poi);
+        if (blob) triggerDownload(blob, `qr-${safeName(poi)}.png`);
+    };
+
+    // Bundle all QRs into one ZIP
+    const downloadAll = async () => {
+        if (downloading) return;
+        setDownloading(true);
+
+        const zip = new JSZip();
+        const folder = zip.folder("qr-codes");
+
+        for (const poi of GRID_POIS) {
+            const blob = await renderQRBlob(poi);
+            if (blob) folder.file(`qr-${safeName(poi)}.png`, blob);
+        }
+
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        triggerDownload(zipBlob, "Ma-OpenDag-QR-codes.zip");
+        setDownloading(false);
+    };
+
+    return (
+        <div
+            className={styles.qrOverlay}
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div className={styles.qrModal}>
+                {/* Header */}
+                <div className={styles.qrModalHeader}>
+                    <div>
+                        <div className={styles.qrModalTitle}>📱 QR-codes per ruimte</div>
+                        <div className={styles.qrModalSub}>
+                            Download alle QR-codes als ZIP en plak ze op de deur van elke
+                            ruimte. Bezoekers scannen de code en de kaart opent automatisch
+                            met die ruimte als startpunt. Klik op één code voor losse
+                            download.
+                        </div>
+                    </div>
+                    <div className={styles.qrModalActions}>
+                        <button
+                            className={styles.qrPrintBtn}
+                            onClick={downloadAll}
+                            disabled={downloading}
+                        >
+                            {downloading ? "⏳ Bezig…" : "⬇️ Download alles (ZIP)"}
+                        </button>
+                        <button className={styles.qrCloseBtn} onClick={onClose}>
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                {/* Grid of QR codes — click any card to download just that one */}
+                <div className={styles.qrGrid}>
+                    {GRID_POIS.map((poi) => {
+                        const url = `${base}?hier=${poi.id}`;
+                        const floor = FLOORS.find((f) => f.id === poi.floor);
+                        return (
+                            <div
+                                key={poi.id}
+                                className={styles.qrItem}
+                                onClick={() => downloadOne(poi)}
+                                style={{ cursor: "pointer" }}
+                                title={`Download QR voor ${poi.label}`}
+                            >
+                                <QRCodeSVG
+                                    ref={(el) => {
+                                        if (el) qrRefs.current[poi.id] = el;
+                                    }}
+                                    value={url}
+                                    size={130}
+                                    bgColor="transparent"
+                                    fgColor="currentColor"
+                                    level="M"
+                                />
+                                <span className={styles.qrItemIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></span>
+                                <span className={styles.qrItemName}>{poi.label}</span>
+                                <span className={styles.qrItemFloor}>{floor?.name}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ── Help Modal ────────────────────────────────────────────────────────────────
+// Popup that explains every button and feature in plain language.
+// Opened via the ? icon in the header — useful for first-time visitors.
+function HelpModal({ onClose }) {
+    const items = [
+        {
+            name: "Route plannen",
+            desc: 'Klik op "Vanaf" en "Naar" om een startpunt en bestemming te kiezen. De route wordt op de kaart getekend met stap-voor-stap aanwijzingen.',
+        },
+        {
+            name: "Tour",
+            desc: 'Start een begeleide rondleiding langs 5 highlights: Receptie → Kantine → Aula → Podium & Events → Radio Studio. Druk op "Ik ben er" om naar de volgende stop te gaan.',
+        },
+        {
+            name: "QR-codes",
+            desc: "Genereert een QR-code voor elke ruimte. Print ze uit en plak ze op de deur. Bezoekers scannen de code en de kaart opent met die ruimte als startpunt.",
+        },
+    ];
+
+    return createPortal(
+        <div
+            className="modal-overlay"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div className="help-modal">
+                <div className="help-modal__header">
+                    <div>
+                        <div className="help-modal__title">Uitleg & functies</div>
+                        <div className="help-modal__subtitle">Een overzicht van alle knoppen en wat ze doen.</div>
+                    </div>
+                    <button className="help-modal__close-btn" onClick={onClose}>
+                        ✕
+                    </button>
+                </div>
+                <div className="help-modal__list">
+                    {items.map((item, i) => (
+                        <div key={i} className="help-modal__item">
+                            <div className="help-modal__item-name">{item.name}</div>
+                            <div className="help-modal__item-desc">{item.desc}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
+}
 
 // ── Main component ────────────────────────────────────────────────────────────
 // Root component for the indoor map application — manages all state and renders the full UI
@@ -299,19 +687,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     }, []);
     // Shorthand translation helper used throughout the component
     const t = T[lang];
-
-    // ── Feature 4: Accessibility mode ────────────────────────────────────────────
-    // Persisted to localStorage; when true adds bigger text and elevator highlights
-    const [accessMode, setAccessMode] = useState(
-        () => localStorage.getItem("mA-access") === "true",
-    );
-    const toggleAccessMode = useCallback(() => {
-        setAccessMode((prev) => {
-            const next = !prev;
-            localStorage.setItem("mA-access", String(next));
-            return next;
-        });
-    }, []);
 
     // ── Feature 7: Kiosk mode ────────────────────────────────────────────────────
     // Initialised from ?kiosk URL param; also toggleable via header button
@@ -361,13 +736,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // Ref holding the setTimeout handle so we can clear it when a new toast fires
     const toastTimer = useRef(null);
 
-    // ── Feature 2: Category filter ───────────────────────────────────────────────
-    // The currently selected category tab ('all' or a category id)
-    const [activeCategory, setActiveCategory] = useState("all");
-
-    // ── Feature 2 (new): Programme filter ───────────────────────────────────────
-    // The currently selected programme ('all' or a programme id)
-    const [activeProgram, setActiveProgram] = useState("all");
 
 
     // ── Feature 6: Favorites ──────────────────────────────────────────────────────
@@ -390,28 +758,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             localStorage.setItem("mA-fav", JSON.stringify(next));
             return next;
         });
-
-    // ── Demo animation ────────────────────────────────────────────────────────────
-    // Whether the automated demo walk is currently running
-    const [isDemo, setIsDemo] = useState(false);
-    // Current interpolated position { x, y, floor } of the demo walker dot
-    const [walkerPos, setWalkerPos] = useState(null);
-    // Playback speed multiplier (0.5 – 5)
-    const [demoSpeed, setDemoSpeed] = useState(1);
-    // Handle for the active requestAnimationFrame call
-    const rafRef = useRef(null);
-    // timestamp of previous frame
-    const lastTsRef = useRef(null);
-    // 0–1, accumulates every frame
-    const progressRef = useRef(0);
-    // mirror of demoSpeed — readable inside rAF without restarting it
-    const demoSpeedRef = useRef(1);
-    // Holds the currently-playing demo pack { route, originPoi, destPoi }.
-    // Stored in a ref so the rAF loop can swap it without triggering a re-render.
-    const demoPackRef = useRef(null);
-
-    // Keep the speed ref in sync with state (runs on every render, no extra effect needed)
-    demoSpeedRef.current = demoSpeed;
 
     // Map from room id → status colour used on the SVG map canvas (read from poi data, never overridden)
     // old data here GAGA
@@ -465,7 +811,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             setFloor(naar.floor_id); // naar.floor => naar.floor_id GAGA
         }
         if (van && naar) {
-            const transport = accessMode ? 'elevator' : 'stairs';
+            const transport = 'stairs';
             setRoute(computeRoute(van.id, naar.id, { lang, transport }));
             setSheetOpen(true);
         }
@@ -495,70 +841,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         );
     }, [origin, destination, kioskMode]);
 
-    // ── Demo animation loop ──────────────────────────────────────────────────────
-    // Speed is read from demoSpeedRef so the slider never restarts the loop.
-    // A new random route is picked on every loop completion so the demo never
-    // shows the same path twice in a row.
-    useEffect(() => {
-        if (!isDemo) {
-            setWalkerPos(null);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            return;
-        }
-
-        // Push a demo pack (route + POIs) to the visible map state
-        const applyPack = (pack) => {
-            if (!pack) return;
-            setOrigin(pack.originPoi);
-            setDestination(pack.destPoi);
-            setRoute(pack.route);
-            console.log(pack); // GAGA
-            setFloor(pack.originPoi.floor_id); // pack.originPoi.floor => pack.originPoi.floor_id GAGA
-        };
-
-        applyPack(demoPackRef.current);
-        progressRef.current = 0;
-        lastTsRef.current = null;
-
-        let gridpois = pois.filter((poi) => poi.category.value !== "transport");
-        function tick(ts) {
-            const dt = lastTsRef.current ? ts - lastTsRef.current : 0;
-            lastTsRef.current = ts;
-            const duration = DEMO_BASE_DURATION / demoSpeedRef.current;
-            progressRef.current += dt / duration;
-
-            // Loop finished — swap in a fresh random route and restart progress
-            if (progressRef.current >= 1) {
-                progressRef.current = 0;
-                lastTsRef.current = null;
-                const next = pickDemoRoute(gridpois);
-                if (next) {
-                    demoPackRef.current = next;
-                    applyPack(next);
-                }
-                rafRef.current = requestAnimationFrame(tick);
-                return;
-            }
-
-            const pack = demoPackRef.current;
-            console.log(pack);
-            if (pack) {
-                const pos = getPosisieOpRoute(pack.route.waypoints, progressRef.current);
-                if (pos) {
-                    setWalkerPos(pos);
-                    setFloor(pos.floor);
-                }
-            }
-            rafRef.current = requestAnimationFrame(tick);
-        }
-
-        rafRef.current = requestAnimationFrame(tick);
-        return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            lastTsRef.current = null;
-        };
-    }, [isDemo]); // demoSpeed intentionally omitted — ref handles it without restart
-
     // ── Toast ────────────────────────────────────────────────────────────────────
     // Shows a temporary toast message that disappears after 2.5 seconds
     const showToast = useCallback((msg) => {
@@ -581,7 +863,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     const applyRoute = useCallback(
         (o, d) => {
             if (o && d) {
-                const transport = accessMode ? 'elevator' : 'stairs';
+                const transport = 'stairs';
                 const result = computeRoute(o.id, d.id, { lang, transport });
                 console.log("computeRoute:", o.id, "→", d.id, "=", result);
                 setRoute(result);
@@ -591,7 +873,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                 setSheetOpen(false);
             }
         },
-        [lang, accessMode],
+        [lang],
     );
 
     // Handles a POI click from either the map or the list;
@@ -650,21 +932,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     const toggleMode = (mode) =>
         setSelectionMode((m) => (m === mode ? null : mode));
 
-    // ── Demo helpers ─────────────────────────────────────────────────────────────
-    // Picks a fresh random route and starts the animation
-    let gridpois = pois.filter((poi) => poi.category.value !== "transport");
-    const startDemo = useCallback(() => {
-        const pack = pickDemoRoute(gridpois);
-        if (!pack) return; // safety — shouldn't happen with real POI data
-        demoPackRef.current = pack;
-        setIsDemo(true);
-    }, []);
-    // Stops the animation and clears the walker dot
-    const stopDemo = useCallback(() => {
-        setIsDemo(false);
-        setWalkerPos(null);
-    }, []);
-
     // ── Guided tour helpers ───────────────────────────────────────────────────────
 
     // Applies the route for a given tour step index (from stop[i] to stop[i+1])
@@ -690,10 +957,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         [applyRoute],
     );
 
-    // Starts the guided tour from step 0, cancelling any active demo
     const startTour = useCallback(() => {
-        setIsDemo(false);
-        setWalkerPos(null);
         setTourStep(0);
         setTourActive(true);
         applyTourStep(0);
@@ -721,84 +985,12 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         showToast("Tour geannuleerd");
     }, [showToast]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // ── Feature 3 (new): Surprise me ─────────────────────────────────────────────
-    // Picks a random POI, sets it as destination, computes route, shows fun fact toast
-    const handleSurprise = useCallback(() => {
-        let gridpois = pois.filter((poi) => poi.category.value !== "transport");  // GAGA
-        const available = gridpois.filter( // grid_pois => gridpois GAGA
-            (p) => p.value !== origin?.value && p.value !== destination?.value, // p.id => p.value, just all ids to value GAGA
-        );
-        if (available.length === 0) return;
-        const pick = available[Math.floor(Math.random() * available.length)];
-        // Pick a random origin if none is set
-        const o = origin ?? gridpois.find((p) => p.value !== pick.value); // GRID_POIS => gridpois p.id => p.value pick.id => pick.value GAGA
-        setDestination(pick);
-        console.log(pick); // GAGA 
-        setFloor(pick.floor_id); // pick.floor => pick.floor_id GAGA
-        if (o) {
-            setOrigin(o);
-            applyRoute(o, pick);
-        }
-        const fact = SURPRISE_FACTS[pick.id];
-        showToast(fact ? fact : `${t.verrasMe}: ${pick.label}`);
-    }, [origin, destination, applyRoute, showToast, t]);
-
-    // ── Feature 6 (new): Save / restore route ────────────────────────────────────
-    // Saves the current origin + destination to localStorage
-    const handleSaveRoute = useCallback(() => {
-        if (!origin || !destination) return;
-        localStorage.setItem(
-            "mA-saved-route",
-            JSON.stringify({ originId: origin.id, destId: destination.id }),
-        );
-        showToast(t.slaRouteOp + " ✓");
-    }, [origin, destination, showToast, t]);
-
-    // Reads saved route from localStorage and restores it
-    const handleRestoreRoute = useCallback(() => {
-        try {
-            const saved = JSON.parse(localStorage.getItem("mA-saved-route"));
-            if (!saved) {
-                showToast(t.geenOpgeslagen);
-                return;
-            }
-            const o = pois.find((poi) => poi.value === saved.originId); // ALL_POIS.find((p) => p.id === saved.originId); GAGA
-            const d = pois.find((poi) => poi.value === saved.destId); // ALL_POIS.find((p) => p.id === saved.destId); GAGA
-            if (o && d) {
-                setOrigin(o);
-                setDestination(d);
-                setFloor(o.floor_id); // o.floor => o.floor_id GAGA
-                const transport = accessMode ? 'elevator' : 'stairs';
-                setRoute(computeRoute(o.id, d.id, { lang, transport }));
-                setSheetOpen(true);
-                showToast(t.opgeslagenRoute + " geladen");
-            } else {
-                showToast(t.geenOpgeslagen);
-            }
-        } catch {
-            showToast(t.geenOpgeslagen);
-        }
-    }, [showToast, t, lang, accessMode]);
-
-    // ── Feature 2+6: Filtered + sorted POIs ─────────────────────────────────────
-    // Derives the visible POI list from search query, active category, programme, and favourites
+    // ── Filtered + sorted POIs ───────────────────────────────────────────────────
     const filteredPois = useMemo(() => {
         // let pois = GRID_POIS;
         let gridpois = pois.filter((poi) => poi.category.value !== "transport");  // let pois = GRID_POIS; GAGA
 
 
-        // Programme filter (new Feature 2 — study programme)
-        if (activeProgram !== "all") {
-            const prog = PROGRAMMES.find((p) => p.id === activeProgram);
-            if (prog) gridpois = gridpois.filter((p) => prog.pois.includes(p.id));  // pois GAGA
-        }
-
-        // Category filter
-        if (activeCategory !== "all") {
-            gridpois = gridpois.filter((p) => p.category === activeCategory);  // pois GAGA
-        }
-
-        // Search filter
         if (searchQuery.trim()) {
             const q = searchQuery.toLowerCase();
             gridpois = gridpois.filter(  // pois GAGA
@@ -809,27 +1001,14 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             );
         }
 
-        // Sort: favorites first, then alphabetical
-        gridpois = [...gridpois].sort((a, b) => { // pois GAGA
-            const aFav = favorites.includes(a.value); // a.id => a.value GAGA
-            const bFav = favorites.includes(b.value); // b.id => b.value GAGA
+        return [...pois].sort((a, b) => {
+            const aFav = favorites.includes(a.id);
+            const bFav = favorites.includes(b.id);
             if (aFav && !bFav) return -1;
             if (!aFav && bFav) return 1;
             return a.label.localeCompare(b.label);
         });
-
-        return gridpois; // pois GAGA
-    }, [searchQuery, activeCategory, activeProgram, favorites]);
-
-    // IDs to highlight on the map when a programme is selected (amber glow)
-    const highlightPoiIds = useMemo(() => {
-        if (activeProgram === "all") return [];
-        return PROGRAMMES.find((p) => p.id === activeProgram)?.pois ?? [];
-    }, [activeProgram]);
-
-    // ── Category tabs (exclude transport) ────────────────────────────────────────
-    // Transport POIs are only shown on the map, not in the category tab strip
-    const gridCategories = categories.filter((category) => category.value !== "transport"); // CATEGORIES.filter((c) => c.id !== "transport"); GAGA
+    }, [searchQuery, favorites]);
 
     // Bundle all HeaderBar props to keep JSX tidy
     const headerProps = {
@@ -837,19 +1016,10 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         setActiveBuilding,
         theme,
         toggleTheme,
-        isDemo,
-        startDemo,
-        stopDemo,
-        demoSpeed,
-        setDemoSpeed,
         tourActive,
         startTour,
         onShowQR: () => setShowQR(true),
         onShowHelp: () => setShowHelp(true),
-        onSurprise: handleSurprise,
-        onRestoreRoute: handleRestoreRoute,
-        accessMode,
-        toggleAccessMode,
         lang,
         toggleLang,
         kioskMode,
@@ -860,7 +1030,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // ── Main render ───────────────────────────────────────────────────────────────
     return (
         <div
-            className={`${styles.app} ${accessMode ? styles.accessMode : ""} ${kioskMode ? styles.kioskMode : ""}`}
+            className={`${styles.app} ${kioskMode ? styles.kioskMode : ""}`}
             data-theme={isDark ? "dark" : "light"}
         >
             {/* ── QR scan welcome overlay ───────────────────────────────────────────
@@ -888,11 +1058,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                 <HeaderBar {...headerProps} />
             )}
 
-            {/* Feature 4: accessibility banner shown below header when accessMode is on */}
-            {accessMode && (
-                <div className={styles.accessBanner}>{t.accessBanner}</div>
-            )}
-
             <main className={styles.main}>
                 <div className={`${styles.card} wrapper`}>
                     {/* Map + floor selector */}
@@ -910,9 +1075,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 highlightRoomId={hlRoom}
                                 roomStatuses={roomStatuses}
                                 isDark={isDark}
-                                walkerPos={walkerPos}
-                                highlightPoiIds={highlightPoiIds}
-                                accessMode={accessMode}
                             />
                             {/* <GraphDebugger floor={floor} /> */}
                         </div>
@@ -1002,14 +1164,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     >
                                         🔗
                                     </button>
-                                    {/* Feature 6 (new): Save route button */}
-                                    <button
-                                        className={styles.shareBtn}
-                                        onClick={handleSaveRoute}
-                                        title={t.slaRouteOp}
-                                    >
-                                        💾
-                                    </button>
                                 </div>
                             </div>
                             <StepsList route={route} />
@@ -1036,38 +1190,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                         )}
                     </div>
 
-                    {/* Feature 2 (new): Programme tabs ABOVE category tabs */}
-                    <div className={styles.progTabsRow}>
-                        <span className={styles.tabsLabel}>{t.programme}</span>
-                        <div className={styles.progTabs}>
-                            {PROGRAMMES.map((prog) => (
-                                <button
-                                    key={prog.id}
-                                    className={`${styles.progTab} ${activeProgram === prog.id ? styles.progTabActive : ""}`}
-                                    onClick={() => setActiveProgram(prog.id)}
-                                >
-                                    <i className={prog.icon} /> {prog.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Feature 2: Category tabs */}
-                    <div className={styles.catTabsRow}>
-                        <span className={styles.tabsLabel}>{t.categories}</span>
-                        <div className={styles.catTabs}>
-                            {gridCategories.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    className={`${styles.catTab} ${activeCategory === cat.id ? styles.catTabActive : ""}`}
-                                    onClick={() => setActiveCategory(cat.id)}
-                                >
-                                    <i className={cat.icon} /> {cat.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
                     {/* POI grid */}
                     {filteredPois.length > 0 ? (
                         <div className={styles.poiBox}>
@@ -1076,12 +1198,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 const isDest = destination?.value === poi.value; // destination?.id => destination?.value, poi.id GAGA
                                 // Mark this POI if it is the current tour stop
                                 const isTourStop =
-                                    tourActive && TOUR_STOPS[tourStep]?.id === poi.value; // poi.id GAGA
-                                // Is this a lift POI in access mode?
-                                const isLift =
-                                    accessMode &&
-                                    poi.category.value === "transport" && // poi.category => poi.category.value GAGA
-                                    poi.label.toLowerCase().includes("lift");
+                                    tourActive && TOUR_STOPS[tourStep]?.id === poi.id;
                                 return (
                                     <div
                                         key={poi.id}
@@ -1107,11 +1224,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                                 title="Huidige tour stop"
                                             >
                                                 📍
-                                            </span>
-                                        )}
-                                        {isLift && (
-                                            <span className={styles.accessNote}>
-                                                {t.liftBeschikbaar}
                                             </span>
                                         )}
                                         <button
@@ -1232,16 +1344,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 }}
                             >
                                 🔗
-                            </button>
-                            {/* Feature 6 (new): Save route (mobile) */}
-                            <button
-                                className={styles.shareBtn}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSaveRoute();
-                                }}
-                            >
-                                💾
                             </button>
                         </div>
                     </div>
