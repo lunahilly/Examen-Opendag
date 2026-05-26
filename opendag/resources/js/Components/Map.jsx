@@ -3,11 +3,11 @@ import { createPortal } from "react-dom";
 // import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
-import { computeRoute, getPositionAtProgress } from "../data/campusWayfinding";
+import { computeRoute, getPosisieOpRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
-// import GraphDebugger from './GraphDebugger'
+import GraphDebugger from './GraphDebugger'
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
 const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
@@ -15,35 +15,35 @@ const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
 // ── Feature 2: Study programmes filter ────────────────────────────────────────
 // Maps programme ids to metadata; 'all' shows every POI
 const PROGRAMMES = [
-    { id: "all", label: "Alles", icon: "🔍", pois: [] },
+    { id: "all", label: "Alles", icon: "fa-solid fa-border-all", pois: [] },
     {
         id: "audio",
         label: "Audio & Podcast",
-        icon: "🎙️",
+        icon: "fa-solid fa-microphone",
         pois: ["poi-radio", "poi-pod", "poi-av", "poi-pet"],
     },
     {
         id: "video",
         label: "Video & Film",
-        icon: "🎬",
+        icon: "fa-solid fa-film",
         pois: ["poi-tv", "poi-post", "poi-cp"],
     },
     {
         id: "design",
         label: "Design & Media",
-        icon: "🎨",
+        icon: "fa-solid fa-palette",
         pois: ["poi-mv", "poi-mr", "poi-rv", "poi-id", "poi-aam"],
     },
     {
         id: "tech",
         label: "Tech & ICT",
-        icon: "💻",
+        icon: "fa-solid fa-laptop-code",
         pois: ["poi-sd", "poi-ga", "poi-xr"],
     },
     {
         id: "events",
         label: "Events & Live",
-        icon: "🎤",
+        icon: "fa-solid fa-music",
         pois: ["poi-pet", "poi-aula", "poi-ss"],
     },
 ];
@@ -180,7 +180,8 @@ const STEP_ICONS = {
 
 // The two buildings available in the building switcher
 const BUILDINGS = [
-  { id: 0, label: "Gebouw A" },
+    { id: 0, label: "Gebouw A" },
+    { id: 1, label: "Silver bullet" },
 ];
 
 // Duration of one full demo loop in milliseconds at 1× speed
@@ -273,7 +274,7 @@ function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
 
                 {/* Pulsing location ring + POI icon */}
                 <div className={styles.scanRing}>
-                    <div className={styles.scanIcon}>{poi.icon}</div>
+                    <div className={styles.scanIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></div>
                 </div>
 
                 {/* "Je bent hier" label */}
@@ -350,18 +351,6 @@ function HeaderBar({
 
             {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
             <div className={`${styles.hSubRow} wrapper`}>
-                {/* Building switcher */}
-                <div className={styles.buildingBar}>
-                    {BUILDINGS.map((b) => (
-                        <button
-                            key={b.id}
-                            className={`${styles.buildingBtn} ${activeBuilding === b.id ? styles.buildingBtnActive : ""}`}
-                            onClick={() => setActiveBuilding(b.id)}
-                        >
-                            {b.label}
-                        </button>
-                    ))}
-                </div>
 
                 <div className={styles.hRow}>
                     {/* Settings icon buttons — SVG icons, always visible */}
@@ -372,20 +361,6 @@ function HeaderBar({
                             onClick={toggleAccessMode}
                             title={t.accessBanner}
                         >
-                            {/* <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="4" r="2" />
-              <path d="M12 9v5M9 21l1.5-5M15 21l-1.5-5" />
-              <path d="M7 12l5-3 5 3" />
-            </svg> */}
                             Rolstoel vriendelijk
                         </button>
 
@@ -754,7 +729,7 @@ function QRModal({ onClose }) {
                                     fgColor="currentColor"
                                     level="M"
                                 />
-                                <span className={styles.qrItemIcon}>{poi.icon}</span>
+                                <span className={styles.qrItemIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></span>
                                 <span className={styles.qrItemName}>{poi.label}</span>
                                 <span className={styles.qrItemFloor}>{floor?.name}</span>
                             </div>
@@ -1107,7 +1082,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
 
             const pack = demoPackRef.current;
             if (pack) {
-                const pos = getPositionAtProgress(pack.route.waypoints, progressRef.current);
+                const pos = getPosisieOpRoute(pack.route.waypoints, progressRef.current);
                 if (pos) {
                     setWalkerPos(pos);
                     setFloor(pos.floor);
@@ -1414,34 +1389,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         t,
     };
 
-    // ── Second building placeholder ──────────────────────────────────────────────
-    // Gebouw B is not yet mapped — show a placeholder screen instead
-    if (activeBuilding === 1) {
-        return (
-            <div
-                className={`${styles.app} ${accessMode ? styles.accessMode : ""} ${kioskMode ? styles.kioskMode : ""}`}
-                data-theme={isDark ? "dark" : "light"}
-            >
-                {kioskMode ? (
-                    <KioskHeader onExit={toggleKiosk} t={t} />
-                ) : (
-                    <HeaderBar {...headerProps} />
-                )}
-                <main className={styles.main}>
-                    <div className={styles.card}>
-                        <div className={styles.comingSoon}>
-                            <span className={styles.comingSoonIcon}>🏗️</span>
-                            <span className={styles.comingSoonTitle}>Gebouw B</span>
-                            <span className={styles.comingSoonSub}>
-                                Binnenkort beschikbaar
-                            </span>
-                        </div>
-                    </div>
-                </main>
-            </div>
-        );
-    }
-
     // ── Main render ───────────────────────────────────────────────────────────────
     return (
         <div
@@ -1499,6 +1446,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 highlightPoiIds={highlightPoiIds}
                                 accessMode={accessMode}
                             />
+                            {/* <GraphDebugger floor={floor} /> */}
                         </div>
                         <div className={styles.floorCol}>
                             <FloorSelector floor={floor} onChange={setFloor} />
@@ -1515,7 +1463,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                     )}
 
                     {/* ── "Je bent hier" chip ─────────────────────────────────────────── */}
-                    {/* Shown when an origin POI is selected so users know their start */}
                     {origin && (
                         <div className={styles.youAreHere}>
                             📍 <strong>Je bent hier:</strong>&nbsp;{origin.label}
@@ -1631,7 +1578,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     className={`${styles.progTab} ${activeProgram === prog.id ? styles.progTabActive : ""}`}
                                     onClick={() => setActiveProgram(prog.id)}
                                 >
-                                    {prog.icon} {prog.label}
+                                    <i className={prog.icon} /> {prog.label}
                                 </button>
                             ))}
                         </div>
@@ -1647,82 +1594,81 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     className={`${styles.catTab} ${activeCategory === cat.id ? styles.catTabActive : ""}`}
                                     onClick={() => setActiveCategory(cat.id)}
                                 >
-                                    {cat.icon} {cat.label}
+                                    <i className={cat.icon} /> {cat.label}
                                 </button>
                             ))}
                         </div>
                     </div>
 
-          {/* POI grid */}
-          {filteredPois.length > 0 ? (
-            <div className={styles.poiBox}>
-              {filteredPois.map((poi) => {
-                const isOrigin = origin?.id === poi.id;
-                const isDest = destination?.id === poi.id;
-                // Mark this POI if it is the current tour stop
-                const isTourStop =
-                  tourActive && TOUR_STOPS[tourStep]?.id === poi.id;
-                // Is this a lift POI in access mode?
-                const isLift =
-                  accessMode &&
-                  poi.category === "transport" &&
-                  poi.label.toLowerCase().includes("lift");
-                return (
-                  <button
-                    key={poi.id}
-                    className={`${styles.poiItem} ${isOrigin ? styles.poiFrom : ""} ${isDest ? styles.poiTo : ""} ${isTourStop ? styles.poiTourStop : ""}`}
-                    onClick={() => {
-                      handlePoiClick(poi);
-                    }}
-                  >
-                    <span
-                      className={`${styles.checkBox} ${isOrigin || isDest ? styles.checkActive : ""}`}
-                    />
-                    <span className={styles.poiName}>
-                      {poi.icon} {poi.label}
-                    </span>
-                    {/* Tour stop indicator */}
-                    {isTourStop && (
-                      <span
-                        className={styles.tourStopBadge}
-                        title="Huidige tour stop"
-                      >
-                        📍
-                      </span>
+                    {/* POI grid */}
+                    {filteredPois.length > 0 ? (
+                        <div className={styles.poiBox}>
+                            {filteredPois.map((poi) => {
+                                const isOrigin = origin?.id === poi.id;
+                                const isDest = destination?.id === poi.id;
+                                // Mark this POI if it is the current tour stop
+                                const isTourStop =
+                                    tourActive && TOUR_STOPS[tourStep]?.id === poi.id;
+                                // Is this a lift POI in access mode?
+                                const isLift =
+                                    accessMode &&
+                                    poi.category === "transport" &&
+                                    poi.label.toLowerCase().includes("lift");
+                                return (
+                                    <div
+                                        key={poi.id}
+                                        role="button"
+                                        tabIndex={0}
+                                        className={`${styles.poiItem} ${isOrigin ? styles.poiFrom : ""} ${isDest ? styles.poiTo : ""} ${isTourStop ? styles.poiTourStop : ""}`}
+                                        onClick={() => handlePoiClick(poi)}
+                                        onKeyDown={(e) => e.key === "Enter" && handlePoiClick(poi)}
+                                    >
+                                        <span
+                                            className={`${styles.checkBox} ${isOrigin || isDest ? styles.checkActive : ""}`}
+                                        />
+                                        <span className={styles.poiName}>
+                                            <img src={`/icons/${poi.icon}.webp`} alt="" className={styles.poiIcon} />
+                                            {poi.label}
+                                        </span>
+                                        {isTourStop && (
+                                            <span
+                                                className={styles.tourStopBadge}
+                                                title="Huidige tour stop"
+                                            >
+                                                📍
+                                            </span>
+                                        )}
+                                        {isLift && (
+                                            <span className={styles.accessNote}>
+                                                {t.liftBeschikbaar}
+                                            </span>
+                                        )}
+                                        <button
+                                            className={`${styles.favBtn} ${isFav(poi.id) ? styles.favActive : ""}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleFav(poi.id);
+                                            }}
+                                            title={
+                                                isFav(poi.id)
+                                                    ? "Verwijder favoriet"
+                                                    : "Voeg toe aan favorieten"
+                                            }
+                                        >
+                                            {isFav(poi.id) ? "⭐" : "☆"}
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className={styles.noResults}>
+                            {t.geenResultaten} &ldquo;<strong>{searchQuery}</strong>&rdquo;
+                        </div>
                     )}
-                    {/* Feature 4: access note on lift POIs */}
-                    {isLift && (
-                      <span className={styles.accessNote}>
-                        {t.liftBeschikbaar}
-                      </span>
-                    )}
-                    {/* Feature 6: star in grid */}
-                    <button
-                      className={`${styles.favBtn} ${isFav(poi.id) ? styles.favActive : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFav(poi.id);
-                      }}
-                      title={
-                        isFav(poi.id)
-                          ? "Verwijder favoriet"
-                          : "Voeg toe aan favorieten"
-                      }
-                    >
-                      {isFav(poi.id) ? "⭐" : "☆"}
-                    </button>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <div className={styles.noResults}>
-              {t.geenResultaten} &ldquo;<strong>{searchQuery}</strong>&rdquo;
-            </div>
-          )}
 
-        </div>
-      </main>
+                </div>
+            </main>
 
             {/* Mobile bottom sheet */}
             {route && (

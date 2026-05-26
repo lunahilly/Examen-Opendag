@@ -733,6 +733,16 @@ $red:   #f44336;
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 250ms;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.poiIcon {
+  width: 1.25em;
+  height: 1.25em;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 // ── Favorites (Feature 6) ─────────────────────────────────────────────────────
@@ -1333,6 +1343,117 @@ $red:   #f44336;
 
 .app[data-theme="dark"] .detailName {
   color: #ffffff;
+}
+
+// ── Help modal — global styles (portal renders to document.body) ───────────────
+:global(.modal-overlay) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+:global(.help-modal) {
+  background: #111;
+  border: 1px solid rgba(255, 0, 230, 0.2);
+  border-radius: 0.75em;
+  width: 100%;
+  max-width: 28em;
+  max-height: calc(100svh - 2em);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  @media (max-width: 37.5em) {
+    max-width: 100%;
+    border-radius: 0.5em;
+  }
+}
+
+:global(.help-modal__header) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25em 1.25em 0;
+}
+
+:global(.help-modal__title) {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2em;
+}
+
+:global(.help-modal__subtitle) {
+  font-size: 0.75em;
+  color: #aaa;
+  margin-bottom: 1em;
+}
+
+:global(.help-modal__close-btn) {
+  flex-shrink: 0;
+  width: 1.75em;
+  height: 1.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 80, 80, 0.15);
+  border: 1px solid rgba(255, 80, 80, 0.4);
+  border-radius: 50%;
+  font-size: 1em;
+  font-weight: 700;
+  color: #ff5050;
+  cursor: pointer;
+  transition: all 150ms;
+
+  &:hover {
+    background: rgba(255, 80, 80, 0.3);
+    border-color: #ff5050;
+  }
+}
+
+:global(.help-modal__list) {
+  overflow-y: auto;
+  padding: 0.625em 0;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #FF00E6 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: #FF00E6;
+    border-radius: 2px;
+  }
+}
+
+:global(.help-modal__item) {
+  padding: 0.875em 1.25em;
+  border-bottom: 0.0625em solid rgba(255, 255, 255, 0.08);
+
+  &:last-child { border-bottom: none; }
+}
+
+:global(.help-modal__item-name) {
+  font-size: 1em;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25em;
+}
+
+:global(.help-modal__item-desc) {
+  font-size: 0.8em;
+  line-height: 1.5;
+  color: #aaa;
 }
 
 .app[data-theme="dark"] .detailClose {
@@ -2096,6 +2217,37 @@ $red:   #f44336;
 
 
 // ── Responsive ────────────────────────────────────────────────────────────────
+// 911px: route From/To fields stack vertically
+@media (max-width: 56.9em) {
+  .routeBox {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .routeDivider {
+    width: auto;
+    height: 1.5px;
+    align-self: stretch;
+    margin: 0 0.5em;
+  }
+
+  .clearBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    padding: 0.4em 0.75em;
+    align-self: unset;
+  }
+}
+
+// 700px: POI grid drops to 1 column so labels are fully readable
+@media (max-width: 43.75em) {
+  .poiBox {
+    grid-template-columns: 1fr;
+  }
+}
+
 // Mobile adjustments: hide nav, switch to 2-column POI grid, shrink map
 @media (max-width: 37.5em) {
 
@@ -2114,9 +2266,9 @@ $red:   #f44336;
     font-size: 0.6875em;
   }
 
-  // POI grid: 2 columns on mobile instead of 3
+  // POI grid: 1 column on mobile for readability
   .poiBox {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   // Shorter map on mobile
