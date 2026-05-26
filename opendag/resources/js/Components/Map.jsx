@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
-import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
-import { computeRoute, getPosisieOpRoute } from "../data/campusWayfinding";
+import { ALL_POIS, FLOORS } from "../data/building";
+import { computeRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
@@ -14,40 +14,6 @@ const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
 
 // ── Feature 2: Study programmes filter ────────────────────────────────────────
 // Maps programme ids to metadata; 'all' shows every POI
-const PROGRAMMES = [
-    { id: "all", label: "Alles", icon: "fa-solid fa-border-all", pois: [] },
-    {
-        id: "audio",
-        label: "Audio & Podcast",
-        icon: "fa-solid fa-microphone",
-        pois: ["poi-radio", "poi-pod", "poi-av", "poi-pet"],
-    },
-    {
-        id: "video",
-        label: "Video & Film",
-        icon: "fa-solid fa-film",
-        pois: ["poi-tv", "poi-post", "poi-cp"],
-    },
-    {
-        id: "design",
-        label: "Design & Media",
-        icon: "fa-solid fa-palette",
-        pois: ["poi-mv", "poi-mr", "poi-rv", "poi-id", "poi-aam"],
-    },
-    {
-        id: "tech",
-        label: "Tech & ICT",
-        icon: "fa-solid fa-laptop-code",
-        pois: ["poi-sd", "poi-ga", "poi-xr"],
-    },
-    {
-        id: "events",
-        label: "Events & Live",
-        icon: "fa-solid fa-music",
-        pois: ["poi-pet", "poi-aula", "poi-ss"],
-    },
-];
-
 // ── Feature 3: Surprise facts ────────────────────────────────────────────────
 // Fun facts shown as toast messages when the user clicks "Verras me"
 const SURPRISE_FACTS = {
@@ -184,43 +150,6 @@ const BUILDINGS = [
     { id: 1, label: "Silver bullet" },
 ];
 
-// Duration of one full demo loop in milliseconds at 1× speed
-const DEMO_BASE_DURATION = 14000;
-
-/**
- * Picks two random non-transport POIs that are guaranteed to be on
- * DIFFERENT floors, then builds a stair route between them.
- * Returns { route, originPoi, destPoi } or null.
- *
- * Strategy: group POIs by floor first, pick two distinct floors at random,
- * then pick one random POI from each floor. This is 100 % guaranteed to
- * produce a cross-floor pair — no shuffle-and-hope required.
- */
-function pickDemoRoute() {
-    // Build a map of floor → [poi, poi, …]
-    const byFloor = GRID_POIS.reduce((acc, p) => {
-        (acc[p.floor] = acc[p.floor] || []).push(p);
-        return acc;
-    }, {});
-
-    const floorKeys = Object.keys(byFloor);
-    if (floorKeys.length < 2) return null;
-
-    // Pick two distinct floor indices
-    const i = Math.floor(Math.random() * floorKeys.length);
-    let j = Math.floor(Math.random() * (floorKeys.length - 1));
-    if (j >= i) j++; // shift so j never equals i
-
-    const originPool = byFloor[floorKeys[i]];
-    const destPool = byFloor[floorKeys[j]];
-
-    // Random POI from each floor
-    const originPoi = originPool[Math.floor(Math.random() * originPool.length)];
-    const destPoi = destPool[Math.floor(Math.random() * destPool.length)];
-
-    const route = computeRoute(originPoi.id, destPoi.id, { transport: "stairs" });
-    return route ? { route, originPoi, destPoi } : null;
-}
 
 // ── Guided tour stops (Open dag rondleiding) ──────────────────────────────────
 // Each stop has a POI id and a short tip shown in the tour banner.
@@ -329,19 +258,10 @@ function ScanWelcomeOverlay({ poi, t, onNavigate, onExplore }) {
 function HeaderBar({
   activeBuilding,
   setActiveBuilding,
-  isDemo,
-  startDemo,
-  stopDemo,
-  demoSpeed,
-  setDemoSpeed,
   tourActive,
   startTour,
   onShowQR,
   onShowHelp,
-  onSurprise,
-  onRestoreRoute,
-  accessMode,
-  toggleAccessMode,
   t,
 }) {
     const [menuOpen, setMenuOpen] = useState(false)
@@ -351,44 +271,6 @@ function HeaderBar({
 
             {/* ── Sub-bar: building tabs · tool buttons ──────────────────────── */}
             <div className={`${styles.hSubRow} wrapper`}>
-
-                <div className={styles.hRow}>
-                    {/* Settings icon buttons — SVG icons, always visible */}
-                    <div className={styles.hIcons}>
-                        {/* Accessibility toggle */}
-                        <button
-                            className={`${styles.hIconBtn} ${accessMode ? styles.hIconBtnOn : ""}`}
-                            onClick={toggleAccessMode}
-                            title={t.accessBanner}
-                        >
-                            Rolstoel vriendelijk
-                        </button>
-
-
-                        {/* Help button — opens the feature explanation popup */}
-                        <button
-                            className={styles.hHelpBtn}
-                            onClick={onShowHelp}
-                            title="Uitleg over alle knoppen"
-                        >
-                            {/* <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg> */}
-                            Hoe werkt het?
-                        </button>
-                    </div>
-                </div>
 
         {/* Tool buttons */}
         <div className={styles.hTools}>
@@ -401,38 +283,6 @@ function HeaderBar({
             <span className={styles.hBtnLabel}>Tour</span>
           </button>
 
-          {/* Verras me */}
-          <button
-            className={styles.hToolBtn}
-            onClick={onSurprise}
-            title={t.verrasMe}
-          >
-            <span className={styles.hBtnLabel}>Verras</span>
-          </button>
-
-          {/* Demo (toggle + inline speed slider when running) */}
-          <button
-            className={`${styles.hToolBtn} ${isDemo ? styles.hToolBtnPink : ""}`}
-            onClick={isDemo ? stopDemo : startDemo}
-          >
-            <span className={styles.hBtnLabel}>Demo</span>
-          </button>
-          {isDemo && (
-            <div className={styles.demoSpeed}>
-              <span className={styles.demoSpeedLabel}>{demoSpeed}×</span>
-              <input
-                type="range"
-                min="0.5"
-                max="5"
-                step="0.5"
-                value={demoSpeed}
-                className={styles.demoSlider}
-                style={{ "--pct": `${((demoSpeed - 0.5) / 4.5) * 100}%` }}
-                onChange={(e) => setDemoSpeed(Number(e.target.value))}
-              />
-            </div>
-          )}
-
           {/* QR codes */}
           <button
             className={styles.hToolBtn}
@@ -442,13 +292,13 @@ function HeaderBar({
             <span className={styles.hBtnLabel}>QR</span>
           </button>
 
-          {/* Saved route */}
+          {/* Help */}
           <button
             className={styles.hToolBtn}
-            onClick={onRestoreRoute}
-            title={t.opgeslagenRoute}
+            onClick={onShowHelp}
+            title="Uitleg over alle knoppen"
           >
-            <span className={styles.hBtnLabel}>Route</span>
+            <span className={styles.hBtnLabel}>Hoe werkt het?</span>
           </button>
         </div>
       </div>
@@ -755,24 +605,8 @@ function HelpModal({ onClose }) {
             desc: 'Start een begeleide rondleiding langs 5 highlights: Receptie → Kantine → Aula → Podium & Events → Radio Studio. Druk op "Ik ben er" om naar de volgende stop te gaan.',
         },
         {
-            name: "Verras me",
-            desc: "Kiest een willekeurige ruimte en toont de route ernaartoe, inclusief een leuk weetje over die plek.",
-        },
-        {
-            name: "Demo",
-            desc: "Speelt een geanimeerde demo af van een loper die een route volgt. Gebruik de schuifregelaar om de snelheid aan te passen.",
-        },
-        {
             name: "QR-codes",
             desc: "Genereert een QR-code voor elke ruimte. Print ze uit en plak ze op de deur. Bezoekers scannen de code en de kaart opent met die ruimte als startpunt.",
-        },
-        {
-            name: "Opgeslagen route",
-            desc: "Laadt een eerder opgeslagen route — handig als je geen wifi hebt in het gebouw.",
-        },
-        {
-            name: "Rolstoel vriendelijk",
-            desc: "Routes lopen alleen via de lift (geen trappen). Ruimtes met liftacces worden extra gemarkeerd op de kaart.",
         },
     ];
 
@@ -844,19 +678,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // Shorthand translation helper used throughout the component
     const t = T[lang];
 
-    // ── Feature 4: Accessibility mode ────────────────────────────────────────────
-    // Persisted to localStorage; when true adds bigger text and elevator highlights
-    const [accessMode, setAccessMode] = useState(
-        () => localStorage.getItem("mA-access") === "true",
-    );
-    const toggleAccessMode = useCallback(() => {
-        setAccessMode((prev) => {
-            const next = !prev;
-            localStorage.setItem("mA-access", String(next));
-            return next;
-        });
-    }, []);
-
     // ── Feature 7: Kiosk mode ────────────────────────────────────────────────────
     // Initialised from ?kiosk URL param; also toggleable via header button
     const [kioskMode, setKioskMode] = useState(() =>
@@ -905,13 +726,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // Ref holding the setTimeout handle so we can clear it when a new toast fires
     const toastTimer = useRef(null);
 
-    // ── Feature 2: Category filter ───────────────────────────────────────────────
-    // The currently selected category tab ('all' or a category id)
-    const [activeCategory, setActiveCategory] = useState("all");
-
-    // ── Feature 2 (new): Programme filter ───────────────────────────────────────
-    // The currently selected programme ('all' or a programme id)
-    const [activeProgram, setActiveProgram] = useState("all");
 
 
     // ── Feature 6: Favorites ──────────────────────────────────────────────────────
@@ -934,28 +748,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             localStorage.setItem("mA-fav", JSON.stringify(next));
             return next;
         });
-
-    // ── Demo animation ────────────────────────────────────────────────────────────
-    // Whether the automated demo walk is currently running
-    const [isDemo, setIsDemo] = useState(false);
-    // Current interpolated position { x, y, floor } of the demo walker dot
-    const [walkerPos, setWalkerPos] = useState(null);
-    // Playback speed multiplier (0.5 – 5)
-    const [demoSpeed, setDemoSpeed] = useState(1);
-    // Handle for the active requestAnimationFrame call
-    const rafRef = useRef(null);
-    // timestamp of previous frame
-    const lastTsRef = useRef(null);
-    // 0–1, accumulates every frame
-    const progressRef = useRef(0);
-    // mirror of demoSpeed — readable inside rAF without restarting it
-    const demoSpeedRef = useRef(1);
-    // Holds the currently-playing demo pack { route, originPoi, destPoi }.
-    // Stored in a ref so the rAF loop can swap it without triggering a re-render.
-    const demoPackRef = useRef(null);
-
-    // Keep the speed ref in sync with state (runs on every render, no extra effect needed)
-    demoSpeedRef.current = demoSpeed;
 
     // Map from room id → status colour used on the SVG map canvas (read from poi data, never overridden)
     const roomStatuses = useMemo(() => {
@@ -1007,7 +799,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             setFloor(naar.floor);
         }
         if (van && naar) {
-            const transport = accessMode ? 'elevator' : 'stairs';
+            const transport = 'stairs';
             setRoute(computeRoute(van.id, naar.id, { lang, transport }));
             setSheetOpen(true);
         }
@@ -1037,67 +829,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         );
     }, [origin, destination, kioskMode]);
 
-    // ── Demo animation loop ──────────────────────────────────────────────────────
-    // Speed is read from demoSpeedRef so the slider never restarts the loop.
-    // A new random route is picked on every loop completion so the demo never
-    // shows the same path twice in a row.
-    useEffect(() => {
-        if (!isDemo) {
-            setWalkerPos(null);
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            return;
-        }
-
-        // Push a demo pack (route + POIs) to the visible map state
-        const applyPack = (pack) => {
-            if (!pack) return;
-            setOrigin(pack.originPoi);
-            setDestination(pack.destPoi);
-            setRoute(pack.route);
-            setFloor(pack.originPoi.floor);
-        };
-
-        applyPack(demoPackRef.current);
-        progressRef.current = 0;
-        lastTsRef.current = null;
-
-        function tick(ts) {
-            const dt = lastTsRef.current ? ts - lastTsRef.current : 0;
-            lastTsRef.current = ts;
-            const duration = DEMO_BASE_DURATION / demoSpeedRef.current;
-            progressRef.current += dt / duration;
-
-            // Loop finished — swap in a fresh random route and restart progress
-            if (progressRef.current >= 1) {
-                progressRef.current = 0;
-                lastTsRef.current = null;
-                const next = pickDemoRoute();
-                if (next) {
-                    demoPackRef.current = next;
-                    applyPack(next);
-                }
-                rafRef.current = requestAnimationFrame(tick);
-                return;
-            }
-
-            const pack = demoPackRef.current;
-            if (pack) {
-                const pos = getPosisieOpRoute(pack.route.waypoints, progressRef.current);
-                if (pos) {
-                    setWalkerPos(pos);
-                    setFloor(pos.floor);
-                }
-            }
-            rafRef.current = requestAnimationFrame(tick);
-        }
-
-        rafRef.current = requestAnimationFrame(tick);
-        return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current);
-            lastTsRef.current = null;
-        };
-    }, [isDemo]); // demoSpeed intentionally omitted — ref handles it without restart
-
     // ── Toast ────────────────────────────────────────────────────────────────────
     // Shows a temporary toast message that disappears after 2.5 seconds
     const showToast = useCallback((msg) => {
@@ -1120,7 +851,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     const applyRoute = useCallback(
         (o, d) => {
             if (o && d) {
-                const transport = accessMode ? 'elevator' : 'stairs';
+                const transport = 'stairs';
                 const result = computeRoute(o.id, d.id, { lang, transport });
                 console.log("computeRoute:", o.id, "→", d.id, "=", result);
                 setRoute(result);
@@ -1130,7 +861,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                 setSheetOpen(false);
             }
         },
-        [lang, accessMode],
+        [lang],
     );
 
     // Handles a POI click from either the map or the list;
@@ -1187,20 +918,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     const toggleMode = (mode) =>
         setSelectionMode((m) => (m === mode ? null : mode));
 
-    // ── Demo helpers ─────────────────────────────────────────────────────────────
-    // Picks a fresh random route and starts the animation
-    const startDemo = useCallback(() => {
-        const pack = pickDemoRoute();
-        if (!pack) return; // safety — shouldn't happen with real POI data
-        demoPackRef.current = pack;
-        setIsDemo(true);
-    }, []);
-    // Stops the animation and clears the walker dot
-    const stopDemo = useCallback(() => {
-        setIsDemo(false);
-        setWalkerPos(null);
-    }, []);
-
     // ── Guided tour helpers ───────────────────────────────────────────────────────
 
     // Applies the route for a given tour step index (from stop[i] to stop[i+1])
@@ -1226,10 +943,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         [applyRoute],
     );
 
-    // Starts the guided tour from step 0, cancelling any active demo
     const startTour = useCallback(() => {
-        setIsDemo(false);
-        setWalkerPos(null);
         setTourStep(0);
         setTourActive(true);
         applyTourStep(0);
@@ -1257,80 +971,10 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         showToast("Tour geannuleerd");
     }, [showToast]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // ── Feature 3 (new): Surprise me ─────────────────────────────────────────────
-    // Picks a random POI, sets it as destination, computes route, shows fun fact toast
-    const handleSurprise = useCallback(() => {
-        const available = GRID_POIS.filter(
-            (p) => p.id !== origin?.id && p.id !== destination?.id,
-        );
-        if (available.length === 0) return;
-        const pick = available[Math.floor(Math.random() * available.length)];
-        // Pick a random origin if none is set
-        const o = origin ?? GRID_POIS.find((p) => p.id !== pick.id);
-        setDestination(pick);
-        setFloor(pick.floor);
-        if (o) {
-            setOrigin(o);
-            applyRoute(o, pick);
-        }
-        const fact = SURPRISE_FACTS[pick.id];
-        showToast(fact ? fact : `${t.verrasMe}: ${pick.label}`);
-    }, [origin, destination, applyRoute, showToast, t]);
-
-    // ── Feature 6 (new): Save / restore route ────────────────────────────────────
-    // Saves the current origin + destination to localStorage
-    const handleSaveRoute = useCallback(() => {
-        if (!origin || !destination) return;
-        localStorage.setItem(
-            "mA-saved-route",
-            JSON.stringify({ originId: origin.id, destId: destination.id }),
-        );
-        showToast(t.slaRouteOp + " ✓");
-    }, [origin, destination, showToast, t]);
-
-    // Reads saved route from localStorage and restores it
-    const handleRestoreRoute = useCallback(() => {
-        try {
-            const saved = JSON.parse(localStorage.getItem("mA-saved-route"));
-            if (!saved) {
-                showToast(t.geenOpgeslagen);
-                return;
-            }
-            const o = ALL_POIS.find((p) => p.id === saved.originId);
-            const d = ALL_POIS.find((p) => p.id === saved.destId);
-            if (o && d) {
-                setOrigin(o);
-                setDestination(d);
-                setFloor(o.floor);
-                const transport = accessMode ? 'elevator' : 'stairs';
-                setRoute(computeRoute(o.id, d.id, { lang, transport }));
-                setSheetOpen(true);
-                showToast(t.opgeslagenRoute + " geladen");
-            } else {
-                showToast(t.geenOpgeslagen);
-            }
-        } catch {
-            showToast(t.geenOpgeslagen);
-        }
-    }, [showToast, t, lang, accessMode]);
-
-    // ── Feature 2+6: Filtered + sorted POIs ─────────────────────────────────────
-    // Derives the visible POI list from search query, active category, programme, and favourites
+    // ── Filtered + sorted POIs ───────────────────────────────────────────────────
     const filteredPois = useMemo(() => {
         let pois = GRID_POIS;
 
-        // Programme filter (new Feature 2 — study programme)
-        if (activeProgram !== "all") {
-            const prog = PROGRAMMES.find((p) => p.id === activeProgram);
-            if (prog) pois = pois.filter((p) => prog.pois.includes(p.id));
-        }
-
-        // Category filter
-        if (activeCategory !== "all") {
-            pois = pois.filter((p) => p.category === activeCategory);
-        }
-
-        // Search filter
         if (searchQuery.trim()) {
             const q = searchQuery.toLowerCase();
             pois = pois.filter(
@@ -1341,27 +985,14 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
             );
         }
 
-        // Sort: favorites first, then alphabetical
-        pois = [...pois].sort((a, b) => {
+        return [...pois].sort((a, b) => {
             const aFav = favorites.includes(a.id);
             const bFav = favorites.includes(b.id);
             if (aFav && !bFav) return -1;
             if (!aFav && bFav) return 1;
             return a.label.localeCompare(b.label);
         });
-
-        return pois;
-    }, [searchQuery, activeCategory, activeProgram, favorites]);
-
-    // IDs to highlight on the map when a programme is selected (amber glow)
-    const highlightPoiIds = useMemo(() => {
-        if (activeProgram === "all") return [];
-        return PROGRAMMES.find((p) => p.id === activeProgram)?.pois ?? [];
-    }, [activeProgram]);
-
-    // ── Category tabs (exclude transport) ────────────────────────────────────────
-    // Transport POIs are only shown on the map, not in the category tab strip
-    const gridCategories = CATEGORIES.filter((c) => c.id !== "transport");
+    }, [searchQuery, favorites]);
 
     // Bundle all HeaderBar props to keep JSX tidy
     const headerProps = {
@@ -1369,19 +1000,10 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         setActiveBuilding,
         theme,
         toggleTheme,
-        isDemo,
-        startDemo,
-        stopDemo,
-        demoSpeed,
-        setDemoSpeed,
         tourActive,
         startTour,
         onShowQR: () => setShowQR(true),
         onShowHelp: () => setShowHelp(true),
-        onSurprise: handleSurprise,
-        onRestoreRoute: handleRestoreRoute,
-        accessMode,
-        toggleAccessMode,
         lang,
         toggleLang,
         kioskMode,
@@ -1392,7 +1014,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // ── Main render ───────────────────────────────────────────────────────────────
     return (
         <div
-            className={`${styles.app} ${accessMode ? styles.accessMode : ""} ${kioskMode ? styles.kioskMode : ""}`}
+            className={`${styles.app} ${kioskMode ? styles.kioskMode : ""}`}
             data-theme={isDark ? "dark" : "light"}
         >
             {/* ── QR scan welcome overlay ───────────────────────────────────────────
@@ -1420,11 +1042,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                 <HeaderBar {...headerProps} />
             )}
 
-            {/* Feature 4: accessibility banner shown below header when accessMode is on */}
-            {accessMode && (
-                <div className={styles.accessBanner}>{t.accessBanner}</div>
-            )}
-
             <main className={styles.main}>
                 <div className={`${styles.card} wrapper`}>
                     {/* Map + floor selector */}
@@ -1442,9 +1059,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 highlightRoomId={hlRoom}
                                 roomStatuses={roomStatuses}
                                 isDark={isDark}
-                                walkerPos={walkerPos}
-                                highlightPoiIds={highlightPoiIds}
-                                accessMode={accessMode}
                             />
                             {/* <GraphDebugger floor={floor} /> */}
                         </div>
@@ -1534,14 +1148,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                     >
                                         🔗
                                     </button>
-                                    {/* Feature 6 (new): Save route button */}
-                                    <button
-                                        className={styles.shareBtn}
-                                        onClick={handleSaveRoute}
-                                        title={t.slaRouteOp}
-                                    >
-                                        💾
-                                    </button>
                                 </div>
                             </div>
                             <StepsList route={route} />
@@ -1568,38 +1174,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                         )}
                     </div>
 
-                    {/* Feature 2 (new): Programme tabs ABOVE category tabs */}
-                    <div className={styles.progTabsRow}>
-                        <span className={styles.tabsLabel}>{t.programme}</span>
-                        <div className={styles.progTabs}>
-                            {PROGRAMMES.map((prog) => (
-                                <button
-                                    key={prog.id}
-                                    className={`${styles.progTab} ${activeProgram === prog.id ? styles.progTabActive : ""}`}
-                                    onClick={() => setActiveProgram(prog.id)}
-                                >
-                                    <i className={prog.icon} /> {prog.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Feature 2: Category tabs */}
-                    <div className={styles.catTabsRow}>
-                        <span className={styles.tabsLabel}>{t.categories}</span>
-                        <div className={styles.catTabs}>
-                            {gridCategories.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    className={`${styles.catTab} ${activeCategory === cat.id ? styles.catTabActive : ""}`}
-                                    onClick={() => setActiveCategory(cat.id)}
-                                >
-                                    <i className={cat.icon} /> {cat.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
                     {/* POI grid */}
                     {filteredPois.length > 0 ? (
                         <div className={styles.poiBox}>
@@ -1609,11 +1183,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 // Mark this POI if it is the current tour stop
                                 const isTourStop =
                                     tourActive && TOUR_STOPS[tourStep]?.id === poi.id;
-                                // Is this a lift POI in access mode?
-                                const isLift =
-                                    accessMode &&
-                                    poi.category === "transport" &&
-                                    poi.label.toLowerCase().includes("lift");
                                 return (
                                     <div
                                         key={poi.id}
@@ -1636,11 +1205,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                                 title="Huidige tour stop"
                                             >
                                                 📍
-                                            </span>
-                                        )}
-                                        {isLift && (
-                                            <span className={styles.accessNote}>
-                                                {t.liftBeschikbaar}
                                             </span>
                                         )}
                                         <button
@@ -1702,16 +1266,6 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                 }}
                             >
                                 🔗
-                            </button>
-                            {/* Feature 6 (new): Save route (mobile) */}
-                            <button
-                                className={styles.shareBtn}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSaveRoute();
-                                }}
-                            >
-                                💾
                             </button>
                         </div>
                     </div>
