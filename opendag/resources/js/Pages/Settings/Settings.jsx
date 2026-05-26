@@ -8,22 +8,22 @@ function Settings() {
     const settings = usePage().props.settings;
     const [isChanged, setIsChanged] = useState(false);
     const user = usePage().props.auth.user;
-    const {data, setData, post, patch, processing, errors, delete: destroy} = useForm({
+    const { data, setData, post, patch, processing, errors, delete: destroy } = useForm({
         courses: settings.courses,
         stories: settings.stories,
         activities: settings.activities,
-        contact: settings.contact
+        contact: 0//settings.contact
     });
-    
+
     useEffect(() => {
-        if(data.courses == settings.courses && data.stories == settings.stories && data.activities == settings.activities && data.contact == settings.contact){
+        if (data.courses == settings.courses && data.stories == settings.stories && data.activities == settings.activities) { // && data.contact == settings.contact) {
             setIsChanged(false);
         }
-        else{
+        else {
             setIsChanged(true);
         }
     }, [data, settings]);
-    
+
     const submit = (event) => {
         event.preventDefault();
         patch(route('settings.update', settings.id));
@@ -36,7 +36,7 @@ function Settings() {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Settings"/>
+            <Head title="Settings" />
             <main className="main">
                 <span className="headlink">
                     <a href={route('dashboard', 'courses')} className="headlink__link">Dashboard</a>
@@ -47,7 +47,7 @@ function Settings() {
                         <h2 className="settings__profile--name">Hallo, {user.name}</h2>
                         <form onSubmit={logout} className="settings__profile--form">
                             {/* <button className="settings__profile--logout">Log uit</button> */}
-                            <Button label="Log uit" type="submit" isDisabled={processing}/>
+                            <Button label="Log uit" type="submit" isDisabled={processing} />
                         </form>
                     </span>
                     <form onSubmit={submit} className='settings__form'>
@@ -55,22 +55,22 @@ function Settings() {
                         <div className="settings__wrapper">
                             <span className="settings__input">
                                 <label className={`settings__label ${data.courses ? null : 'settings__label--blurred'}`}>Laat opleidingen zien</label>
-                                <Toggle value={data.courses} onChange={(event) => setData('courses', event.target.checked)}/>
+                                <Toggle value={data.courses} onChange={(event) => setData('courses', event.target.checked)} />
                             </span>
                             <span className="settings__input">
                                 <label className={`settings__label ${data.stories ? null : 'settings__label--blurred'}`}>Laat verhalen van studenten zien</label>
-                                <Toggle value={data.stories} onChange={(event) => setData('stories', event.target.checked)}/>
+                                <Toggle value={data.stories} onChange={(event) => setData('stories', event.target.checked)} />
                             </span>
                             <span className="settings__input">
                                 <label className={`settings__label ${data.activities ? null : 'settings__label--blurred'}`}>Laat activiteiten zien</label>
-                                <Toggle value={data.activities} onChange={(event) => setData('activities', event.target.checked)}/>
+                                <Toggle value={data.activities} onChange={(event) => setData('activities', event.target.checked)} />
                             </span>
-                            <span className="settings__input">
+                            {/* <span className="settings__input">
                                 <label className={`settings__label ${data.contact ? null : 'settings__label--blurred'}`}>Laat contact zien</label>
-                                <Toggle value={data.contact} onChange={(event) => setData('contact', event.target.checked)}/>
-                            </span>
+                                <Toggle value={data.contact} onChange={(event) => setData('contact', event.target.checked)} />
+                            </span> */}
                         </div>
-                        <Button label="Opslaan" type="submit" isDisabled={isChanged == false ? true : processing}/>
+                        <Button label="Opslaan" type="submit" isDisabled={isChanged == false ? true : processing} />
                     </form>
                 </section>
             </main>

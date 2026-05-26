@@ -4,7 +4,7 @@ import { Head, usePage } from "@inertiajs/react";
 import Student from "./Student";
 import { useEffect, useState } from "react";
 
-function Stories(){
+function Stories() {
     const stories = usePage().props.stories;
     const courses = usePage().props.courses;
     const [filtered, setFiltered] = useState([]);
@@ -14,24 +14,24 @@ function Stories(){
     }, []);
 
     const filterCourses = (event) => {
-        if(event.target.value != ""){
+        if (event.target.value != "") {
             setFiltered(stories.filter((item) => item.course_id == event.target.value));
         }
-        else{
+        else {
             setFiltered(stories);
         }
     }
-    
-    return(
+
+    return (
         <GuestLayout>
-            <Head title="Verhalen van studenten"/>
-            <PageTitle title="Verhalen van studenten"/>
+            <Head title="Verhalen van studenten" />
+            <PageTitle title="Verhalen van studenten" />
             <section className="stories">
                 <div className="stories__dropdown">
                     <select onChange={filterCourses} name="" id="" className="dropdown">
                         <option value="" className="dropdown__option">Alle opleidingen</option>
                         {
-                            courses.map((item, index) => 
+                            courses.map((item, index) =>
                                 <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
                             )
                         }
@@ -39,8 +39,8 @@ function Stories(){
                 </div>
                 <div className="stories__students">
                     {
-                        filtered.map((item, index) => 
-                            <Student data={item} key={index}/>
+                        filtered.map((item, index) =>
+                            <Student data={item} key={index} />
                         )
                     }
                 </div>

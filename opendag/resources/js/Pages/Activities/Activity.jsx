@@ -1,14 +1,16 @@
-function Activity({data}){
-    return(
-        <article className={`activity ${data.course_id != null   ? 'activity_timeline' : 'activity_general'}`}>
-            <h2>
-                {
-                    data.course !== null ? `${data.course.name} : ` : null
-                }
-                {
-                    data.activity_type.name
-                }
-            </h2>
+
+
+function Activity({ data, index }) {
+    return (
+        <article className="activity">
+            <img className="activity__img" src={data.image} alt="vul in" />
+            <div className="activity__text">
+                <h2 className="activity__title">{data.title}</h2>
+                <p className="activity__description">{data.description}</p>
+            </div>
+            <button className="activity__button">
+                Bekijk <p>{data.title}</p> op de plattegrond!
+            </button>
         </article>
     )
 }

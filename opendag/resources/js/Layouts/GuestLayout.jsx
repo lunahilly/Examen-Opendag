@@ -1,5 +1,6 @@
 import { usePage } from "@inertiajs/react";
 import Navigation from "./Navigation";
+import Footer from "./Footer";
 
 function GuestLayout({children}){
     return(
@@ -8,6 +9,7 @@ function GuestLayout({children}){
             <main className="main">
                 {children}
             </main>
+            <Footer/>
         </>
     );
 }

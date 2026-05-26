@@ -2,13 +2,15 @@ import PageTitle from "@/Components/Title";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, usePage } from "@inertiajs/react";
 import Activity from "./Activity";
+import Footer from "../../../js/Layouts/Footer"
 
 import { useMemo, useState } from "react";
 
 function Activities() {
     const activities = usePage().props.activities;
 
-    const withoutCourse = activities.filter((item) => item.course_id == null);
+    // const withoutCourse = activities.filter((item) => item.course_id == null);
+    const withoutCourse = activities.filter((item) => item.is_general == true);
 
 
     // De JS logica direct binnen de component
@@ -20,14 +22,11 @@ function Activities() {
             <section className="activities__general">
                 {
                     withoutCourse.map((activity, index) =>
-                        <>
-                            {
-                                    <Activity data={activity} key={index} />
-                            }
-                        </>
+                        <Activity key={index} data={activity} />
                     )
                 }
             </section>
+
         </GuestLayout>
     );
 }
