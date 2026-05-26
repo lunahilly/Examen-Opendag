@@ -1,4 +1,4 @@
-import image from "../../../../img/image.jpg"
+
 
 function Activity({ data, index }) {
     return (

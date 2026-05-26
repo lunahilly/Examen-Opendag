@@ -44,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('/settings', SettingsController::class);
 
     Route::post('/dashboard/upload/{type}', [ImageController::class, 'store'])->name('image.store');
+
+    Route::get('/nfc', function () {
+        return Inertia::render('Nfc/Nfc');
+    })->name('nfc');
 });
 
 
