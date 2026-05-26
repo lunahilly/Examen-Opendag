@@ -7,7 +7,7 @@ export const FLOORS = [
 
 // Breedte en hoogte van het SVG-canvas
 export const SVG_W = 800
-export const SVG_H = 686
+export const SVG_H = 500
 
 // Y-coördinaat van de hoofdgang per verdieping (routing-anker).
 // Verdieping 3 heeft een diagonale gang — CORRIDOR_Y[3] is de Y bij de trapingang bovenaan.
@@ -39,72 +39,80 @@ export function diag3X(y) {
 
 // Points of Interest
 export const ALL_POIS = [
-    //opleidingen
-    { id: 'poi-sd', label: 'Creative software developer', icon: '💻', floor: 2, x: 655, y: 280, category: 'onderwijs' },
-    { id: 'poi-mv', label: 'Mediavormgever', icon: '🎨', floor: 1, x: 280, y: 150, category: 'onderwijs' },
-    { id: 'poi-id', label: 'Immersive designer', icon: '🥽', floor: 0, x: 700, y: 210, category: 'onderwijs' },
-    { id: 'poi-pet', label: 'Podium- en evententechnicus', icon: '🎤', floor: 0, x: 500, y: 405, category: 'onderwijs' },
-    { id: 'poi-cp', label: 'Medewerker creatieve productie', icon: '🎞️', floor: 1, x: 100, y: 350, category: 'onderwijs' },
-    { id: 'poi-aam', label: 'All around mediamaker (dtp-er)', icon: '📡', floor: 1, x: 310, y: 300, category: 'onderwijs' },
-    { id: 'poi-ss', label: 'Signspecialist', icon: '🖼️', floor: 1, x: 320, y: 420, category: 'onderwijs' },
-    { id: 'poi-mr', label: 'Mediaredactiemedewerker', icon: '📰', floor: 2, x: 430, y: 460, category: 'onderwijs' },
-    { id: 'poi-ed', label: 'E-commerce designer', icon: '🎞️', floor: 0, x: 100, y: 300, category: 'onderwijs' },
-    { id: 'poi-rv', label: 'Ruimtelijk Vormgever', icon: '🏗️', floor: 0, x: 400, y: 150, category: 'onderwijs' },
-    { id: 'poi-meemip', label: 'Media- en eventproducer & Music industry professional', icon: '🎞️', floor: 2, x: 430, y: 505, category: 'onderwijs' },
-    { id: 'poi-av', label: 'Audiovisueel', icon: '🎬', floor: 0, x: 630, y: 270, category: 'onderwijs' },
-    { id: 'poi-pd', label: 'Photograpic designer', icon: '🎞️', floor: 0, x: 650, y: 320, category: 'onderwijs' },
-    { id: 'poi-ga', label: 'Game artist', icon: '🎮', floor: 3, x: 400, y: 310, category: 'onderwijs' },
-    { id: 'poi-aidev', label: 'Applied AI software developer', icon: '🎞️', floor: 0, x: 595, y: 225, category: 'onderwijs' },
-    { id: 'poi-fa', label: 'Filmacteur', icon: '🎞️', floor: 0, x: 130, y: 553, category: 'onderwijs' },
+    // Opleidingen
+    { id: 'poi-sd', label: 'Creative software developer', icon: 'Creative-Software-Dev', floor: 2, x: 652, y: 157, category: 'onderwijs' },
+    { id: 'poi-mv', label: 'Mediavormgever', icon: 'Mediavormgever', floor: 1, x: 281, y: 112, category: 'onderwijs' },
+    { id: 'poi-id', label: 'Immersive designer', icon: 'immersive-designer', floor: 0, x: 640, y: 136, category: 'onderwijs' },
+    { id: 'poi-pet', label: 'Podium- en evententechnicus', icon: 'Podium-en-Eventmenten tech', floor: 0, x: 607, y: 322, category: 'onderwijs' },
+    { id: 'poi-cp', label: 'Medewerker creatieve productie', icon: 'Medewerker-creatieve-productie', floor: 1, x: 102, y: 271, category: 'onderwijs' },
+    { id: 'poi-aam', label: 'All around mediamaker (dtp-er)', icon: 'Allround-DTP', floor: 1, x: 307, y: 241, category: 'onderwijs' },
+    { id: 'poi-ss', label: 'Signspecialist', icon: 'Sign', floor: 1, x: 300, y: 371, category: 'onderwijs' },
+    { id: 'poi-mr', label: 'Mediaredactiemedewerker', icon: 'Mediaredactie', floor: 2, x: 428, y: 309, category: 'onderwijs' },
+    { id: 'poi-ed', label: 'E-commerce designer', icon: 'Ecom-design', floor: 0, x: 145, y: 260, category: 'onderwijs' },
+    { id: 'poi-rv', label: 'Ruimtelijk Vormgever', icon: 'Ruimtelijkevormgever', floor: 0, x: 400, y: 112, category: 'onderwijs' },
+    { id: 'poi-meemip', label: 'Media- en eventproducer & Music industry professional', icon: 'Media-Eventproducer', floor: 2, x: 428, y: 350, category: 'onderwijs' },
+    { id: 'poi-av', label: 'Audiovisueel', icon: 'Audiovisueel', floor: 0, x: 608, y: 200, category: 'onderwijs' },
+    { id: 'poi-pd', label: 'Photograpic designer', icon: 'Photographic-Design', floor: 0, x: 450, y: 430, category: 'onderwijs' },
+    { id: 'poi-ga', label: 'Game artist', icon: 'Game-Artist', floor: 3, x: 398, y: 225, category: 'onderwijs' },
+    { id: 'poi-aidev', label: 'Applied AI software developer', icon: 'Applied-Ai-Software dev', floor: 0, x: 488, y: 428, category: 'onderwijs' },
+    { id: 'poi-fa', label: 'Filmacteur', icon: 'Film-acteur', floor: 0, x: 148, y: 432, category: 'onderwijs' },
 
-    //verdiepings dingen
-    // Het eerste cijfer staat voor de verdieping, de 2e voor welke trap/lift
-    // begane grond
-    { id: 'lift-01', label: 'Lift', icon: '🛗', floor: 0, x: 659, y: 207, category: 'transport' },
-    { id: 'lift-02', label: 'Lift', icon: '🛗', floor: 0, x: 247, y: 387, category: 'transport' },
-    { id: 'trap-01', label: 'Trap 1', icon: '🪜', floor: 0, x: 290, y: 380, category: 'transport' },
-    { id: 'trap-02', label: 'Trap 2', icon: '🪜', floor: 0, x: 603, y: 376, category: 'transport' },
-    { id: 'trap-03', label: 'Trap 3', icon: '🪜', floor: 0, x: 635, y: 220, category: 'transport' },
-    { id: 'trap-04', label: 'Trap 4', icon: '🪜', floor: 0, x: 624, y: 96, category: 'transport' },
-    { id: 'trap-05', label: 'Trap 5', icon: '🪜', floor: 0, x: 277, y: 68, category: 'transport' },
-    { id: 'trap-06', label: 'Trap 6', icon: '🪜', floor: 0, x: 120, y: 253, category: 'transport' },
-    { id: 'trap-07', label: 'Trap 7', icon: '🪜', floor: 0, x: 115, y: 445, category: 'transport' },
-    //1e verdieping
-    { id: 'lift-11', label: 'Lift', icon: '🛗', floor: 1, x: 650, y: 218, category: 'transport' },
-    { id: 'lift-12', label: 'Lift', icon: '🛗', floor: 1, x: 251, y: 385, category: 'transport' },
-    { id: 'trap-11', label: 'Trap 1', icon: '🪜', floor: 1, x: 284, y: 374, category: 'transport' },
-    { id: 'trap-12', label: 'Trap 2', icon: '🪜', floor: 1, x: 603, y: 378, category: 'transport' },
-    { id: 'trap-13', label: 'Trap 3', icon: '🪜', floor: 1, x: 633, y: 228, category: 'transport' },
-    { id: 'trap-14', label: 'Trap 4', icon: '🪜', floor: 1, x: 618, y: 109, category: 'transport' },
-    { id: 'trap-15', label: 'Trap 5', icon: '🪜', floor: 1, x: 283, y: 55, category: 'transport' },
-    { id: 'trap-16', label: 'Trap 6', icon: '🪜', floor: 1, x: 125, y: 250, category: 'transport' },
-    { id: 'trap-17', label: 'Trap 7', icon: '🪜', floor: 1, x: 129, y: 444, category: 'transport' },
-    //2e verdieping
-    { id: 'lift-21', label: 'Lift', icon: '🛗', floor: 2, x: 651, y: 304, category: 'transport' },
-    { id: 'trap-21', label: 'Trap 1', icon: '🪜', floor: 2, x: 299, y: 457, category: 'transport' },
-    { id: 'trap-23', label: 'Trap 3', icon: '🪜', floor: 2, x: 631, y: 310, category: 'transport' },
-    { id: 'trap-24', label: 'Trap 4', icon: '🪜', floor: 2, x: 616, y: 191, category: 'transport' },
-    //3e verdieping
-    { id: 'lift-31', label: 'Lift', icon: '🛗', floor: 3, x: 385, y: 390, category: 'transport' },
-    { id: 'trap-33', label: 'Trap 3', icon: '🪜', floor: 3, x: 339, y: 408, category: 'transport' },
-    { id: 'trap-34', label: 'Trap 4', icon: '🪜', floor: 3, x: 316, y: 146, category: 'transport' },
+    // Transport
+    { id: 'lift-01', label: 'Lift', icon: 'Lift', floor: 0, x: 637, y: 168, category: 'transport' },
+    { id: 'lift-02', label: 'Lift', icon: 'Lift', floor: 0, x: 273, y: 300, category: 'transport' },
+    { id: 'trap-01', label: 'Trap 1', icon: 'Trap', floor: 0, x: 319, y: 301, category: 'transport' },
+    { id: 'trap-02', label: 'Trap 2', icon: 'Trap', floor: 0, x: 589, y: 292, category: 'transport' },
+    { id: 'trap-03', label: 'Trap 3', icon: 'Trap', floor: 0, x: 616, y: 174, category: 'transport' },
+    { id: 'trap-04', label: 'Trap 4', icon: 'Trap', floor: 0, x: 608, y: 80, category: 'transport' },
+    { id: 'trap-05', label: 'Trap 5', icon: 'Trap', floor: 0, x: 300, y: 55, category: 'transport' },
+    { id: 'trap-06', label: 'Trap 6', icon: 'Trap', floor: 0, x: 168, y: 200, category: 'transport' },
 
-    //studio's
-    { id: 'poi-pod', label: 'Podcaststudio', icon: '🎧', floor: 0, x: 243, y: 430, category: 'onderwijs', status: 'vrij' },
+    { id: 'lift-11', label: 'Lift', icon: 'Lift', floor: 1, x: 653, y: 178, category: 'transport' },
+    { id: 'lift-12', label: 'Lift', icon: 'Lift', floor: 1, x: 251, y: 321, category: 'transport' },
+    { id: 'trap-11', label: 'Trap 1', icon: 'Trap', floor: 1, x: 288, y: 314, category: 'transport' },
+    { id: 'trap-12', label: 'Trap 2', icon: 'Trap', floor: 1, x: 604, y: 311, category: 'transport' },
+    { id: 'trap-13', label: 'Trap 3', icon: 'Trap', floor: 1, x: 629, y: 188, category: 'transport' },
+    { id: 'trap-14', label: 'Trap 4', icon: 'Trap', floor: 1, x: 621, y: 88, category: 'transport' },
+    { id: 'trap-15', label: 'Trap 5', icon: 'Trap', floor: 1, x: 283, y: 45, category: 'transport' },
+    { id: 'trap-16', label: 'Trap 6', icon: 'Trap', floor: 1, x: 125, y: 250, category: 'transport' },
 
-    //toiletten
-    { id: 'poi-wc-bg1', label: 'Toiletten Beganegrond1', icon: '🚻', floor: 0, x: 125, y: 365, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-bg2', label: 'Toiletten Beganegrond2', icon: '🚻', floor: 0, x: 230, y: 365, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-bg3', label: 'Toiletten Beganegrond3', icon: '🚻', floor: 0, x: 223, y: 195, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-bg4', label: 'Toiletten Beganegrond4', icon: '🚻', floor: 0, x: 655, y: 255, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-bg5', label: 'Toiletten Beganegrond5', icon: '🚻', floor: 0, x: 630, y: 370, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-2', label: 'Toiletten 2e', icon: '🚻', floor: 2, x: 102, y: 460, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-wc-3', label: 'Toiletten 3e', icon: '🚻', floor: 3, x: 400, y: 470, category: 'faciliteiten', status: 'vrij' },
+    { id: 'lift-21', label: 'Lift', icon: 'Lift', floor: 2, x: 649, y: 183, category: 'transport' },
+    { id: 'trap-21', label: 'Trap 1', icon: 'Trap', floor: 2, x: 300, y: 309, category: 'transport' },
+    { id: 'trap-22', label: 'Trap 2', icon: 'Trap', floor: 2, x: 598, y: 305, category: 'transport' },
+    { id: 'trap-23', label: 'Trap 3', icon: 'Trap', floor: 2, x: 624, y: 190, category: 'transport' },
+    { id: 'trap-24', label: 'Trap 4', icon: 'Trap', floor: 2, x: 616, y: 89, category: 'transport' },
 
-    //overig
-    { id: 'poi-portier', label: 'Ingang', icon: '🛡️', floor: 0, x: 295, y: 455, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-receptie', label: 'Receptie', icon: 'ℹ️', floor: 0, x: 320, y: 410, category: 'faciliteiten', status: 'vrij' },
-    { id: 'poi-kantine', label: 'Kantine', icon: '🍽️', floor: 0, x: 295, y: 290, category: 'eten', status: 'vrij' },
+    { id: 'lift-31', label: 'Lift', icon: 'Lift', floor: 3, x: 389, y: 276, category: 'transport' },
+    { id: 'trap-33', label: 'Trap 3', icon: 'Trap', floor: 3, x: 344, y: 290, category: 'transport' },
+    { id: 'trap-34', label: 'Trap 4', icon: 'Trap', floor: 3, x: 318, y: 92, category: 'transport' },
+
+    // Studio's
+    { id: 'poi-pod', label: 'Podcaststudio', icon: 'Audiovisueel', floor: 0, x: 270, y: 340, category: 'onderwijs', status: 'vrij' },
+
+    // Toiletten
+    { id: 'poi-wc-bg1', label: 'Toiletten Beganegrond1', icon: 'Toilet', floor: 0, x: 167, y: 284, category: 'faciliteiten' },
+    { id: 'poi-wc-bg2', label: 'Toiletten Beganegrond2', icon: 'Toilet', floor: 0, x: 260, y: 284, category: 'faciliteiten' },
+    { id: 'poi-wc-bg3', label: 'Toiletten Beganegrond3', icon: 'Toilet', floor: 0, x: 256, y: 155, category: 'faciliteiten' },
+    { id: 'poi-wc-bg4', label: 'Toiletten Beganegrond4', icon: 'Toilet', floor: 0, x: 637, y: 204, category: 'faciliteiten' },
+    { id: 'poi-wc-bg5', label: 'Toiletten Beganegrond5', icon: 'Toilet', floor: 0, x: 612, y: 288, category: 'faciliteiten' },
+
+    { id: 'poi-wc-1-1', label: 'Toiletten1 1e', icon: 'Toilet', floor: 1, x: 648, y: 216, category: 'faciliteiten', },
+    { id: 'poi-wc-1-2', label: 'Toiletten2 1e', icon: 'Toilet', floor: 1, x: 631, y: 302, category: 'faciliteiten', },
+    { id: 'poi-wc-1-3', label: 'Toiletten3 1e', icon: 'Toilet', floor: 1, x: 243, y: 298, category: 'faciliteiten', },
+    { id: 'poi-wc-1-4', label: 'Toiletten4 1e', icon: 'Toilet', floor: 1, x: 125, y: 185, category: 'faciliteiten', },
+    { id: 'poi-wc-1-5', label: 'Toiletten5 1e', icon: 'Toilet', floor: 1, x: 219, y: 173, category: 'faciliteiten', },
+
+    { id: 'poi-wc-2-1', label: 'Toiletten1 2e', icon: 'Toilet', floor: 2, x: 646, y: 215, category: 'faciliteiten', },
+    { id: 'poi-wc-2-2', label: 'Toiletten2 2e', icon: 'Toilet', floor: 2, x: 624, y: 312, category: 'faciliteiten', },
+    { id: 'poi-wc-2-3', label: 'Toiletten3 2e', icon: 'Toilet', floor: 2, x: 339, y: 312, category: 'faciliteiten', },
+    { id: 'poi-wc-2-4', label: 'Toiletten4 2e', icon: 'Toilet', floor: 2, x: 261, y: 299, category: 'faciliteiten', },
+
+    { id: 'poi-wc-3', label: 'Toiletten 3e', icon: 'Toilet', floor: 3, x: 384, y: 342, category: 'faciliteiten', },
+
+    // Overig
+    { id: 'poi-portier', label: 'Ingang', icon: 'Ingang', floor: 0, x: 319, y: 356, category: 'faciliteiten', },
+    { id: 'poi-receptie', label: 'Receptie', icon: 'Info', floor: 0, x: 346, y: 338, category: 'faciliteiten', },
+    { id: 'poi-kantine', label: 'Kantine', icon: 'Kantine', floor: 0, x: 325, y: 166, category: 'eten', },
 ]
 
 // Oost-vleugel aansluiting (verdieping 2) — aparte gedraaide vleugel, routing springt hier de gap over

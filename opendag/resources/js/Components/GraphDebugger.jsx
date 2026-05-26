@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { graphNodes, graphEdges } from "../data/campusWayfinding";
 
-const W = 800, H = 686;
+const W = 800, H = 500;
 const floorIdFromNum = (n) => `floor-${n}`;
 
 // Transparante SVG-overlay die nodes en edges over de kaart tekent
