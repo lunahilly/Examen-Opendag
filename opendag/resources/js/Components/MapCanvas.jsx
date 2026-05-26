@@ -24,6 +24,7 @@ export default function MapCanvas({
     highlightPoiIds,
     accessMode,
 }) {
+    console.log(floor); // GAGA
     // Ref to the outer wrapper div — used to attach wheel and touch listeners
     const wrapRef = useRef(null)
     // Pan and zoom transform state: x/y offset in pixels, s = scale factor
@@ -42,7 +43,7 @@ export default function MapCanvas({
     const pinch = useRef(null)   // { startDist, startScale } for two-finger zoom
 
     // Only POIs that belong to the currently visible floor
-    const floorPois = (pois || []).filter(p => p.floor === floor)
+    const floorPois = (pois || []).filter(p => p.floor_id === floor) // floor => floor_id GAGA
 
     // const COORDS_W = floor === 0 ? 1986.13 : 2050.72
     // const COORDS_H = 1704.1
@@ -347,10 +348,10 @@ export default function MapCanvas({
 
                     {/* ── POI markers ────────────────────────────────────────── */}
                     {floorPois.map(poi => {
-                        const isOrigin = origin?.id === poi.id
-                        const isDest = destination?.id === poi.id
-                        const isHov = hoveredPoi?.id === poi.id
-                        const isTransit = poi.category === 'transport'
+                        const isOrigin = origin?.value === poi.value // poi.id GAGA
+                        const isDest = destination?.value === poi.value // poi.id GAGA
+                        const isHov = hoveredPoi?.value === poi.value // poi.id GAGA
+                        const isTransit = poi.category.value === 'transport' // poi.category => poi.category.value GAGA
                         // Amber/gold highlight for programme filter
                         const isProgramHL = Array.isArray(highlightPoiIds) && highlightPoiIds.includes(poi.id)
 

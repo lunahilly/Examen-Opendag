@@ -8,6 +8,10 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoryController;
+use App\Models\Building;
+use App\Models\Category;
+use App\Models\Floor;
+use App\Models\Poi;
 use App\Models\Setting;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,12 +19,20 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     $settings = Setting::find(1);
+    $pois = Poi::with(['floor', 'category'])->get();
+    $categories = Category::all();
+    $floors = Floor::all();
+    $buildings = Building::all();
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
-        'settings' => $settings
+        'settings' => $settings,
+        'pois' => $pois,
+        'categories' => $categories,
+        'floors' => $floors,
+        'buildings' => $buildings
     ]);
 });
 

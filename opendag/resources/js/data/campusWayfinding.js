@@ -233,7 +233,7 @@ export function computeRoute(vanPoiId, naarPoiId, _options = {}) {
 
     const vanNode = vindDichtstbijzijndeNode(vanPoi);
     const naarNode = vindDichtstbijzijndeNode(naarPoi);
-    if (!vanNode || !naarNode) return null;
+    if (!vanNode || !naarNode) return null; 
 
     const resultaat = dijkstra(vanNode, naarNode);
     if (!resultaat) return null;
