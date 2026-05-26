@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-// import JSZip from "jszip";
+import JSZip from "jszip";
 import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
 import { computeRoute, getPosisieOpRoute } from "../data/campusWayfinding";
@@ -669,7 +669,7 @@ function QRModal({ onClose }) {
         }
 
         const zipBlob = await zip.generateAsync({ type: "blob" });
-        triggerDownload(zipBlob, "wayfinder-qr-codes.zip");
+        triggerDownload(zipBlob, "Ma-OpenDag-QR-codes.zip");
         setDownloading(false);
     };
 
