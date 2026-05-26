@@ -305,15 +305,9 @@ export function computeRoute(vanLocatieId, naarLocatieId, _opties = {}) {
     if (!vanLocatie || !naarLocatie) return null;
     if (vanLocatieId === naarLocatieId) return null;
 
-<<<<<<< HEAD
     const vanNode = vindDichtstbijzijndeNode(vanPoi);
     const naarNode = vindDichtstbijzijndeNode(naarPoi);
     if (!vanNode || !naarNode) return null; 
-=======
-    const startKruispunt = vindDichtsteKruispunt(vanLocatie);
-    const eindKruispunt = vindDichtsteKruispunt(naarLocatie);
-    if (!startKruispunt || !eindKruispunt) return null;
->>>>>>> 0ef7e80a1e9754a28416848f371693ef4e5aac97
 
     const routeResultaat = kortsteRoute(startKruispunt, eindKruispunt);
     if (!routeResultaat) return null;
