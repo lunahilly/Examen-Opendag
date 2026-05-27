@@ -7,7 +7,7 @@ export default function Dashboard() {
     const settings = usePage().props.settings;
     const items = usePage().props.data;
     const type = usePage().props.type;
-    const {delete: destroy} = useForm();
+    const { delete: destroy } = useForm();
 
     const submit = (event) => {
         event.preventDefault();
@@ -15,25 +15,32 @@ export default function Dashboard() {
     }
 
     const format = (value, toDutch) => {
-        if(value == 'courses'){
+        if (value == 'courses') {
             return toDutch ? 'Opleidingen' : 'course';
         }
-        else if(value == 'stories'){
+        else if (value == 'stories') {
             return toDutch ? 'Verhalen' : 'story';
         }
-        else if(value == 'activities'){
+        else if (value == 'activities') {
             return toDutch ? 'Activiteiten' : 'activity';
         }
     }
+    
     const deleteItem = (event, id) => {
         event.preventDefault();
-        destroy(route(`${format(type, false)}.destroy`, id));
+        const answer = confirm('weet u zeker dat u dit wilt verwijderen?');
+        if(answer){
+            destroy(route(`${format(type, false)}.destroy`, id));
+        }
+        else{
+            return;
+        }
     }
 
     return (
         <AuthenticatedLayout>
             <main className="main">
-                <Head title='Dashboard'/>
+                <Head title='Dashboard' />
                 <span className="headlink">
                     <p className="headlink__title">Dashboard / </p>
                     <a href={route('settings.index')} className="headlink__link">Settings</a>
@@ -47,7 +54,7 @@ export default function Dashboard() {
                     <div className="dashboard__wrapper">
                         <div className="dashboard__header">
                             <h3 className="dashboard__header--text">Beheer {format(type, true)}</h3>
-                            <Button label="+ Nieuwe aanmaken" route={route(`${format(type, false)}.create`)}/>
+                            <Button label="+ Nieuwe aanmaken" route={route(`${format(type, false)}.create`)} />
                         </div>
                         <table className="dashboard__table">
                             <thead className="dashboard__head">
@@ -59,15 +66,19 @@ export default function Dashboard() {
                             </thead>
                             <tbody className="dashboard__body">
                                 {
-                                    items.data.map((item, index) => 
+                                    items.data.map((item, index) =>
                                         <tr className="dashboard__row" key={index}>
-                                            <td className="dashboard__row--title">{item.name ?? item.activity_type.name}</td>
+                                            <td className="dashboard__row--title">{item.name ?? item.title}</td>
                                             <td className="dashboard__row--edit">
-                                                <a href={route(`${format(type, false)}.edit`, item.id)} className="dashboard__row--edit-link">X</a>
+                                                <a href={route(`${format(type, false)}.edit`, item.id)} className="dashboard__row--edit-link">
+                                                    <i className="fa-solid fa-pen dashboard__row--edit-icon"/>
+                                                </a>
                                             </td>
                                             <td className="dashboard__row--delete">
                                                 <form onSubmit={(event) => deleteItem(event, item.id)} className="dashboard__row--delete-form">
-                                                    <button className="dashboard__row--delete-submit" type='submit'>X</button>
+                                                    <button className="dashboard__row--delete-submit" type='submit'>
+                                                        <i className="fa-solid fa-trash-can dashboard__row--delete-icon"/>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -76,7 +87,7 @@ export default function Dashboard() {
                             </tbody>
                         </table>
                         {
-                            items.last_page == 1 ? null : <Pagination data={items}/>
+                            items.last_page == 1 ? null : <Pagination data={items} />
                         }
                     </div>
                 </section>

@@ -2,7 +2,7 @@ import Button from "@/Components/Button";
 import { usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-function Navigation(){
+function Navigation() {
     const user = usePage().props.auth.user;
     const url = usePage().url;
     const settings = usePage().props.settings;
@@ -10,10 +10,10 @@ function Navigation(){
     const [openMenu, setOpenMenu] = useState(false);
 
     const screenSize = () => {
-        if(isSmaller == false && window.innerWidth < 750){
+        if (isSmaller == false && window.innerWidth < 750) {
             setIsSmaller(true);
         }
-        else{
+        else {
             setIsSmaller(false);
         }
     }
@@ -23,10 +23,10 @@ function Navigation(){
     }, []);
 
     useEffect(() => {
-        if(openMenu == true){
+        if (openMenu == true) {
             document.body.style.overflow = "hidden";
         }
-        else{
+        else {
             document.body.style.overflow = "unset";
         }
     }, [openMenu]);
@@ -34,60 +34,64 @@ function Navigation(){
     return isSmaller ? (
         <header className="header">
             <span className="header__menu">
-                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">X</button>
                 <a href="/" className="header__menu--logo">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
                 </a>
+                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
+                    <i className="fa-solid fa-bars header__menu--button-icon"/>
+                </button>
             </span>
             {
-                openMenu ? 
+                openMenu ?
                     <>
                         <div onClick={() => setOpenMenu(!openMenu)} className="background"></div>
                         <nav className="header__sidebar">
                             <span className="header__sidebar--wrapper">
-                                <button onClick={() => setOpenMenu(!openMenu)} className="header__sidebar--button">X</button>
+                                <button onClick={() => setOpenMenu(!openMenu)} className="header__sidebar--button">
+                                    <i className="fa-solid fa-close header__sidebar--button-icon"/>
+                                </button>
                             </span>
                             <ul className="header__sidebar--list">
                                 <li className="header__sidebar--item">
                                     <a href="/" className={`header__sidebar--item-link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                                 </li>
                                 {
-                                    settings.courses ? 
+                                    settings.courses ?
                                         <li className="header__sidebar--item">
                                             <a href={route('information.index')} className={`header__sidebar--item-link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
                                         </li>
-                                    : null
+                                        : null
                                 }
                                 {
-                                    settings.stories ? 
+                                    settings.stories ?
                                         <li className="header__sidebar--item">
                                             <a href={route('stories.index')} className={`header__sidebar--item-link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                                         </li>
-                                    : null
+                                        : null
                                 }
                                 {
-                                    settings.activities ? 
+                                    settings.activities ?
                                         <li className="header__sidebar--item">
                                             <a href={route('activities.index')} className={`header__sidebar--item-link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
                                         </li>
-                                    : null
+                                        : null
                                 }
                                 {
-                                    settings.contact ? 
+                                    user != null ? 
                                         <li className="header__sidebar--item">
-                                            <a href={route('contact.index')} className={`header__sidebar--item-link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
+                                            <a href={route('nfc')} className={`header__sidebar--item-link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC</a>
                                         </li>
                                     : null
                                 }
                                 {
-                                user != null ? 
-                                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
-                                : null
-                            }
+                                    user != null ? 
+                                        <Button label="Dashboard" route={route('dashboard', 'courses')}/>
+                                    : null
+                                }
                             </ul>
                         </nav>
                     </>
-            : null
+                    : null
             }
         </header>
     ) : (
@@ -98,28 +102,28 @@ function Navigation(){
             <nav className="header__navigation">
                 <a href="/" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                 {
-                    settings.courses ? 
+                    settings.courses ?
                         <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
-                    : null
+                        : null
                 }
                 {
-                    settings.stories ? 
+                    settings.stories ?
                         <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
-                    : null
+                        : null
                 }
                 {
-                    settings.activities ? 
+                    settings.activities ?
                         <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
+                        : null
+                }
+                {
+                    user != null ?
+                        <a href={route('nfc')} className={`header__navigation--link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC</a>
                     : null
                 }
                 {
-                    settings.contact ? 
-                        <a href={route('contact.index')} className={`header__navigation--link ${url == '/contact' ? 'header__navigation--link-active' : null} `}>Contact</a>
-                    : null
-                }
-                {
-                    user != null ? 
-                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
+                    user != null ?
+                        <Button label="Dashboard" route={route('dashboard', 'courses')} />
                         // <div className="header__dropdown">
                         //     <Button label="CMS"/>
                         //     <ul className="header__dropdown--list">
@@ -134,7 +138,7 @@ function Navigation(){
                         //         </li>
                         //     </ul>
                         // </div>
-                    : null
+                        : null
                 }
             </nav>
         </header>

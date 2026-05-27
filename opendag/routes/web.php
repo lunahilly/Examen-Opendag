@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
-use App\Http\Controllers\ActivityTypeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
@@ -9,7 +8,6 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoryController;
-use App\Models\ActivityType;
 use App\Models\Setting;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,10 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('course', CourseController::class)->except('index', 'show');
     Route::resource('story', StoryController::class)->except('index', 'show');
     Route::resource('activity', ActivityController::class)->except('index', 'show');
-    Route::resource('type', ActivityTypeController::class)->except('index', 'show');
     Route::resource('/settings', SettingsController::class);
 
     Route::post('/dashboard/upload/{type}', [ImageController::class, 'store'])->name('image.store');
+
+    Route::get('/nfc', function () {
+        return Inertia::render('Nfc/Nfc');
+    })->name('nfc');
 });
 
 

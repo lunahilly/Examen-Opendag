@@ -49,10 +49,11 @@ class StoryController extends Controller
         $request->validate([
             'image' => 'required'
         ]);
-        $path = $request->file('image')->store('students', 'public');
+        $path = $request->file('image')->store('students', 'public'); // public_html 4 live
         // dd($path);
-        $request['image'] = $path;
+        // $request['image'] = '/'.'uploads'.$path;
         $data = $this->validateData($request);
+        $data['image'] = '/'.'storage/'.$path; // terug naar uploads als live is, zo not forget
         $story = new Story($data);
         $story->save();
         return redirect(route('stories.index'));
@@ -84,7 +85,20 @@ class StoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $this->validateData($request);
+        // $data = $this->validateData($request);
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            $path = $request->file('image')->store('students', 'public'); // change to public_html 4 live, niet vergeten cuz anders not work:) x
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; // same thing here, uploads 4 live in plaats van storage. again niet vergeten cuz anders werkt het niet x
+        }
+        else{
+            $data = $this->validateData($request);
+        }
+        // dd($path);
+        // $request['image'] = '/'.'uploads'.$path;
         $story = Story::find($id);
         $story->update($data);
         return redirect(route('stories.index'));

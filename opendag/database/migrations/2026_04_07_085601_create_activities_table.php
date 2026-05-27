@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('course_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('activity_type_id')->constrained()->onDelete('cascade');
-            $table->time('time')->nullable();
+            $table->string('title');
+            $table->boolean('is_general')->default(0);
+            $table->string('image')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

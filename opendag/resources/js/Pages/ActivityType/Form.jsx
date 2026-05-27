@@ -3,8 +3,8 @@ import InputField from "@/Components/Input";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useForm } from "@inertiajs/react";
 
-function ActivityTypeForm(){
-    const {data, setData, post, processing, errors} = useForm({
+function ActivityTypeForm() {
+    const { data, setData, post, processing, errors } = useForm({
         name: ''
     });
 
@@ -17,7 +17,7 @@ function ActivityTypeForm(){
         <AuthenticatedLayout>
             <form onSubmit={submit} className="form">
                 <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} />
-                <Button label="send" type="submit" isDisabled={processing}/>
+                <Button label="send" type="submit" isDisabled={processing} />
             </form>
         </AuthenticatedLayout>
     );

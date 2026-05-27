@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
-use App\Models\ActivityType;
 use App\Models\Course;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -18,7 +17,7 @@ class ActivityController extends Controller
     {
         $settings = Setting::find(1);
         if($settings->activities == true){
-            $activities = Activity::with(['course', 'activityType'])->get();
+            $activities = Activity::all();
             return Inertia::render('Activities/Activities', [
                 'activities' => $activities
             ]);
@@ -33,12 +32,7 @@ class ActivityController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
-        $types = ActivityType::all();
-        return Inertia::render('Activities/Form', [
-            'courses' => $courses,
-            'types' => $types
-        ]);
+        return Inertia::render('Activities/Form');
     }
 
     /**
@@ -46,7 +40,23 @@ class ActivityController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validateData($request);
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            // dd('queen');
+            $path = $request->file('image')->store('activities', 'public'); // also here public_html voor de live
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; // storage naar uploads als live whatevhgor
+
+        }
+        else{
+            $data = $this->validateData($request);
+            // dd('no queen');
+        }
+        // $path = $request->file('image')->store('activities', 'public');
+        // $request['image'] = '/'.'uploads'.$path;
+        // $data['image'] = '/'.'uploads/'.$path;
         $activity = new Activity($data);
         $activity->save();
         return redirect(route('activities.index'));
@@ -65,7 +75,10 @@ class ActivityController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $activity = Activity::find($id);
+        return Inertia::render('Activities/Form', [
+            'activity' => $activity
+        ]);
     }
 
     /**
@@ -73,7 +86,20 @@ class ActivityController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'image' => ''
+        ]);
+        if($request->file('image')){
+            $path = $request->file('image')->store('activities', 'public'); //public_html 4 live
+            $data = $this->validateData($request);
+            $data['image'] = '/'.'storage/'.$path; //uploads 4 live n storage 4 local
+        }
+        else{
+            $data = $this->validateData($request);
+        }
+        $activity = Activity::find($id);
+        $activity->update($data);
+        return redirect(route('activities.index'));
     }
 
     /**
@@ -87,9 +113,10 @@ class ActivityController extends Controller
 
     protected function validateData(Request $request){
         $data = $request->validate([
-            'course_id' => 'nullable',
-            'activity_type_id' => '',
-            'time' => 'nullable'
+            'title' => 'required',
+            'is_general' => 'required',
+            'image' => '',
+            'description' => ''
         ]);
         return $data;
     }

@@ -12,7 +12,6 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function index($type = 'courses'){
-        // dd($type);
         $settings = Setting::find(1);
         $data = null;
         if($type == 'courses'){
@@ -22,16 +21,10 @@ class DashboardController extends Controller
             $data = Story::paginate(10);
         }
         else if($type == 'activities'){
-            $data = Activity::with('activityType')->paginate(10);
+            $data = Activity::paginate(10);
         }
-        // $courses = Course::paginate(10);
-        // $stories = Story::paginate(10);
-        // $activities = Activity::paginate(10);
         return Inertia::render('Dashboard', [
             'settings' => $settings,
-            // 'courses' => $courses,
-            // 'stories' => $stories,
-            // 'activities' => $activities,
             'type' => $type,
             'data' => $data
         ]);

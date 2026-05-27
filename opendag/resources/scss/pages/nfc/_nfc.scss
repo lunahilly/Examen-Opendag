@@ -1,0 +1,40 @@
+.nfc__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    flex-direction: column;
+
+    .head {
+        margin-block-end: 2em;
+    }
+}
+
+.nfc__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+
+    input {
+        width: 100%;
+    }
+
+    button {
+        max-width: fit-content;
+    }
+
+    .nfc__buttons {
+        display: flex;
+        gap: 1em;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .nfc__textContainer{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5em;
+    }
+}

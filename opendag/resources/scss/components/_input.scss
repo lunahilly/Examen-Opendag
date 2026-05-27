@@ -38,6 +38,15 @@
     //     }
     // }
 
+    &__label{
+        &--required{
+            &::after{
+                content: attr(data-end);
+                color: map-get(variables.$colors, "red");
+            }
+        }
+    }
+
     &__wrapper{
         width: 100%;
     }

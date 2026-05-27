@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activity;
 use App\Models\Course;
 use App\Models\Setting;
 use Illuminate\Http\Request;
@@ -59,8 +60,10 @@ class CourseController extends Controller
     public function edit(string $id)
     {
         $course = Course::find($id);
+        $activities = Activity::where('is_general', 0)->get();
         return Inertia::render('Information/Form', [
-            'course' => $course
+            'course' => $course,
+            'activities' => $activities
         ]);
     }
 
@@ -87,6 +90,7 @@ class CourseController extends Controller
     protected function validateData(Request $request){
         $data = $request->validate([
             'name' => 'required',
+            'abbreviation' => 'required',
             'image' => 'required',
             'information' => 'required',
             'careers' => 'required',
