@@ -6,14 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
-    protected $fillable = ['course_id', 'activity_type_id', 'time'];
+    protected $fillable = ['title', 'is_general', 'image', 'description'];
 
-    public function course(){
-        return $this->belongsTo(Course::class);
-    }
-
-    public function activityType(){
-        return $this->belongsTo(ActivityType::class);
+    public function activityCourses(){
+        return $this->belongsTo(ActivityCourse::class);
     }
 
 }

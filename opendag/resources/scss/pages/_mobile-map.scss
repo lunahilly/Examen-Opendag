@@ -11,6 +11,42 @@
 //   var(--sheet-bg) is semi-transparant, waardoor de PROGRAMME-tabs er
 //   doorheen schijnen. Oplossing: opake achtergrond via var(--card).
 
+// ── Kleine tablet / groot mobiel (≤ 750 px / 46.75em) ────────────────────────
+// hSubRow heeft width: 80em waardoor hij buiten het scherm valt onder 750px.
+// Oplossing: width: 100% + flex-wrap zodat alle knoppen zichtbaar blijven.
+@media screen and (max-width: 46.75em) {
+  .hSubRow {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0.25em 0.5em;
+    gap: 0.25em;
+  }
+
+  .hIcons {
+    gap: 0.5em;
+    flex-wrap: wrap;
+  }
+
+  .hTools {
+    flex-wrap: wrap;
+    gap: 0.25em;
+  }
+
+  .hBtnLabel {
+    display: none;
+  }
+
+  .hIconBtn,
+  .hHelpBtn,
+  .hLangBtn,
+  .hToolBtn,
+  .buildingBtn {
+    flex-shrink: 0;
+    font-size: 0.75em;
+  }
+}
+
 // ── Alle telefoonschermen (≤ 600 px / 37.5em) ────────────────────────────────
 @media screen and (max-width: 37.5em) {
 

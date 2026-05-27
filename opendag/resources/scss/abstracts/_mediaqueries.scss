@@ -47,6 +47,41 @@
     }
 }
 
+// 750 px — navigatie gaat naar column
+@media screen and (max-width: 46.75em) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5em;
+        padding: 0.75em 1em;
+    }
+
+    .header__navigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .activity{
+        grid-template: 8em 1fr 1fr / 1fr;
+        margin-block-start: 2em;
+        margin-inline: 2em;
+    }
+
+    .activity__img{
+        grid-row: 1;
+        width: auto;
+        height: 100%;
+    }
+
+    .activity__text{
+        grid-row: 2;
+        grid-column: auto;
+    }
+}
+
 // 700 px
 @media screen and (max-width: 43.75em) {}
 
@@ -56,6 +91,14 @@
         flex-direction: column-reverse;
     }
 
+    .activity__button{
+        flex-wrap: wrap;
+        max-width: 80%;
+        height: fit-content;
+        gap: 0.5em;
+        justify-content: center;
+    }
+
 }
 
 //650px
@@ -63,6 +106,10 @@
     .course__details {
         flex-direction: column;
         align-items: start;
+    }
+
+    .activity{
+        margin-inline: 1em;
     }
 }
 
@@ -83,6 +130,10 @@
         .course__button {
             height: 3em;
         }
+    }
+
+    .activity__button{
+        max-width: 100%;
     }
 }
 

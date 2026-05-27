@@ -1,4 +1,4 @@
-const Button = ({label, onClick, route, type, isDisabled}) => {
+const Button = ({label, onClick, route, type, isDisabled, arrow}) => {
     return route == null ? (
         <button onClick={onClick} type={type} disabled={isDisabled} className="button">
             {label}

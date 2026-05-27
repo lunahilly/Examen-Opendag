@@ -1,4 +1,4 @@
-<?php use \Illuminate\Foundation\Exceptions\Renderer\Renderer; ?>
+<?php use Illuminate\Foundation\Exceptions\Renderer\Renderer; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
