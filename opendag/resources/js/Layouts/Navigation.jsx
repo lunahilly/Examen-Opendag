@@ -34,12 +34,12 @@ function Navigation() {
     return isSmaller ? (
         <header className="header">
             <span className="header__menu">
-                <a href="/" className="header__menu--logo">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
-                </a>
                 <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
                     <i className="fa-solid fa-bars header__menu--button-icon"/>
                 </button>
+                <a href="/" className="header__menu--logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
+                </a>
             </span>
             {
                 openMenu ?
@@ -56,16 +56,16 @@ function Navigation() {
                                     <a href="/" className={`header__sidebar--item-link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                                 </li>
                                 {
-                                    settings.courses ?
+                                    settings.stories ?
                                         <li className="header__sidebar--item">
-                                            <a href={route('information.index')} className={`header__sidebar--item-link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
+                                            <a href={route('stories.index')} className={`header__sidebar--item-link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                                         </li>
                                         : null
                                 }
                                 {
-                                    settings.stories ?
+                                    settings.courses ?
                                         <li className="header__sidebar--item">
-                                            <a href={route('stories.index')} className={`header__sidebar--item-link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
+                                            <a href={route('information.index')} className={`header__sidebar--item-link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
                                         </li>
                                         : null
                                 }
@@ -102,13 +102,13 @@ function Navigation() {
             <nav className="header__navigation">
                 <a href="/" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                 {
-                    settings.courses ?
-                        <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
+                    settings.stories ?
+                        <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                         : null
                 }
                 {
-                    settings.stories ?
-                        <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
+                    settings.courses ?
+                        <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
                         : null
                 }
                 {

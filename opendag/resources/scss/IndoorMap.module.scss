@@ -1344,7 +1344,118 @@ $red:   #f44336;
 .app[data-theme="dark"] .detailName {
   color: #ffffff;
 }
+// ── Help modal ────────────────────────────────────────────────────────────────
+// Overlay + popup explaining all buttons and features in plain language.
+// Shares the same backdrop style as the QR modal.
+.helpOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1.25em;
+  backdrop-filter: blur(0.125em);
+}
 
+// The white popup box — compact, centred, max 28em wide
+.helpModal {
+  background: var(--card);
+  border-radius: 0.75em;
+  width: 100%;
+  max-width: 28em;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: background 250ms;
+}
+
+// Sticky header inside the popup: title + close button
+.helpHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1em;
+  padding: 1em 1.25em;
+  border-bottom: 0.0625em solid var(--divider);
+  flex-shrink: 0;
+}
+
+// "Uitleg & functies" heading
+.helpTitle {
+  font-size: 0.9375em;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2em;
+  transition: color 250ms;
+}
+
+// Subtitle below the heading
+.helpSub {
+  font-size: 0.75em;
+  color: var(--muted);
+}
+
+// Scrollable list of feature entries
+.helpList {
+  overflow-y: auto;
+  padding: 0.625em 0;
+  flex: 1;
+}
+
+// One feature row: icon square on the left, name + description on the right
+.helpItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875em;
+  padding: 0.75em 1.25em;
+  border-bottom: 0.0625em solid var(--divider);
+
+  &:last-child { border-bottom: none; }
+}
+
+// Centred icon / emoji container — fixed size so all rows align
+.helpItemIcon {
+  width: 2em;
+  height: 2em;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--input-bg);
+  border-radius: 0.375em;
+  font-size: 1em;
+  color: var(--text-dim);
+  border: 0.0625em solid var(--divider);
+  transition: background 250ms;
+
+  svg { display: block; }
+}
+
+// Text block to the right of the icon
+.helpItemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+// Bold feature name
+.helpItemName {
+  font-size: 0.8125em;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2em;
+  transition: color 250ms;
+}
+
+// Plain-language description
+.helpItemDesc {
+  font-size: 0.75em;
+  color: var(--muted);
+  line-height: 1.5;
+}
 // ── Help modal — global styles (portal renders to document.body) ───────────────
 :global(.modal-overlay) {
   position: fixed;

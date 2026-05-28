@@ -18,36 +18,36 @@ import HelpModal from "@/Pages/Home/Partials/HelpModal";
 // import GraphDebugger from './GraphDebugger'
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
-const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
+// const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
 
 // ── Feature 2: Study programmes filter ────────────────────────────────────────
 // Maps programme ids to metadata; 'all' shows every POI
 // ── Feature 3: Surprise facts ────────────────────────────────────────────────
 // Fun facts shown as toast messages when the user clicks "Verras me"
-const SURPRISE_FACTS = {
-    "poi-radio":
-        "Wist je dat hier de schoolradio van Mediacollege Amsterdam wordt opgenomen? 🎙️",
-    "poi-tv":
-        "In deze TV-studio worden echte televisieprogramma's gemaakt door studenten! 📺",
-    "poi-pod": "In de podcaststudio kun je straks je eigen podcast opnemen. 🎧",
-    "poi-xr":
-        "Het XR Lab heeft de nieuwste VR- en AR-apparatuur — probeer het vandaag uit! 🥽",
-    "poi-aula":
-        "De aula biedt ruimte aan 400 mensen. Veel grote schoolfeesten vinden hier plaats. 🎭",
-    "poi-kantine":
-        "De kantine serveert elke dag verse broodjes en een dagschotel voor studenten. 🍽️",
-    "poi-sd":
-        "Software developers bij Mediacollege bouwen apps voor echte klanten. 💻",
-    "poi-ga": "Game Artists ontwerpen hier personages en werelden voor games. 🎮",
-    "poi-pet":
-        "Podium & Evenementen Techniek leert je live shows en festivals te begeleiden. 🎤",
-    "poi-mr":
-        "Media Redactie studenten produceren content voor echte media-outlets. 📰",
-    "poi-post":
-        "In de post-productie studio leer je video editing en color grading. 🎞️",
-    "poi-id":
-        "Immersive Designers creëren ervaringen voor musea, festivals en meer. 🥽",
-};
+// const SURPRISE_FACTS = {
+//     "poi-radio":
+//         "Wist je dat hier de schoolradio van Mediacollege Amsterdam wordt opgenomen? 🎙️",
+//     "poi-tv":
+//         "In deze TV-studio worden echte televisieprogramma's gemaakt door studenten! 📺",
+//     "poi-pod": "In de podcaststudio kun je straks je eigen podcast opnemen. 🎧",
+//     "poi-xr":
+//         "Het XR Lab heeft de nieuwste VR- en AR-apparatuur — probeer het vandaag uit! 🥽",
+//     "poi-aula":
+//         "De aula biedt ruimte aan 400 mensen. Veel grote schoolfeesten vinden hier plaats. 🎭",
+//     "poi-kantine":
+//         "De kantine serveert elke dag verse broodjes en een dagschotel voor studenten. 🍽️",
+//     "poi-sd":
+//         "Software developers bij Mediacollege bouwen apps voor echte klanten. 💻",
+//     "poi-ga": "Game Artists ontwerpen hier personages en werelden voor games. 🎮",
+//     "poi-pet":
+//         "Podium & Evenementen Techniek leert je live shows en festivals te begeleiden. 🎤",
+//     "poi-mr":
+//         "Media Redactie studenten produceren content voor echte media-outlets. 📰",
+//     "poi-post":
+//         "In de post-productie studio leer je video editing en color grading. 🎞️",
+//     "poi-id":
+//         "Immersive Designers creëren ervaringen voor musea, festivals en meer. 🥽",
+// };
 
 // ── Feature 5: Translations ──────────────────────────────────────────────────
 // All UI strings in Dutch ('nl') and English ('en')
