@@ -350,7 +350,8 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         }
         if (van && naar) {
             const transport = 'stairs';
-            setRoute(computeRoute(van.id, naar.id, { lang, transport }));
+            console.log(van); // GAGA
+            setRoute(computeRoute(van, naar, { lang, transport })); // id gone GAGA
             setSheetOpen(true);
         }
 
@@ -402,7 +403,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         (o, d) => {
             if (o && d) {
                 const transport = 'stairs';
-                const result = computeRoute(o.id, d.id, { lang, transport });
+                const result = computeRoute(o, d, { lang, transport }); // o.id, d.id weggehaald GAGA
                 console.log("computeRoute:", o.id, "→", d.id, "=", result);
                 setRoute(result);
                 setSheetOpen(true);
@@ -749,9 +750,9 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
                                         <span
                                             className={`${styles.checkBox} ${isOrigin || isDest ? styles.checkActive : ""}`}
                                         />
-                                        {
-                                            console.log(poi)
-                                        }
+                                        {/* {
+                                            console.log(poi) GAGA
+                                        } */} 
                                         <span className={styles.poiName}>
                                             <img src={`/icons/${poi.icon}.webp`} alt="" className={styles.poiIcon} />
                                             {poi.label}
@@ -905,3 +906,4 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
         </div>
     );
 }
+
