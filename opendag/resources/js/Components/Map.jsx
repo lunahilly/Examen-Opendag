@@ -7,6 +7,7 @@ import { computeRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
+// import styles from "../../scss/indoorMap.module.scss";
 import { usePage } from "@inertiajs/react";
 import HeaderBar from "@/Pages/Home/Partials/HeaderBar";
 import KioskHeader from "@/Pages/Home/Partials/KioskHeader";

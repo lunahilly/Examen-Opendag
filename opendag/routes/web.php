@@ -58,7 +58,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/upload/{type}', [ImageController::class, 'store'])->name('image.store');
 
     Route::get('/nfc', function () {
-        return Inertia::render('Nfc/Nfc');
+        $pois = Poi::all();
+        return Inertia::render('Nfc/Nfc', [
+            'pois' => $pois
+        ]);
     })->name('nfc');
 });
 
@@ -68,4 +71,4 @@ Route::get('/stories', [StoryController::class, 'index'])->name('stories.index')
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
