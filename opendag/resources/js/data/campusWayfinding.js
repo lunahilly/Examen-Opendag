@@ -257,6 +257,7 @@ function dijkstra(startId, eindId) {
 export function computeRoute(vanPoi, naarPoi, _options = {}) { // Id weg beide GAGA
     // const vanPoi = ALL_POIS.find(p => p.id === vanPoiId); // GAGA
     // const naarPoi = ALL_POIS.find(p => p.id === naarPoiId); // GAGA
+    // const transport = _options.transport === 'stairs' ? 'stairs': 'elevator' // trying to make transport idk work ig GAGA
     if (!vanPoi || !naarPoi) return null;
     // if (vanPoiId === naarPoiId) return null; // GAGA
 
@@ -265,6 +266,7 @@ export function computeRoute(vanPoi, naarPoi, _options = {}) { // Id weg beide G
     if (!vanNode || !naarNode) return null;
 
     const resultaat = dijkstra(vanNode, naarNode);
+    console.log(resultaat);
     if (!resultaat) return null;
 
     const { pad, afstand: padAfstand } = resultaat;

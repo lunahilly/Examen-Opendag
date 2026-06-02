@@ -275,7 +275,7 @@ export default function IndoorMap() {    // ── Theme (Feature 1) ───�
     // Ref holding the setTimeout handle so we can clear it when a new toast fires
     const toastTimer = useRef(null);
 
-
+console.log(route);
 
     // ── Feature 6: Favorites ──────────────────────────────────────────────────────
     // Array of favourite POI ids, persisted to localStorage

@@ -55,6 +55,7 @@ export default function MapCanvas({
     // the floor number the user needs to travel to so the label is correct.
     const stairMarkers = (() => {
         if (!route || !route.multiFloor) return []
+        console.log('this');
         const all = route.waypoints
         const markers = []
         for (let i = 0; i < all.length; i++) {
@@ -63,6 +64,7 @@ export default function MapCanvas({
             const prev = all[i - 1]
             const next = all[i + 1]
             // Entry: coming FROM another floor onto this one
+            console.log(prev);
             if (prev && prev.floor !== floor)
                 markers.push({ x: wp.x, y: wp.y, type: 'entry', doelFloor: prev.floor })
             // Exit: leaving this floor FOR another one
