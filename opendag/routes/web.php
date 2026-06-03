@@ -8,6 +8,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoryController;
+use App\Models\Category;
 use App\Models\Floor;
 use App\Models\Poi;
 use App\Models\Setting;
@@ -19,6 +20,7 @@ Route::get('/', function () {
     $settings = Setting::find(1);
     $pois = Poi::with(['category', 'floor'])->get();
     $floors = Floor::all();
+    $categories = Category::all();
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
@@ -26,7 +28,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
         'settings' => $settings,
         'pois' => $pois,
-        'floors' => $floors
+        'floors' => $floors,
+        'categories' => $categories
     ]);
 });
 
