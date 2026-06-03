@@ -12,7 +12,14 @@ body {
     color: map-get(variables.$colors, "white");
 }
 
+.layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .main {
+    flex: 1;
     padding: map-get(variables.$padding, "padding-m") map-get(variables.$padding, "padding-xl");
     display: flex;
     flex-direction: column;

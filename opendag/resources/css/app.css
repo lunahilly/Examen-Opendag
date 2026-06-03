@@ -15,7 +15,14 @@ body {
   color: white;
 }
 
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .main {
+  flex: 1;
   padding: 0.5em 1.25em;
   display: flex;
   flex-direction: column;

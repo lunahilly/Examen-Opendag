@@ -1,15 +1,28 @@
 import PageTitle from "@/Components/Title";
-import GuestLayout from "@/Layouts/GuestLayout";
-import { Form, Head } from "@inertiajs/react";
 import Button from "@/Components/Button";
 import { useState } from "react";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { usePage, Head } from "@inertiajs/react";
 
 function NFC() {
     const [status, setStatus] = useState("");
     const [Message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
+
+    const { pois = [] } = usePage().props;
+    let filteredPois = pois.filter((poi) => poi?.category_id == 1);
+    console.log(filteredPois);
+
+    // Lokale variabelen geïnitialiseerd voor de classname logica
+    const origin = null;
+    const isOrigin = false;
+    const isDest = false;
+    const isTourStop = false;
+    const searchQuery = "";
+    const t = {
+        geenResultaten: "Geen resultaten voor"
+    };
 
     async function Read() {
         setStatus("scanning...");
@@ -38,7 +51,6 @@ function NFC() {
 
                         if (record.data) {
                             let part = utf8decoder.decode(record.data);
-
                             url = url.concat(part);
                         }
                     }
@@ -81,7 +93,7 @@ function NFC() {
         else {
             setStatus("no nfc found");
         }
-    };
+    }
 
     function handleForm(e) {
         e.preventDefault();
@@ -94,13 +106,19 @@ function NFC() {
         }
     }
 
+    function handlePoiClick(poi) {
+        if (poi && poi.value) {
+            setInputValue(poi.value);
+            setStatus(`POI "${poi.label}" geselecteerd.`);
+        }
+    }
+
     return (
         <AuthenticatedLayout>
             <Head title="NFC" />
 
             <div className="nfc__container">
                 <PageTitle title="NFC instellen" />
-
 
                 <form className="nfc__form" onSubmit={handleForm}>
                     <p>Fill in the data and click write to set NFC tag</p>
@@ -111,9 +129,43 @@ function NFC() {
                         placeholder="https://example.com"
                     />
 
+                    {filteredPois.length > 0 ? (
+                        <div className="poiBox">
+                            {filteredPois.map((poi) => {
+                                const isActive = inputValue === poi.value;
+                                const isOrigin = origin?.value === poi.value;
+                                return (
+                                    <div
+                                        key={poi.id}
+                                        role="button"
+                                        tabIndex={0}
+                                        className={`poiItem ${isOrigin ? "poiFrom" : ""} ${isDest ? "poiTo" : ""} ${isTourStop ? "poiTourStop" : ""} ${isActive ? "poiActive" : ""}`}
+                                        onClick={() => handlePoiClick(poi)}
+                                        onKeyDown={(e) => e.key === "Enter" && handlePoiClick(poi)}
+                                    >
+                                        <span
+                                            className={`checkBox ${isOrigin || isDest ? "checkActive" : ""}`}
+                                        />
+
+                                        <span className="poiName">
+                                            {poi.icon && (
+                                                <img src={`/icons/${poi.icon}.webp`} alt="" className="poiIcon" />
+                                            )}
+                                            {poi.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="noResults">
+                            {t.geenResultaten} &ldquo;<strong>{searchQuery}</strong>&rdquo;
+                        </div>
+                    )}
+
                     <div className="nfc__buttons">
                         <Button label={'write'} type="submit" />
-                        <Button label={'Read NFC tag'} onClick={Read} />
+                        <Button label={'Read NFC tag'} type="button" onClick={Read} />
                     </div>
 
                     <div className="nfc__textContainer">
@@ -122,7 +174,6 @@ function NFC() {
                     </div>
                 </form>
             </div>
-
         </AuthenticatedLayout>
     );
 }
