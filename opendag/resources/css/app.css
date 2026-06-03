@@ -79,7 +79,7 @@ body {
   background: rgba(250, 103, 103, 0.2);
 }
 .button__logout:hover, .form__file::file-selector-button__logout:hover {
-  background: rgb(249.6751592357, 93.1248407643, 93.1248407643);
+  background: #fa5d5d;
 }
 
 .checkbox {
@@ -112,12 +112,10 @@ body {
   color: white;
   font-size: 1em;
   padding: 0.125em 0.25em;
+  width: 100%;
 }
 .dropdown:focus {
   outline: none;
-}
-.dropdown {
-  width: 100%;
 }
 .dropdown__option {
   border: none;
@@ -1089,17 +1087,15 @@ body {
   color: white;
   font-size: 1.2em;
   padding: 0.125em 0.25em;
-}
-.courses__item--dropdown:focus {
-  outline: none;
-}
-.courses__item--dropdown {
   display: flex;
   align-items: center;
   justify-content: center;
   border: 0.075em solid gray;
   border-radius: 0.2rem;
   font-size: 1em;
+}
+.courses__item--dropdown:focus {
+  outline: none;
 }
 .courses__item--dropdown-active {
   border: 0.075em solid #FF00E6;
