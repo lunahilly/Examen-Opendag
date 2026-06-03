@@ -8,6 +8,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoryController;
+use App\Models\Poi;
 use App\Models\Setting;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/upload/{type}', [ImageController::class, 'store'])->name('image.store');
 
     Route::get('/nfc', function () {
-        return Inertia::render('Nfc/Nfc');
+        $pois = Poi::all();
+        return Inertia::render('Nfc/Nfc', [
+            'pois' => $pois
+        ]);
     })->name('nfc');
 });
 
