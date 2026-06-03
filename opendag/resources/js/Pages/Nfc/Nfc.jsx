@@ -82,8 +82,15 @@ function NFC() {
                 await ndef.write({
                     records: [{ recordType: "url", data: url }]
                 });
-                setStatus("Writing succesfull")
-                setMessage(url)
+                setStatus("Tag beschreven. Houd de tag nógmaals tegen de telefoon om deze permanent te vergrendelen...");
+                if (typeof ndef.makeReadOnly === "function") {
+                    await ndef.makeReadOnly();
+                    setStatus("Writing succesfull and locked");
+                } else {
+                    setStatus("Writing succesfull but not locked");
+                }
+
+                setMessage(url);
             }
             catch (error) {
                 console.log(`scan error: ${error}.`);
@@ -137,7 +144,7 @@ function NFC() {
                         <Button label={'write'} type="submit" />
                         <Button label={'Read NFC tag'} type="button" onClick={Read} />
                     </div>
-                    
+
                     <div className="nfc__textContainer">
                         <p>Status: {status}</p>
                         <p>NFC data: {Message}</p>
