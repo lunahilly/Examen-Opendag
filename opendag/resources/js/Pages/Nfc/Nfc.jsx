@@ -9,6 +9,7 @@ function NFC() {
     const [status, setStatus] = useState("");
     const [Message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
+    var baseUrl = location.protocol + '//' + location.host + '/';
 
     const { pois = [] } = usePage().props;
     let filteredPois = pois.filter((poi) => poi?.category_id == 1);
@@ -99,6 +100,7 @@ function NFC() {
         e.preventDefault();
 
         if (inputValue.trim()) {
+            inputValue = baseUrl + inputValue;
             Write(inputValue);
         }
         else {
@@ -126,7 +128,7 @@ function NFC() {
                         name="data"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="https://example.com"
+                        placeholder={baseUrl}
                     />
 
                     {filteredPois.length > 0 ? (
