@@ -313,8 +313,7 @@ export default function MapCanvas({
                                 onMouseLeave={() => onPoiHover(null)}
                                 style={{ cursor: 'pointer' }}
                             >
-                                <circle r={r} fill={fill} stroke={stroke} strokeWidth="1.5" />
-
+                                {!isOrigin && !isDest && <circle r={r} fill={fill} stroke={stroke} strokeWidth="1.5" />}
                                 <image
                                     href={`/icons/${poi.icon}.webp`}
                                     x={-10}

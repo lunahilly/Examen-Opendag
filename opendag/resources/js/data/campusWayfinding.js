@@ -334,58 +334,50 @@ export function computeRoute(vanLocatieId, naarLocatieId, _opties = {}) {
         waypoints.push({ x: naarLocatie.x, y: naarLocatie.y, floor: naarLocatie.floor });
     }
 
-    // Bouw de navigatiestappen op.
-    // Trappen zijn als opeenvolgende kanten gekoppeld (verdieping 1 → 0, verdieping 2 → 1, …).
-    // Als het pad zo'n keten gebruikt, willen we precies ÉÉN instructie die het
-    // vervoermiddel en de verdieping waar de gebruiker echt uitkomt benoemt.
-    // Aanpak: bij een verdiepingswisseling verder scannen door eventuele volgende stappen
-    // met hetzelfde vervoerlabel en de verdieping van het laatste knooppunt gebruiken.
-    const navigatieStappen = [];
-    navigatieStappen.push({ icon: "start", text: `Start bij ${vanLocatie.label}`, type: "start" });
-
-    const gebruikteTransport = new Set();
-
-    for (let i = 0; i < pad.length - 1; i++) {
-        const huidig = allGraphNodes[pad[i]];
-        const volgende = allGraphNodes[pad[i + 1]];
-
-        if (huidig.floorId === volgende.floorId) continue;
-
-        const verbinding = (verbindingenOverzicht[pad[i]] ?? []).find(b => b.naar === pad[i + 1]);
-        if (!verbinding?.label) continue;
-
-        // Sla over als er al een stap voor deze trap/lift is aangemaakt.
-        if (gebruikteTransport.has(verbinding.label)) continue;
-        gebruikteTransport.add(verbinding.label);
-
-        // Vooruitkijken: volg alle opeenvolgende stappen met hetzelfde vervoerlabel
-        // om de verdieping te vinden waar de gebruiker echt uitkomt.
-        let eindFloorId = volgende.floorId;
-        for (let j = i + 1; j < pad.length - 1; j++) {
-            const vNext = (verbindingenOverzicht[pad[j]] ?? []).find(b => b.naar === pad[j + 1]);
-            if (vNext?.label === verbinding.label && allGraphNodes[pad[j]].floorId !== allGraphNodes[pad[j + 1]].floorId) {
-                eindFloorId = allGraphNodes[pad[j + 1]].floorId;
-            } else {
-                break;
-            }
-        }
-
-        const doelVerdieping = verdiepingOpzoektabel[eindFloorId]?.label ?? eindFloorId;
-        const isLift = verbinding.label.includes("Lift");
-        navigatieStappen.push({
-            icon: isLift ? "elevator" : "stairs",
-            text: `${verbinding.label} naar ${doelVerdieping}`,
-            type: isLift ? "elevator" : "stairs",
-        });
-    }
-
-    navigatieStappen.push({ icon: "arrive", text: `Aangekomen bij ${naarLocatie.label}`, type: "arrive" });
+    // === Navigatiestappen opbouwen ===
+    // const navigatieStappen = [];
+    // navigatieStappen.push({ icon: "start", text: `Start bij ${vanLocatie.label}`, type: "start" });
+    //
+    // const gebruikteTransport = new Set();
+    //
+    // for (let i = 0; i < pad.length - 1; i++) {
+    //     const huidig = allGraphNodes[pad[i]];
+    //     const volgende = allGraphNodes[pad[i + 1]];
+    //
+    //     if (huidig.floorId === volgende.floorId) continue;
+    //
+    //     const verbinding = (verbindingenOverzicht[pad[i]] ?? []).find(b => b.naar === pad[i + 1]);
+    //     if (!verbinding?.label) continue;
+    //
+    //     if (gebruikteTransport.has(verbinding.label)) continue;
+    //     gebruikteTransport.add(verbinding.label);
+    //
+    //     let eindFloorId = volgende.floorId;
+    //     for (let j = i + 1; j < pad.length - 1; j++) {
+    //         const vNext = (verbindingenOverzicht[pad[j]] ?? []).find(b => b.naar === pad[j + 1]);
+    //         if (vNext?.label === verbinding.label && allGraphNodes[pad[j]].floorId !== allGraphNodes[pad[j + 1]].floorId) {
+    //             eindFloorId = allGraphNodes[pad[j + 1]].floorId;
+    //         } else {
+    //             break;
+    //         }
+    //     }
+    //
+    //     const doelVerdieping = verdiepingOpzoektabel[eindFloorId]?.label ?? eindFloorId;
+    //     const isLift = verbinding.label.includes("Lift");
+    //     navigatieStappen.push({
+    //         icon: isLift ? "elevator" : "stairs",
+    //         text: `${verbinding.label} naar ${doelVerdieping}`,
+    //         type: isLift ? "elevator" : "stairs",
+    //     });
+    // }
+    //
+    // navigatieStappen.push({ icon: "arrive", text: `Aangekomen bij ${naarLocatie.label}`, type: "arrive" });
 
     const afstandInMeters = Math.max(1, Math.round(totaleAfstand * 0.08));
     const reistijdInMinuten = Math.max(1, Math.round(afstandInMeters / 60));
     const meerdereVerdiepingen = vanLocatie.floor !== naarLocatie.floor;
 
-    return { waypoints, steps: navigatieStappen, totalDistance: afstandInMeters, totalMinutes: reistijdInMinuten, multiFloor: meerdereVerdiepingen };
+    return { waypoints, /* steps: navigatieStappen, */ totalDistance: afstandInMeters, totalMinutes: reistijdInMinuten, multiFloor: meerdereVerdiepingen };
 }
 
 export function getPosisieOpRoute(waypoints, voortgang) {

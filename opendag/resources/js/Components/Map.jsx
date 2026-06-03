@@ -89,23 +89,23 @@ function HeaderBar({ onShowQR }) {
 }
 
 // ── Route steps list ──────────────────────────────────────────────────────────
-function StepsList({ route }) {
-    return (
-        <ol className={styles.stepsList}>
-            {route.steps.map((step, i) => (
-                <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
-                    <div className={styles.stepLeft}>
-                        <span className={styles.stepIcon}>
-                            {STEP_ICONS[step.icon] ?? step.icon}
-                        </span>
-                        {i < route.steps.length - 1 && <span className={styles.stepLine} />}
-                    </div>
-                    <span className={styles.stepText}>{step.text}</span>
-                </li>
-            ))}
-        </ol>
-    );
-}
+// function StepsList({ route }) {
+//     return (
+//         <ol className={styles.stepsList}>
+//             {route.steps.map((step, i) => (
+//                 <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
+//                     <div className={styles.stepLeft}>
+//                         <span className={styles.stepIcon}>
+//                             {STEP_ICONS[step.icon] ?? step.icon}
+//                         </span>
+//                         {i < route.steps.length - 1 && <span className={styles.stepLine} />}
+//                     </div>
+//                     <span className={styles.stepText}>{step.text}</span>
+//                 </li>
+//             ))}
+//         </ol>
+//     );
+// }
 
 // ── QR Modal ──────────────────────────────────────────────────────────────────
 function QRModal({ onClose }) {
@@ -515,7 +515,7 @@ export default function IndoorMap() {
                         <div className={styles.hint}>Klik op een locatie op de kaart of in de lijst</div>
                     )}
 
-                    {route && (
+                    {/* {route && (
                         <div className={`${styles.stepsBox} ${styles.desktopOnly}`}>
                             <div className={styles.stepsHeader}>
                                 <span className={styles.stepsMeta}>
@@ -529,7 +529,7 @@ export default function IndoorMap() {
                             </div>
                             <StepsList route={route} />
                         </div>
-                    )}
+                    )} */}
 
                     <div className={styles.searchWrap}>
                         <span className={styles.searchIcon}>🔍</span>
@@ -609,7 +609,7 @@ export default function IndoorMap() {
                         </div>
                     </div>
                     <div className={styles.sheetContent}>
-                        <StepsList route={route} />
+                        {/* <StepsList route={route} /> */}
                     </div>
                 </div>
             )}
