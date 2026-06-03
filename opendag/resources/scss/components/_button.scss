@@ -28,9 +28,10 @@
 
     &:hover{
         cursor: pointer;
-        background: transparent;
-        border: 2px solid map-get(variables.$colors, "magenta");
-        color: map-get(variables.$colors, "magenta");
+        background: darken(map-get(variables.$colors, "magenta"), 10%);
+        // background: transparent;
+        // border: 2px solid map-get(variables.$colors, "magenta");
+        // color: map-get(variables.$colors, "magenta");
 
         .button__arrow {
             transform: translateX(0.25em);

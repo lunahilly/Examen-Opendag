@@ -58,9 +58,7 @@ body {
 }
 .button:hover, .form__file::file-selector-button:hover {
   cursor: pointer;
-  background: transparent;
-  border: 2px solid #FF00E6;
-  color: #FF00E6;
+  background: #cc00b8;
 }
 .button:hover .button__arrow, .form__file::file-selector-button:hover .button__arrow {
   transform: translateX(0.25em);
