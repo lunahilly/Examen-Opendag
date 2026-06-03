@@ -1,40 +1,143 @@
 .nfc__container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1em;
-    flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  flex-direction: column;
 
-    .head {
-        margin-block-end: 2em;
-    }
+  .head {
+    margin-block-end: 2em;
+  }
 }
 
 .nfc__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+
+  input {
+    width: 100%;
+  }
+
+  button {
+    max-width: fit-content;
+  }
+
+  .nfc__buttons {
+    display: flex;
+    gap: 1em;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .nfc__textContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1em;
+    width: 100%;
+    gap: 0.5em;
+  }
+}
 
-    input {
-        width: 100%;
-    }
+.poiBox {
+  display: grid;
+  padding: 0.5em;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.125em 0;
+  margin: 0.5em 0.75em 0.75em;
+  border: 0.094em solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.15em;
+  overflow: hidden;
+}
 
-    button {
-        max-width: fit-content;
-    }
+.poiItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4375em;
+  padding: 0.8em 0.5em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: all 150ms;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
 
-    .nfc__buttons {
-        display: flex;
-        gap: 1em;
-        justify-content: space-around;
-        width: 100%;
-    }
+  &:hover {
+    background: var(--pink-hover);
+  }
 
-    .nfc__textContainer{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        gap: 0.5em;
+  // Green tint when this POI is the route origin
+  &.poiFrom {
+    background: rgba(76, 175, 80, 0.1);
+  }
+
+  // Red tint when this POI is the route destination
+  &.poiTo {
+    background: rgba(244, 67, 54, 0.1);
+  }
+}
+
+.checkActive {
+  box-shadow: 0 0 0 2px rgba(255, 0, 230, 0.4);
+  background: rgba(255, 0, 230, 0.1);
+}
+
+// POI name with icon; truncates with ellipsis if too long
+.poiName {
+  font-size: 1em;
+  color: white;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 250ms;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.poiIcon {
+  width: 1.25em;
+  height: 1.25em;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.checkBox {
+    width: 0.8125em;
+    height: 0.8125em;
+    border: 0.094em solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    border-radius: 0.125em;
+    flex-shrink: 0;
+    transition: all 120ms;
+    position: relative; // Nodig voor het vinkje
+}
+
+// Wat er gebeurt als de checkbox actief is (er verschijnt een wit vinkje met roze achtergrond)
+.checkBox.checkActive {
+    background: #ff00e6; // De roze merkkleur
+    border-color: #ff00e6;
+
+    // Dit maakt een echt CSS-vinkje (L-vorm gekanteld) binnen het vierkantje
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0.2em;
+        top: 0.05em;
+        width: 0.25em;
+        height: 0.45em;
+        border: solid white;
+        border-width: 0 0.125em 0.125em 0;
+        transform: rotate(45deg);
     }
+}
+
+.noResults {
+  font-size: 0.75em;
+  color: var(--muted);
+  padding: 1em 0.75em;
+  text-align: center;
 }

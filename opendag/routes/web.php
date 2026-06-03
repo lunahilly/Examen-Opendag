@@ -54,10 +54,9 @@ Route::middleware('auth')->group(function () {
     })->name('nfc');
 });
 
-
 Route::get('/information', [CourseController::class, 'index'])->name('information.index');
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

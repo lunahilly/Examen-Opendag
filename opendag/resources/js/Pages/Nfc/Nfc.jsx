@@ -9,13 +9,13 @@ function NFC() {
     const [status, setStatus] = useState("");
     const [Message, setMessage] = useState("");
     const [inputValue, setInputValue] = useState("");
-    var baseUrl = location.protocol + '//' + location.host + '/';
 
     const { pois = [] } = usePage().props;
     let filteredPois = pois.filter((poi) => poi?.category_id == 1);
     console.log(filteredPois);
 
-    // Lokale variabelen geïnitialiseerd voor de classname logica
+    var baseUrl = location.protocol + '//' + location.host + '/';
+    const startFrom = "?van=";
     const origin = null;
     const isOrigin = false;
     const isDest = false;
@@ -100,8 +100,10 @@ function NFC() {
         e.preventDefault();
 
         if (inputValue.trim()) {
-            inputValue = baseUrl + inputValue;
-            Write(inputValue);
+            const fullUrl = inputValue.startsWith(baseUrl + startFrom) ? inputValue
+                : baseUrl + startFrom + inputValue;
+
+            Write(fullUrl);
         }
         else {
             setStatus("Voer eerst een geldige URL in.");
@@ -110,7 +112,7 @@ function NFC() {
 
     function handlePoiClick(poi) {
         if (poi && poi.value) {
-            setInputValue(poi.value);
+            setInputValue(baseUrl + startFrom + poi.value);
             setStatus(`POI "${poi.label}" geselecteerd.`);
         }
     }
@@ -134,19 +136,19 @@ function NFC() {
                     {filteredPois.length > 0 ? (
                         <div className="poiBox">
                             {filteredPois.map((poi) => {
-                                const isActive = inputValue === poi.value;
+                                const isActive = inputValue === poi.value || inputValue.endsWith(poi.value);
                                 const isOrigin = origin?.value === poi.value;
                                 return (
                                     <div
                                         key={poi.id}
                                         role="button"
                                         tabIndex={0}
-                                        className={`poiItem ${isOrigin ? "poiFrom" : ""} ${isDest ? "poiTo" : ""} ${isTourStop ? "poiTourStop" : ""} ${isActive ? "poiActive" : ""}`}
+                                        className={`poiItem ${isOrigin ? "poiFrom" : ""} ${isDest ? "poiTo" : ""} ${isTourStop ? "poiTourStop" : ""} ${isActive ? "checkActive" : ""}`}
                                         onClick={() => handlePoiClick(poi)}
                                         onKeyDown={(e) => e.key === "Enter" && handlePoiClick(poi)}
                                     >
                                         <span
-                                            className={`checkBox ${isOrigin || isDest ? "checkActive" : ""}`}
+                                            className={`checkBox ${isOrigin || isDest || isActive ? "checkActive" : ""}`}
                                         />
 
                                         <span className="poiName">
