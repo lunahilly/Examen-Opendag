@@ -1,0 +1,44 @@
+@use "../../abstracts/variables";
+@use "../../abstracts/mixins";
+
+.story{
+    @include mixins.flexBox(start, space-between);
+    gap: 2em;
+    width: 100%;
+
+    &__aside{
+        width: 30%;
+        @include mixins.flexBox(start, start);
+        flex-direction: column;
+        gap: 2em;
+
+        &--image{
+            width: 100%;
+            object-fit: cover;
+        }
+
+        &--wrapper{
+            @include mixins.flexBox(start, start);
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        &--return{
+            text-decoration: none;
+            color: map-get(variables.$colors, "magenta");
+        }
+    }
+
+    &__content{
+        width: 70%;
+
+        & a {
+            color: lighten(map-get(variables.$colors, "magenta"), 20%);
+            text-decoration: none;
+
+            &:hover{
+                color: map-get(variables.$colors, "magenta");
+            }
+        }
+    }
+}

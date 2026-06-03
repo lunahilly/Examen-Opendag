@@ -6,6 +6,7 @@ import { computeRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
+import { usePage } from "@inertiajs/react";
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
 const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
@@ -71,7 +72,8 @@ function ScanWelcomeOverlay({ poi, onNavigate, onExplore }) {
 
 // ── Header ────────────────────────────────────────────────────────────────────
 function HeaderBar({ onShowQR }) {
-    return (
+    const user = usePage().props.auth.user;
+    return user ? (
         <header className={styles.header}>
             <div className={`${styles.hSubRow} wrapper`}>
                 <div className={styles.hTools}>
@@ -85,7 +87,7 @@ function HeaderBar({ onShowQR }) {
                 </div>
             </div>
         </header>
-    );
+    ) : null ;
 }
 
 // ── Route steps list ──────────────────────────────────────────────────────────

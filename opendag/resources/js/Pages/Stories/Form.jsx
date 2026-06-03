@@ -30,6 +30,7 @@ function StoryForm() {
             post(route('story.store'));
         }
     }
+    console.log(data);
 
     return (
         <AuthenticatedLayout>

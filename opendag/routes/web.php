@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/information', [CourseController::class, 'index'])->name('information.index');
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/stories/{id}', [StoryController::class, 'show'])->name('stories.show');
 Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
