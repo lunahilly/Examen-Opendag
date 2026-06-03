@@ -11,7 +11,7 @@ function NFC() {
     const [inputValue, setInputValue] = useState("");
 
     const { pois = [] } = usePage().props;
-    let filteredPois = pois.filter((poi) => poi?.category?.value == "transport");
+    let filteredPois = pois.filter((poi) => poi?.category_id == 1);
     console.log(filteredPois);
 
     // Lokale variabelen geïnitialiseerd voor de classname logica
