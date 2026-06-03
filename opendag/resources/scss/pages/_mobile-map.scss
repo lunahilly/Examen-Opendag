@@ -75,7 +75,7 @@
 
   // Fix: override min-height: 18rem from 62em breakpoint that caused overflow
   .mapWrap {
-    height: 15em;   // 240 px — good balance for screens up to 600 px
+    height: 15em; // 240 px — good balance for screens up to 600 px
     min-height: 0;
   }
 
@@ -144,7 +144,7 @@
 
   // Smaller map on tiny screens
   .mapWrap {
-    height: 12.5em;  // 200 px
+    height: 12.5em; // 200 px
   }
 
   .floorCol {
@@ -163,13 +163,6 @@
   .searchWrap {
     margin: 0.375em 0.625em 0;
     padding: 0.375em 0.625em;
-  }
-
-  .progTabsRow,
-  .catTabsRow {
-    padding: 0.25em 0.625em 0;
-    margin: 0.375em 0;
-    gap: 0.25em;
   }
 
   .tabsLabel {

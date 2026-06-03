@@ -159,52 +159,53 @@ export const graphEdges = [
 const FLOOR_CHANGE_PENALTY = 2000;
 
 function buildTransportNodesAndEdges() {
-    const transportPOIs = ALL_POIS.filter(p => p.category === 'transport');
+    const trapPOIs = ALL_POIS.filter(p => p.category === 'transport' && p.id.startsWith("trap"));
     const extraNodes = {};
     const extraEdges = [];
 
-    for (const poi of transportPOIs) {
+    for (const poi of trapPOIs) {
         extraNodes[poi.id] = { floorId: `floor-${poi.floor}`, x: poi.x, y: poi.y };
     }
 
-    const byLabel = {};
-    for (const poi of transportPOIs) {
-        (byLabel[poi.label] ??= []).push(poi);
+    const trapGroups = {};
+
+    // groepeer traps per nummer
+    for (const poi of trapPOIs) {
+        const group = getTrapGroup(poi.id);
+        trapGroups[group] ??= [];
+        trapGroups[group].push(poi);
     }
 
-    for (const [label, pois] of Object.entries(byLabel)) {
-        const sorted = [...pois].sort((a, b) => a.floor - b.floor);
-        const isLift = label.toLowerCase().includes('lift');
+    // verbind traps per groep over floors
+    for (const group of Object.values(trapGroups)) {
+        const sorted = group.sort((a, b) => a.floor - b.floor);
 
         for (let i = 0; i < sorted.length - 1; i++) {
-            const a = sorted[i], b = sorted[i + 1];
-            extraEdges.push([
-                a.id,
-                b.id,
-                {
-                    weight: (isLift ? 350 : 300) + FLOOR_CHANGE_PENALTY,
-                    label,
-                    isLift,
-                }
-            ]);
+            extraEdges.push([sorted[i].id, sorted[i + 1].id, {
+                label: "trap",
+                isLift: false,
+                weight: 2000
+            }]);
         }
     }
 
-    // Connect each transport node to its nearest corridor node on the same floor.
-    // Without this, Dijkstra can reach a staircase/lift but has no way to continue
-    // onto the corridor graph on the destination floor — routes return null.
-    for (const poi of transportPOIs) {
-        const floorId = `floor-${poi.floor}`;
-        let nearestId = null;
-        let nearestDist = Infinity;
-        for (const [nodeId, node] of Object.entries(graphNodes)) {
-            if (node.floorId !== floorId) continue;
-            const d = Math.hypot(node.x - poi.x, node.y - poi.y);
-            if (d < nearestDist) { nearestDist = d; nearestId = nodeId; }
+    for (const poi of trapPOIs) {
+        let dichtstbij = null;
+        let kortste = Infinity;
+        for (const [id, node] of Object.entries(graphNodes)) {
+            if (node.floorId !== `floor-${poi.floor}`) continue;
+            const d = afstand(node.x, node.y, poi.x, poi.y);
+            if (d < kortste) {
+                kortste = d;
+                dichtstbij = id;
+            }
         }
-        if (nearestId) {
-            extraEdges.push([poi.id, nearestId]);
-        }
+        if (dichtstbij) extraEdges.push([poi.id, dichtstbij]);
+    }
+
+    function getTrapGroup(id) {
+        // trap-21 → "1"
+        return id.split('-')[1][1];
     }
 
     return { extraNodes, extraEdges };
@@ -318,44 +319,64 @@ export function computeRoute(vanLocatieId, naarLocatieId, _opties = {}) {
 
     const waypoints = [];
 
-    // Voeg startlocatie toe als die niet precies op een kruispunt ligt
     const eersteKruispunt = allGraphNodes[pad[0]];
     if (vanLocatie.x !== eersteKruispunt.x || vanLocatie.y !== eersteKruispunt.y) {
         waypoints.push({ x: vanLocatie.x, y: vanLocatie.y, floor: vanLocatie.floor });
     }
 
-    // Voeg alle kruispunten op het pad toe — allGraphNodes zodat transport nodes
-    // (trappen, liften) ook correct worden opgelost
     for (const kruispuntId of pad) {
         const kruispunt = allGraphNodes[kruispuntId];
         waypoints.push({ x: kruispunt.x, y: kruispunt.y, floor: verdiepingNummer(kruispunt.floorId) });
     }
 
-    // Voeg eindlocatie toe als die niet precies op een kruispunt ligt
     const laatsteKruispunt = allGraphNodes[pad[pad.length - 1]];
     if (naarLocatie.x !== laatsteKruispunt.x || naarLocatie.y !== laatsteKruispunt.y) {
         waypoints.push({ x: naarLocatie.x, y: naarLocatie.y, floor: naarLocatie.floor });
     }
 
-    // Bouw de lijst van leesbare navigatiestappen op
+    // Bouw de navigatiestappen op.
+    // Trappen zijn als opeenvolgende kanten gekoppeld (verdieping 1 → 0, verdieping 2 → 1, …).
+    // Als het pad zo'n keten gebruikt, willen we precies ÉÉN instructie die het
+    // vervoermiddel en de verdieping waar de gebruiker echt uitkomt benoemt.
+    // Aanpak: bij een verdiepingswisseling verder scannen door eventuele volgende stappen
+    // met hetzelfde vervoerlabel en de verdieping van het laatste knooppunt gebruiken.
     const navigatieStappen = [];
     navigatieStappen.push({ icon: "start", text: `Start bij ${vanLocatie.label}`, type: "start" });
 
+    const gebruikteTransport = new Set();
+
     for (let i = 0; i < pad.length - 1; i++) {
-        // Both lookups use allGraphNodes so transport nodes (stairs/lifts) resolve correctly
         const huidig = allGraphNodes[pad[i]];
         const volgende = allGraphNodes[pad[i + 1]];
-        const verbinding = (verbindingenOverzicht[pad[i]] ?? []).find(b => b.naar === pad[i + 1]);
 
-        if (huidig.floorId !== volgende.floorId && verbinding?.label) {
-            const doelVerdieping = verdiepingOpzoektabel[volgende.floorId]?.label ?? volgende.floorId;
-            const isLift = verbinding.label.includes("Lift");
-            navigatieStappen.push({
-                icon: isLift ? "elevator" : "stairs",
-                text: `${verbinding.label} naar ${doelVerdieping}`,
-                type: isLift ? "elevator" : "stairs",
-            });
+        if (huidig.floorId === volgende.floorId) continue;
+
+        const verbinding = (verbindingenOverzicht[pad[i]] ?? []).find(b => b.naar === pad[i + 1]);
+        if (!verbinding?.label) continue;
+
+        // Sla over als er al een stap voor deze trap/lift is aangemaakt.
+        if (gebruikteTransport.has(verbinding.label)) continue;
+        gebruikteTransport.add(verbinding.label);
+
+        // Vooruitkijken: volg alle opeenvolgende stappen met hetzelfde vervoerlabel
+        // om de verdieping te vinden waar de gebruiker echt uitkomt.
+        let eindFloorId = volgende.floorId;
+        for (let j = i + 1; j < pad.length - 1; j++) {
+            const vNext = (verbindingenOverzicht[pad[j]] ?? []).find(b => b.naar === pad[j + 1]);
+            if (vNext?.label === verbinding.label && allGraphNodes[pad[j]].floorId !== allGraphNodes[pad[j + 1]].floorId) {
+                eindFloorId = allGraphNodes[pad[j + 1]].floorId;
+            } else {
+                break;
+            }
         }
+
+        const doelVerdieping = verdiepingOpzoektabel[eindFloorId]?.label ?? eindFloorId;
+        const isLift = verbinding.label.includes("Lift");
+        navigatieStappen.push({
+            icon: isLift ? "elevator" : "stairs",
+            text: `${verbinding.label} naar ${doelVerdieping}`,
+            type: isLift ? "elevator" : "stairs",
+        });
     }
 
     navigatieStappen.push({ icon: "arrive", text: `Aangekomen bij ${naarLocatie.label}`, type: "arrive" });
