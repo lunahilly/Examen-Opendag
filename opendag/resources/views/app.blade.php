@@ -21,5 +21,6 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        <script src={{ URL::to("src/js/tinymce_8.6.0/tinymce/js/tinymce/tinymce.min.js") }}></script>
     </body>
 </html>

@@ -1,64 +1,39 @@
 import Button from "@/Components/Button";
 import InputField from "@/Components/Input";
-import Textarea from "@/Components/Textarea";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import { useEffect, useRef } from "react";
-import Markdown, { MarkdownHooks } from "react-markdown";
-
+import { Editor } from "@tinymce/tinymce-react";
+import { useRef } from "react";
 function StoryForm() {
     const story = usePage().props.story;
     const path = usePage().props.status;
     const { data, setData, post, patch, processing, errors } = useForm({
         name: story ? story.name : '',
         course_id: story ? story.course_id : '',
-        // image: story ? story.image : '',
         image: path != null ? `storage/${path}` : story ? story.image : '',
-        story: story ? story.story : 'iodnwldw __owinlmfw__ hojfehj k* k*'
+        story: story ? story.story : ''
     });
     const courses = usePage().props.courses;
-    const ref = useRef();
-    console.log(ref.current);
+    const ref = useRef(null);
     const submit = (event) => {
         event.preventDefault();
-        // if(path != null && disable){
+        console.log(ref.current);
+        if(ref.current){
+            console.log('changes');
+            const storyContent = ref.current.getContent();
+            setData('story', storyContent);
+        }
         if (story != null) {
             patch(route('story.update', story.id));
         }
         else {
             post(route('story.store'));
         }
-        // }
-        // else{
-        //     post(route('image.store', 'students'), {
-        //         forceFormData: true
-        //     });
-        // }
     }
-
-    // useEffect(() => {
-    //     if(path != null){
-    //         console.log('changed');
-    //         setData('image', `storage/${path}`);
-    //     }
-    // }, [path]);
-
-    // console.log(data.image.type);
-    // useEffect(() => {
-    //     if(data.image.type == "image/png"){
-    //         console.log('grjo');
-
-    //         post(route('image.store', 'students'), {
-    //             forceFormData: true
-    //         });path != null ? '' : 
-    //     }
-    // }, [data.image]);
-
-
 
     return (
         <AuthenticatedLayout>
-            <Head title="New story" />
+            <Head title={story == null ? "New story" : `Edit ${data.name}`} />
             <main className="main">
                 <form onSubmit={submit} className="form" encType={'multipart/form-data'}>
                     <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name} />
@@ -72,17 +47,24 @@ function StoryForm() {
                         </select>
                     </span>
                     <input type="file" onChange={(event) => setData('image', event.target.files[0])} className="form__file" />
-                    {/* <Textarea value={data.story} onChange={(event) => setData('story', event.target.value)} formatChange={(value) => setData('story', value)}/> */}
-                    {/* <div contentEditable onChange={(event) => setData(event.target.value)} ref={ref} className="form__textarea">
-                            <MarkdownHooks>
-                                {data.story}
-                            </MarkdownHooks>
-                    </div> */}
-                    {/* <textarea name="" id="">
-                        
-                    </textarea> */}
-                    {/* <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image}/> */}
-                    <InputField label="Story" value={data.story} onChange={(event) => setData('story', event.target.value)} error={errors.story} />
+                    <Editor
+                        tinymceScriptSrc='public/src/js/tinymce_8.6.0/tinymce/js/tinymce/tinymce.min.js'
+                        licenseKey="gpl"
+                        value={data.story}
+                        onEditorChange={(value, editor) => setData('story', value)}
+                        onInit={(evt, editor) => {
+                            console.log(editor);
+                            console.log(ref.current);
+                            ref.current = editor;
+                        }}
+                        init={{
+                            menubar: false,
+                            width: '100%',
+                            plugins: ['link'],
+                            toolbar: 'blocks | bold italic link',
+                            content_style: 'body {font-family: aeonik, sans-serif}'
+                        }}
+                    />
                     <Button type="submit" label={story ? 'Update' : 'Save'} isDisabled={processing} />
                 </form>
             </main>
