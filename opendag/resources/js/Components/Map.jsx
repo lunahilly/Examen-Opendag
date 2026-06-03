@@ -8,6 +8,7 @@ import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
 import { usePage } from "@inertiajs/react";
 import QRModal from "@/Pages/Home/QRModal";
+import HeaderBar from "@/Pages/Home/HeaderBar";
 
 // All POIs that are not transport nodes (stairs/lift) — used in the grid and search
 const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
@@ -72,24 +73,6 @@ function ScanWelcomeOverlay({ poi, onNavigate, onExplore }) {
 }
 
 // ── Header ────────────────────────────────────────────────────────────────────
-function HeaderBar({ onShowQR }) {
-    const user = usePage().props.auth.user;
-    return user ? (
-        <header className={styles.header}>
-            <div className={`${styles.hSubRow} wrapper`}>
-                <div className={styles.hTools}>
-                    <button
-                        className={styles.hToolBtn}
-                        onClick={onShowQR}
-                        title="QR-codes voor elke ruimte"
-                    >
-                        <span className={styles.hBtnLabel}>QR</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-    ) : null ;
-}
 
 // ── Route steps list ──────────────────────────────────────────────────────────
 // function StepsList({ route }) {
