@@ -15,6 +15,10 @@
         display: flex;
         flex-direction: column;
     }
+
+    .poiBox {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 //830 px
@@ -36,13 +40,15 @@
 }
 
 @media screen and (max-width: 50em) {
-    .headlink{
+    .headlink {
         width: 100%;
     }
-    .dashboard{
+
+    .dashboard {
         width: 100%;
     }
-    .settings{
+
+    .settings {
         width: 100%;
     }
 }
@@ -64,21 +70,25 @@
         text-align: center;
     }
 
-    .activity{
+    .activity {
         grid-template: 8em 1fr 1fr / 1fr;
         margin-block-start: 2em;
         margin-inline: 2em;
     }
 
-    .activity__img{
+    .activity__img {
         grid-row: 1;
         width: auto;
         height: 100%;
     }
 
-    .activity__text{
+    .activity__text {
         grid-row: 2;
         grid-column: auto;
+    }
+
+    .poiBox {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -91,7 +101,7 @@
         flex-direction: column-reverse;
     }
 
-    .activity__button{
+    .activity__button {
         flex-wrap: wrap;
         max-width: 80%;
         height: fit-content;
@@ -108,7 +118,7 @@
         align-items: start;
     }
 
-    .activity{
+    .activity {
         margin-inline: 1em;
     }
 }
@@ -132,14 +142,14 @@
         }
     }
 
-    .activity__button{
+    .activity__button {
         max-width: 100%;
     }
 }
 
 //440px
 @media screen and (max-width: 27.5em) {
-    .dashboard{
+    .dashboard {
         font-size: 80%;
     }
 }
@@ -154,17 +164,17 @@
         height: 5em;
     }
 
-    .headlink{
+    .headlink {
         font-size: 90%;
     }
 
-    .dashboard{
-        &__header{
+    .dashboard {
+        &__header {
             flex-direction: column;
             gap: 1em;
         }
 
-        &__options{
+        &__options {
             justify-content: center;
             font-size: 80%;
         }

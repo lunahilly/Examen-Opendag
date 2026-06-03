@@ -133,6 +133,16 @@ function NFC() {
                         placeholder={baseUrl}
                     />
 
+                    <div className="nfc__buttons">
+                        <Button label={'write'} type="submit" />
+                        <Button label={'Read NFC tag'} type="button" onClick={Read} />
+                    </div>
+                    
+                    <div className="nfc__textContainer">
+                        <p>Status: {status}</p>
+                        <p>NFC data: {Message}</p>
+                    </div>
+
                     {filteredPois.length > 0 ? (
                         <div className="poiBox">
                             {filteredPois.map((poi) => {
@@ -166,16 +176,6 @@ function NFC() {
                             {t.geenResultaten} &ldquo;<strong>{searchQuery}</strong>&rdquo;
                         </div>
                     )}
-
-                    <div className="nfc__buttons">
-                        <Button label={'write'} type="submit" />
-                        <Button label={'Read NFC tag'} type="button" onClick={Read} />
-                    </div>
-
-                    <div className="nfc__textContainer">
-                        <p>Status: {status}</p>
-                        <p>NFC data: {Message}</p>
-                    </div>
                 </form>
             </div>
         </AuthenticatedLayout>
