@@ -8,45 +8,6 @@ import QRModal from "@/Pages/Home/QRModal";
 import HeaderBar from "@/Pages/Home/HeaderBar";
 import { usePage } from "@inertiajs/react";
 
-// All POIs that are not transport nodes (stairs/lift) — used in the grid and search
-// const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
-
-// Maps a route step type to a display emoji icon
-// const STEP_ICONS = {
-//     start: "📍",
-//     walk: "🚶",
-//     elevator: "🛗",
-//     stairs: "🪜",
-//     enter: "🚪",
-//     arrive: "✅",
-// };
-
-// ── QR Scan Welcome Overlay ───────────────────────────────────────────────────
-
-// ── Header ────────────────────────────────────────────────────────────────────
-
-// ── Route steps list ──────────────────────────────────────────────────────────
-// function StepsList({ route }) {
-//     return (
-//         <ol className={styles.stepsList}>
-//             {route.steps.map((step, i) => (
-//                 <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
-//                     <div className={styles.stepLeft}>
-//                         <span className={styles.stepIcon}>
-//                             {STEP_ICONS[step.icon] ?? step.icon}
-//                         </span>
-//                         {i < route.steps.length - 1 && <span className={styles.stepLine} />}
-//                     </div>
-//                     <span className={styles.stepText}>{step.text}</span>
-//                 </li>
-//             ))}
-//         </ol>
-//     );
-// }
-
-// ── QR Modal ──────────────────────────────────────────────────────────────────
-
-
 // ── Main component ────────────────────────────────────────────────────────────
 export default function IndoorMap() {
     // ── Theme ─────────────────────────────────────────────────────────────────────
@@ -65,7 +26,7 @@ export default function IndoorMap() {
     const pois = usePage().props.pois;
     const categories = usePage().props.categories;
     // ── Map state ─────────────────────────────────────────────────────────────────
-    const GRID_POIS = pois.filter((p) => p.category.name !== "transport");
+    const gridpois = pois.filter((p) => p.category.name !== "transport");
     const [floor, setFloor] = useState(0);
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
@@ -202,7 +163,7 @@ export default function IndoorMap() {
 
     // ── Filtered + sorted POIs ────────────────────────────────────────────────────
     const filteredPois = useMemo(() => {
-        let pois = GRID_POIS;
+        let pois = gridpois;
 
         if (activeCategory !== "all") {
             pois = pois.filter((p) => p.category.name === activeCategory);
@@ -313,22 +274,6 @@ export default function IndoorMap() {
                         <div className={styles.hint}>Klik op een locatie op de kaart of in de lijst</div>
                     )}
 
-                    {/* {route && (
-                        <div className={`${styles.stepsBox} ${styles.desktopOnly}`}>
-                            <div className={styles.stepsHeader}>
-                                <span className={styles.stepsMeta}>
-                                    📏 ~{route.totalDistance} m &nbsp;·&nbsp; 🚶 ~{route.totalMinutes} min
-                                    {route.multiFloor && <>&nbsp;·&nbsp;🛗 meerdere verdiepingen</>}
-                                </span>
-                                <div style={{ display: "flex", gap: 4 }}>
-                                    <button className={styles.shareBtn} onClick={() => window.print()} title="Afdrukken">🖨️</button>
-                                    <button className={styles.shareBtn} onClick={handleShare} title="Deel route">🔗</button>
-                                </div>
-                            </div>
-                            <StepsList route={route} />
-                        </div>
-                    )} */}
-
                     <div className={styles.searchWrap}>
                         <span className={styles.searchIcon}>🔍</span>
                         <input
@@ -407,7 +352,6 @@ export default function IndoorMap() {
                         </div>
                     </div>
                     <div className={styles.sheetContent}>
-                        {/* <StepsList route={route} /> */}
                     </div>
                 </div>
             )}

@@ -3,13 +3,6 @@ import { SVG_W, SVG_H, FLOORS } from '../data/building'
 import styles from '../../scss/components/MapCanvas.module.scss'
 import { usePage } from '@inertiajs/react'
 
-const FLOOR_IMAGES = {
-    0: '/maps/floor-0.png',
-    1: '/maps/floor-1.png',
-    2: '/maps/floor-2.png',
-    3: '/maps/floor-3.png',
-}
-
 function pinchDist(t1, t2) {
     const dx = t1.clientX - t2.clientX
     const dy = t1.clientY - t2.clientY
