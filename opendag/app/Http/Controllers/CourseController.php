@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Course;
+use App\Models\Poi;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,8 +19,10 @@ class CourseController extends Controller
         $settings = Setting::find(1);
         if($settings->courses == true){
             $courses = Course::all();
+            $pois = Poi::all();
             return Inertia::render('Information/Information', [
-                'courses' => $courses
+                'courses' => $courses,
+                'pois' => $pois
             ]);
         }
         else{
