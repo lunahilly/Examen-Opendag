@@ -1,7 +1,14 @@
 // dit is een test
 
+import { usePage } from "@inertiajs/react";
 
 function Course({ course }) {
+
+    const pois = usePage().props.pois || [];
+    console.log("pois: " + pois)
+    let value = pois.find((poi) => poi?.label == course.name);
+    console.log("value:" + value);
+
     return (
         <div className="course">
             <h2 className="course__name">{course.name}</h2>
@@ -42,8 +49,12 @@ function Course({ course }) {
                 </div>
                 <div className="course__right">
                     <img src={course.image} alt="" className="course__image" />
-                    <button className="course__button">Bekijk  <span className="course__button__highlighted">{course.name}</span>    op de plattegrond!</button>
-                </div>
+                    <a
+                        className="course__button"
+                        href={`/?naar=${course.name}`}
+                    >
+                        Bekijk <span className="course__button__highlighted">{course.name}</span> op de plattegrond!
+                    </a>                </div>
             </div>
         </div>
     );
