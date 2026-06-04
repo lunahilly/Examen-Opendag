@@ -5,10 +5,12 @@
     @include mixins.flexBox(start, start);
     flex-direction: column;
     gap: 1em;
+    width: 80em;
     
     &__students{
-        @include mixins.flexBox(space-between, start);
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 1em;
+        width: 100%;
     }
 }

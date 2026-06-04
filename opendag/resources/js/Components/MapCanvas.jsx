@@ -1,13 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { SVG_W, SVG_H, FLOORS } from '../data/building'
 import styles from '../../scss/components/MapCanvas.module.scss'
-
-const FLOOR_IMAGES = {
-    0: '/maps/floor-0.png',
-    1: '/maps/floor-1.png',
-    2: '/maps/floor-2.png',
-    3: '/maps/floor-3.png',
-}
+import { usePage } from '@inertiajs/react'
 
 function pinchDist(t1, t2) {
     const dx = t1.clientX - t2.clientX
@@ -22,6 +16,7 @@ export default function MapCanvas({
     highlightPoiIds,
     accessMode,
 }) {
+    const floors = usePage().props.floors;
     const wrapRef = useRef(null)
     const [tx, setTx] = useState({ x: 0, y: 0, s: 1 })
     const drag = useRef(null)
@@ -33,7 +28,7 @@ export default function MapCanvas({
     // ── Derived values (all declared before the return) ──────────────────────
 
     const floorPois = (pois || []).filter(p =>
-        Number(p.floor) === Number(floor)
+        Number(p.floor_id) === Number(floor)
     )
     const routePath = (() => {
         if (!route?.waypoints || route.waypoints.length < 2) return ''
@@ -222,7 +217,7 @@ export default function MapCanvas({
 
                     {/* FLOOR */}
                     <image
-                        href={FLOOR_IMAGES[floor]}
+                        href={floors[floor].image}
                         x="0"
                         y="0"
                         width={SVG_W}
@@ -275,7 +270,7 @@ export default function MapCanvas({
                                 <g transform="translate(0,-20)">
                                     <rect className={styles.stairMarkerBg} />
                                     <text textAnchor="middle" y="1" fontSize="8" fill="#fff">
-                                        {FLOORS.find(f => f.id === m.doelFloor)?.name}
+                                        {floors.find(f => f.id === m.doelFloor)?.label}
                                     </text>
                                 </g>
                             )}
@@ -287,10 +282,10 @@ export default function MapCanvas({
                     {/* ========================= */}
 
                     {floorPois.map(poi => {
-                        const isOrigin = origin?.id === poi.id
-                        const isDest = destination?.id === poi.id
+                        const isOrigin = origin?.value === poi.value
+                        const isDest = destination?.value === poi.value
                         const isTransit = poi.category === 'transport'
-                        const isProgramHL = Array.isArray(highlightPoiIds) && highlightPoiIds.includes(poi.id)
+                        const isProgramHL = Array.isArray(highlightPoiIds) && highlightPoiIds.includes(poi.value)
 
                         const r = isOrigin || isDest ? 12 : 8
                         const stroke = isOrigin ? '#4caf50' : isDest ? '#f44336'
@@ -306,7 +301,7 @@ export default function MapCanvas({
 
                         return (
                             <g
-                                key={poi.id}
+                                key={poi.value}
                                 transform={`translate(${poi.x},${poi.y})`}
                                 onClick={() => { if (!didDrag.current) onPoiClick(poi) }}
                                 onMouseEnter={() => onPoiHover(poi)}
@@ -331,9 +326,9 @@ export default function MapCanvas({
                     {/* ========================= */}
 
                     {floorPois.map(poi => {
-                        const isHov = hoveredPoi?.id === poi.id
-                        const isOrigin = origin?.id === poi.id
-                        const isDest = destination?.id === poi.id
+                        const isHov = hoveredPoi?.value === poi.value
+                        const isOrigin = origin?.value === poi.value
+                        const isDest = destination?.value === poi.value
 
                         if (!(isHov || isOrigin || isDest)) return null
 
@@ -341,7 +336,7 @@ export default function MapCanvas({
 
                         return (
                             <g
-                                key={`label-${poi.id}`}
+                                key={`label-${poi.value}`}
                                 transform={`translate(${poi.x},${poi.y - 28})`}
                                 pointerEvents="none"
                             >

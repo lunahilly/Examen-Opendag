@@ -1,256 +1,12 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from "react";
-import JSZip from "jszip";
-import { QRCodeSVG } from "qrcode.react";
 import { ALL_POIS, FLOORS, CATEGORIES } from "../data/building";
 import { computeRoute } from "../data/campusWayfinding";
 import MapCanvas from "./MapCanvas";
 import FloorSelector from "../Components/FloorSelector";
 import styles from "../../scss/indoorMap.module.scss";
-
-// All POIs that are not transport nodes (stairs/lift) — used in the grid and search
-const GRID_POIS = ALL_POIS.filter((p) => p.category !== "transport");
-
-// Maps a route step type to a display emoji icon
-const STEP_ICONS = {
-    start: "📍",
-    walk: "🚶",
-    elevator: "🛗",
-    stairs: "🪜",
-    enter: "🚪",
-    arrive: "✅",
-};
-
-// ── QR Scan Welcome Overlay ───────────────────────────────────────────────────
-function ScanWelcomeOverlay({ poi, onNavigate, onExplore }) {
-    const floor = FLOORS.find((f) => f.id === poi.floor);
-
-    const statusColor =
-        poi.status === "vrij" ? "scanBadgeGreen"
-            : poi.status === "bezet" ? "scanBadgeRed"
-                : poi.status === "gesloten" ? "scanBadgeAmber"
-                    : "";
-
-    const statusLabel =
-        poi.status === "vrij" ? "✅ Vrij"
-            : poi.status === "bezet" ? "🔴 Bezet"
-                : poi.status === "gesloten" ? "🔒 Gesloten"
-                    : "";
-
-    return (
-        <div className={styles.scanOverlay} onClick={(e) => {
-            if (e.target === e.currentTarget) onExplore();
-        }}>
-            <div className={styles.scanCard}>
-                <div className={styles.scanRing}>
-                    <div className={styles.scanIcon}>
-                        <img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} />
-                    </div>
-                </div>
-                <div className={styles.scanHere}>📍 Je bent hier</div>
-                <div className={styles.scanName}>{poi.label}</div>
-                <div className={styles.scanBadges}>
-                    {floor && <span className={styles.scanBadge}>{floor.name}</span>}
-                    {statusLabel && (
-                        <span className={`${styles.scanBadge} ${statusColor ? styles[statusColor] : ""}`}>
-                            {statusLabel}
-                        </span>
-                    )}
-                    {poi.category && <span className={styles.scanBadge}>{poi.category}</span>}
-                </div>
-                {poi.desc && <div className={styles.scanDesc}>{poi.desc}</div>}
-                <button className={styles.scanCta} onClick={onNavigate}>
-                    🗺️ Kies mijn bestemming
-                </button>
-                <button className={styles.scanExplore} onClick={onExplore}>
-                    Verken de kaart zonder route
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// ── Header ────────────────────────────────────────────────────────────────────
-function HeaderBar({ onShowQR }) {
-    return (
-        <header className={styles.header}>
-            <div className={`${styles.hSubRow} wrapper`}>
-                <div className={styles.hTools}>
-                    <button
-                        className={styles.hToolBtn}
-                        onClick={onShowQR}
-                        title="QR-codes voor elke ruimte"
-                    >
-                        <span className={styles.hBtnLabel}>QR</span>
-                    </button>
-                </div>
-            </div>
-        </header>
-    );
-}
-
-// ── Route steps list ──────────────────────────────────────────────────────────
-// function StepsList({ route }) {
-//     return (
-//         <ol className={styles.stepsList}>
-//             {route.steps.map((step, i) => (
-//                 <li key={i} className={`${styles.step} ${styles[`step_${step.type}`]}`}>
-//                     <div className={styles.stepLeft}>
-//                         <span className={styles.stepIcon}>
-//                             {STEP_ICONS[step.icon] ?? step.icon}
-//                         </span>
-//                         {i < route.steps.length - 1 && <span className={styles.stepLine} />}
-//                     </div>
-//                     <span className={styles.stepText}>{step.text}</span>
-//                 </li>
-//             ))}
-//         </ol>
-//     );
-// }
-
-// ── QR Modal ──────────────────────────────────────────────────────────────────
-function QRModal({ onClose }) {
-    const base = `${window.location.origin}${window.location.pathname}`;
-    const qrRefs = useRef({});
-    const [downloading, setDownloading] = useState(false);
-
-    const renderQRBlob = async (poi) => {
-        const svg = qrRefs.current[poi.id];
-        if (!svg) return null;
-
-        let svgString = new XMLSerializer().serializeToString(svg);
-        svgString = svgString.replace(/currentColor/g, "#000000");
-
-        const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-        const svgUrl = URL.createObjectURL(svgBlob);
-
-        const img = new Image();
-        await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = svgUrl;
-        });
-
-        const SIZE = 1024;
-        const PAD = 60;
-        const canvas = document.createElement("canvas");
-        canvas.width = SIZE;
-        canvas.height = SIZE + 140;
-        const ctx = canvas.getContext("2d");
-
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, PAD, PAD, SIZE - 2 * PAD, SIZE - 2 * PAD);
-        URL.revokeObjectURL(svgUrl);
-
-        ctx.fillStyle = "#000000";
-        ctx.font = "bold 40px sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(poi.label, SIZE / 2, SIZE + 60);
-
-        const floor = FLOORS.find((f) => f.id === poi.floor);
-        if (floor) {
-            ctx.font = "28px sans-serif";
-            ctx.fillStyle = "#666666";
-            ctx.fillText(floor.name, SIZE / 2, SIZE + 100);
-        }
-
-        return new Promise((resolve) =>
-            canvas.toBlob((blob) => resolve(blob), "image/png"),
-        );
-    };
-
-    const triggerDownload = (blob, filename) => {
-        const link = document.createElement("a");
-        link.download = filename;
-        link.href = URL.createObjectURL(blob);
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-    };
-
-    const safeName = (poi) =>
-        poi.label
-            .replace(/[^a-z0-9]+/gi, "-")
-            .toLowerCase()
-            .replace(/^-|-$/g, "");
-
-    const downloadOne = async (poi) => {
-        const blob = await renderQRBlob(poi);
-        if (blob) triggerDownload(blob, `qr-${safeName(poi)}.png`);
-    };
-
-    const downloadAll = async () => {
-        if (downloading) return;
-        setDownloading(true);
-        const zip = new JSZip();
-        const folder = zip.folder("qr-codes");
-        for (const poi of GRID_POIS) {
-            const blob = await renderQRBlob(poi);
-            if (blob) folder.file(`qr-${safeName(poi)}.png`, blob);
-        }
-        const zipBlob = await zip.generateAsync({ type: "blob" });
-        triggerDownload(zipBlob, "Ma-OpenDag-QR-codes.zip");
-        setDownloading(false);
-    };
-
-    return (
-        <div
-            className={styles.qrOverlay}
-            onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-        >
-            <div className={styles.qrModal}>
-                <div className={styles.qrModalHeader}>
-                    <div>
-                        <div className={styles.qrModalTitle}>📱 QR-codes per ruimte</div>
-                        <div className={styles.qrModalSub}>
-                            Download alle QR-codes als ZIP en plak ze op de deur van elke
-                            ruimte. Bezoekers scannen de code en de kaart opent automatisch
-                            met die ruimte als startpunt. Klik op één code voor losse download.
-                        </div>
-                    </div>
-                    <div className={styles.qrModalActions}>
-                        <button
-                            className={styles.qrPrintBtn}
-                            onClick={downloadAll}
-                            disabled={downloading}
-                        >
-                            {downloading ? "⏳ Bezig…" : "⬇️ Download alles (ZIP)"}
-                        </button>
-                        <button className={styles.qrCloseBtn} onClick={onClose}>✕</button>
-                    </div>
-                </div>
-                <div className={styles.qrGrid}>
-                    {GRID_POIS.map((poi) => {
-                        const url = `${base}?hier=${poi.id}`;
-                        const floor = FLOORS.find((f) => f.id === poi.floor);
-                        return (
-                            <div
-                                key={poi.id}
-                                className={styles.qrItem}
-                                onClick={() => downloadOne(poi)}
-                                style={{ cursor: "pointer" }}
-                                title={`Download QR voor ${poi.label}`}
-                            >
-                                <QRCodeSVG
-                                    ref={(el) => { if (el) qrRefs.current[poi.id] = el; }}
-                                    value={url}
-                                    size={130}
-                                    bgColor="transparent"
-                                    fgColor="currentColor"
-                                    level="M"
-                                />
-                                <span className={styles.qrItemIcon}>
-                                    <img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} />
-                                </span>
-                                <span className={styles.qrItemName}>{poi.label}</span>
-                                <span className={styles.qrItemFloor}>{floor?.name}</span>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        </div>
-    );
-}
+import QRModal from "@/Pages/Home/QRModal";
+import HeaderBar from "@/Pages/Home/HeaderBar";
+import { usePage } from "@inertiajs/react";
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function IndoorMap() {
@@ -267,7 +23,10 @@ export default function IndoorMap() {
         localStorage.setItem("mA-theme", theme);
     }, [isDark]);
 
+    const pois = usePage().props.pois;
+    const categories = usePage().props.categories;
     // ── Map state ─────────────────────────────────────────────────────────────────
+    const gridpois = pois.filter((p) => p.category.name !== "transport");
     const [floor, setFloor] = useState(0);
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
@@ -312,19 +71,19 @@ export default function IndoorMap() {
     // ── URL params: read on mount ─────────────────────────────────────────────────
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const van = params.get("van") ? ALL_POIS.find((p) => p.id === params.get("van")) : null;
-        const naar = params.get("naar") ? ALL_POIS.find((p) => p.id === params.get("naar")) : null;
-        const hier = params.get("hier") ? ALL_POIS.find((p) => p.id === params.get("hier")) : null;
+        const van = params.get("van") ? pois.find((p) => p.value === params.get("van")) : null;
+        const naar = params.get("naar") ? pois.find((p) => p.value === params.get("naar")) : null;
+        const hier = params.get("hier") ? pois.find((p) => p.value === params.get("hier")) : null;
 
-        if (van) { setOrigin(van); setFloor(van.floor); }
-        if (naar) { setDestination(naar); setFloor(naar.floor); }
+        if (van) { setOrigin(van); setFloor(van.floor_id); }
+        if (naar) { setDestination(naar); setFloor(naar.floor_id); }
         if (van && naar) {
-            setRoute(computeRoute(van.id, naar.id, { transport: "stairs" }));
+            setRoute(computeRoute(van.value, naar.value, { transport: "stairs" }));
             setSheetOpen(true);
         }
         if (hier && !van && !naar) {
             setOrigin(hier);
-            setFloor(hier.floor);
+            setFloor(hier.floor_id);
             setScanWelcomePoi(hier);
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -332,8 +91,8 @@ export default function IndoorMap() {
     // ── URL params: sync on change ────────────────────────────────────────────────
     useEffect(() => {
         const params = new URLSearchParams();
-        if (origin) params.set("van", origin.id);
-        if (destination) params.set("naar", destination.id);
+        if (origin) params.set("van", origin.value);
+        if (destination) params.set("naar", destination.value);
         const qs = params.toString();
         window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
     }, [origin, destination]);
@@ -355,7 +114,7 @@ export default function IndoorMap() {
     // ── Route ─────────────────────────────────────────────────────────────────────
     const applyRoute = useCallback((o, d) => {
         if (o && d) {
-            const result = computeRoute(o.id, d.id, { transport: "stairs" });
+            const result = computeRoute(o.value, d.value, { transport: "stairs" });
             setRoute(result);
             setSheetOpen(true);
         } else {
@@ -367,28 +126,28 @@ export default function IndoorMap() {
     const handlePoiClick = useCallback((poi) => {
         if (selectionMode === "from") {
             setOrigin(poi);
-            setFloor(poi.floor);
+            setFloor(poi.floor_id);
             applyRoute(poi, destination);
             setSelectionMode(null);
         } else if (selectionMode === "to") {
             setDestination(poi);
-            if (!origin || poi.floor === origin.floor) setFloor(poi.floor);
+            if (!origin || poi.floor_id === origin.floor_id) setFloor(poi.floor_id);
             applyRoute(origin, poi);
             setSelectionMode(null);
         } else {
             if (!origin) {
                 setOrigin(poi);
-                setFloor(poi.floor);
+                setFloor(poi.floor_id);
                 applyRoute(poi, destination);
                 setSelectionMode("to");
             } else {
                 setDestination(poi);
-                if (poi.floor === origin.floor) setFloor(poi.floor);
+                if (poi.floor_id === origin.floor_id) setFloor(poi.floor_id);
                 applyRoute(origin, poi);
                 setSelectionMode(null);
             }
         }
-        setHlRoom(poi.roomId);
+        // setHlRoom(poi.roomId); GAGA
         setTimeout(() => setHlRoom(null), 1200);
     }, [selectionMode, origin, destination, applyRoute]);
 
@@ -404,10 +163,10 @@ export default function IndoorMap() {
 
     // ── Filtered + sorted POIs ────────────────────────────────────────────────────
     const filteredPois = useMemo(() => {
-        let pois = GRID_POIS;
+        let pois = gridpois;
 
         if (activeCategory !== "all") {
-            pois = pois.filter((p) => p.category === activeCategory);
+            pois = pois.filter((p) => p.category.name === activeCategory);
         }
 
         if (searchQuery.trim()) {
@@ -415,14 +174,14 @@ export default function IndoorMap() {
             pois = pois.filter(
                 (p) =>
                     p.label.toLowerCase().includes(q) ||
-                    (p.desc && p.desc.toLowerCase().includes(q)) ||
-                    (p.category && p.category.toLowerCase().includes(q)),
+                    // (p.desc && p.desc.toLowerCase().includes(q)) || GAGA
+                    (p.category.name && p.category.name.toLowerCase().includes(q)),
             );
         }
 
         pois = [...pois].sort((a, b) => {
-            const aFav = favorites.includes(a.id);
-            const bFav = favorites.includes(b.id);
+            const aFav = favorites.includes(a.value);
+            const bFav = favorites.includes(b.value);
             if (aFav && !bFav) return -1;
             if (!aFav && bFav) return 1;
             return a.label.localeCompare(b.label);
@@ -431,7 +190,7 @@ export default function IndoorMap() {
         return pois;
     }, [searchQuery, activeCategory, favorites]);
 
-    const gridCategories = CATEGORIES.filter((c) => c.id !== "transport");
+    const gridCategories = categories.filter((c) => c.value !== "transport");
 
     // ── Render ────────────────────────────────────────────────────────────────────
     return (
@@ -459,7 +218,7 @@ export default function IndoorMap() {
                         <div className={styles.mapWrap}>
                             <MapCanvas
                                 floor={floor}
-                                pois={ALL_POIS}
+                                pois={pois}
                                 route={route}
                                 origin={origin}
                                 destination={destination}
@@ -515,22 +274,6 @@ export default function IndoorMap() {
                         <div className={styles.hint}>Klik op een locatie op de kaart of in de lijst</div>
                     )}
 
-                    {/* {route && (
-                        <div className={`${styles.stepsBox} ${styles.desktopOnly}`}>
-                            <div className={styles.stepsHeader}>
-                                <span className={styles.stepsMeta}>
-                                    📏 ~{route.totalDistance} m &nbsp;·&nbsp; 🚶 ~{route.totalMinutes} min
-                                    {route.multiFloor && <>&nbsp;·&nbsp;🛗 meerdere verdiepingen</>}
-                                </span>
-                                <div style={{ display: "flex", gap: 4 }}>
-                                    <button className={styles.shareBtn} onClick={() => window.print()} title="Afdrukken">🖨️</button>
-                                    <button className={styles.shareBtn} onClick={handleShare} title="Deel route">🔗</button>
-                                </div>
-                            </div>
-                            <StepsList route={route} />
-                        </div>
-                    )} */}
-
                     <div className={styles.searchWrap}>
                         <span className={styles.searchIcon}>🔍</span>
                         <input
@@ -548,9 +291,9 @@ export default function IndoorMap() {
                     <div className={styles.catTabs}>
                         {gridCategories.map((cat) => (
                             <button
-                                key={cat.id}
-                                className={`${styles.catTab} ${activeCategory === cat.id ? styles.catTabActive : ""}`}
-                                onClick={() => setActiveCategory(cat.id)}
+                                key={cat.value}
+                                className={`${styles.catTab} ${activeCategory === cat.value ? styles.catTabActive : ""}`}
+                                onClick={() => setActiveCategory(cat.value)}
                             >
                                 <i className={cat.icon} /> {cat.label}
                             </button>
@@ -560,11 +303,11 @@ export default function IndoorMap() {
                     {filteredPois.length > 0 ? (
                         <div className={styles.poiBox}>
                             {filteredPois.map((poi) => {
-                                const isOrigin = origin?.id === poi.id;
-                                const isDest = destination?.id === poi.id;
+                                const isOrigin = origin?.value === poi.value;
+                                const isDest = destination?.value === poi.value;
                                 return (
                                     <div
-                                        key={poi.id}
+                                        key={poi.value}
                                         role="button"
                                         tabIndex={0}
                                         className={`${styles.poiItem} ${isOrigin ? styles.poiFrom : ""} ${isDest ? styles.poiTo : ""}`}
@@ -577,11 +320,11 @@ export default function IndoorMap() {
                                             {poi.label}
                                         </span>
                                         <button
-                                            className={`${styles.favBtn} ${isFav(poi.id) ? styles.favActive : ""}`}
-                                            onClick={(e) => { e.stopPropagation(); toggleFav(poi.id); }}
-                                            title={isFav(poi.id) ? "Verwijder favoriet" : "Voeg toe aan favorieten"}
+                                            className={`${styles.favBtn} ${isFav(poi.value) ? styles.favActive : ""}`}
+                                            onClick={(e) => { e.stopPropagation(); toggleFav(poi.value); }}
+                                            title={isFav(poi.value) ? "Verwijder favoriet" : "Voeg toe aan favorieten"}
                                         >
-                                            {isFav(poi.id) ? "⭐" : "☆"}
+                                            {isFav(poi.value) ? "⭐" : "☆"}
                                         </button>
                                     </div>
                                 );
@@ -609,7 +352,6 @@ export default function IndoorMap() {
                         </div>
                     </div>
                     <div className={styles.sheetContent}>
-                        {/* <StepsList route={route} /> */}
                     </div>
                 </div>
             )}

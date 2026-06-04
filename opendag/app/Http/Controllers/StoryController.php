@@ -18,7 +18,8 @@ class StoryController extends Controller
         $settings = Setting::find(1);
         if ($settings->stories == true) {
             $stories = Story::with('course')->orderBy('created_at', 'desc')->get();
-            $courses = Course::all();
+            // $courses = Course::all();
+            $courses = $stories->pluck('course')->unique()->flatten()->toArray();
             return Inertia::render('Stories/Stories', [
                 'stories' => $stories,
                 'courses' => $courses
@@ -55,7 +56,11 @@ class StoryController extends Controller
         $data['image'] = '/' . 'storage/' . $path; // terug naar uploads als live is, zo not forget
         $story = new Story($data);
         $story->save();
-        return redirect(route('stories.index'));
+        // return redirect(route('stories.index'));
+        // return Inertia::render('Stories/Story', [
+        //     'story' => $story
+        // ]);
+        return redirect(route('stories.show', $story->id));
     }
 
     /**
@@ -63,7 +68,10 @@ class StoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $story = Story::with('course')->find($id);
+        return Inertia::render('Stories/Story', [
+            'story' => $story
+        ]);
     }
 
     /**
@@ -99,7 +107,11 @@ class StoryController extends Controller
         // $request['image'] = '/'.'uploads'.$path;
         $story = Story::find($id);
         $story->update($data);
-        return redirect(route('stories.index'));
+        // return redirect(route('stories.index'));
+        // return Inertia::render('Stories/Story', [
+        //     'story' => $story
+        // ]);
+        return redirect(route('stories.show', $story->id));
     }
 
     /**

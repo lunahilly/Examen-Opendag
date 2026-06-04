@@ -2,67 +2,37 @@
 @use "../../abstracts/mixins";
 
 .student{
+    border: 0.025em solid rgba(map-get(variables.$colors, "white"), 0.2);
     @include mixins.flexBox(start, start);
     gap: 1em;
-    width: 48%;
-    min-height: 7em;
-    border: 0.1em solid rgba(map-get(variables.$colors, "white"), 0.2);
-    padding: map-get(variables.$padding, "padding-m");
-    border-radius: map-get(variables.$borders, "border-radius-s");
+    // width: 48%;
+    height: 8em;
+    // width: 100%;
 
     &__figure{
-        height: 7em;
-        position: relative;
+        width: 8em;
+        height: 100%;
 
-        &:hover &--link{
-            opacity: 1;
-            transition: 0.4s all;
-        }
-        
         &--image{
+            width: 8em;
             height: 100%;
-            aspect-ratio: 2.5/2;
             object-fit: cover;
-            border-radius: map-get(variables.$borders, "border-radius-s");
-        }
-    
-        &--link{
-            position: absolute;
-            background: rgba(map-get(variables.$colors, "black"), 0.4);
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            @include mixins.flexBox(center, center);
-            opacity: 0;
-            color: map-get(variables.$colors, "white");
-            text-decoration: none;
         }
     }
 
-    &__details{
-        @include mixins.flexBox(start, start);
+    &__wrapper{
+        padding: map-get(variables.$padding, "padding-m");
+        @include mixins.flexBox(space-between, start);
         flex-direction: column;
-        gap: 0.25em;
         height: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-wrap: break-word;
+    }
 
-        &--name{
-            font-weight: 400;
+    &__link{
+        color: map-get(variables.$colors, "magenta");
+        text-decoration: none;
+
+        &:hover{
+            color: lighten(map-get(variables.$colors, "magenta"), 20%);
         }
-
-        &--course{
-            color: map-get(variables.$colors, "magenta");
-            font-weight: 400;
-        }
-
-        // &--story{
-        //     // overflow: hidden;
-        //     // word-wrap: break-word;
-        //     // text-overflow: ellipsis;
-        //     // height: 100%;
-        // }
     }
 }
