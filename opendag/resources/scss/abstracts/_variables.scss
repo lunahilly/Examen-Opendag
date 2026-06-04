@@ -1,13 +1,14 @@
 // hier staan alle variables
 
 $baseVars: (
-    "font": aeonik,
+    "font": (akzidenz-grotesk, aeonik, helvetica, arial, sans-serif),
     "secondary-font": sangbleukingdom
 );
 
 $colors: (
     "white": white,
     "magenta": #FF00E6,
+    "cyan": #01C3BD,
     "black": black,
     "error-red": #ea95a2,
 	"red": #fa6767

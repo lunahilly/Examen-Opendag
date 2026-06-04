@@ -20,6 +20,7 @@
   height: 100%;
   display: block;
   user-select: none;
+  background-color: #353535;
 }
 
 // ── Zoom controls ─────────────────────────────────────────────────────────────
@@ -42,7 +43,7 @@
   align-items: center;
   justify-content: center;
   background: black;
-  border: 0.094em solid #FF00E3;
+  border: 0.094em solid #FF00E6;
   border-radius: 0.25em;
   color: white;
   font-size: 0.875em;
@@ -53,4 +54,12 @@
   &:active {
     background: var(--steps-hd);
   }
+}
+
+.stairMarkerBg {
+  background-color: black;
+}
+
+.stairMarkerText {
+  color: white;
 }

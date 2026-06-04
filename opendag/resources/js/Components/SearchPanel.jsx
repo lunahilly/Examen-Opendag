@@ -14,14 +14,14 @@ export default function SearchPanel({
   floor,
   onFloorChange,
 }) {
-  const [query,    setQuery]    = useState('')
+  const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all')
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim()
     return ALL_POIS.filter(p => {
-      const matchCat  = category === 'all' || p.category === category
-      const matchQ    = !q || p.label.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)
+      const matchCat = category === 'all' || p.category === category
+      const matchQ = !q || p.label.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)
       return matchCat && matchQ
     })
   }, [query, category])
@@ -53,7 +53,7 @@ export default function SearchPanel({
           className={`${styles.routeField} ${selectionMode === 'from' ? styles.activeField : ''} ${origin ? styles.filled : ''}`}
           onClick={() => onSetMode('from')}
         >
-          <span className={styles.fieldDot} style={{ background: '#4caf50' }}/>
+          <span className={styles.fieldDot} style={{ background: '#4caf50' }} />
           <span className={styles.fieldText}>
             {origin ? origin.label : 'Vertrekpunt kiezen…'}
           </span>
@@ -72,7 +72,7 @@ export default function SearchPanel({
           className={`${styles.routeField} ${selectionMode === 'to' ? styles.activeField : ''} ${destination ? styles.filled : ''}`}
           onClick={() => onSetMode('to')}
         >
-          <span className={styles.fieldDot} style={{ background: '#f44336' }}/>
+          <span className={styles.fieldDot} style={{ background: '#f44336' }} />
           <span className={styles.fieldText}>
             {destination ? destination.label : 'Bestemming kiezen…'}
           </span>
@@ -98,7 +98,7 @@ export default function SearchPanel({
             exit={{ opacity: 0, y: -6 }}
           >
             <span className={styles.hintDot}
-              style={{ background: selectionMode === 'from' ? '#4caf50' : '#f44336' }}/>
+              style={{ background: selectionMode === 'from' ? '#4caf50' : '#f44336' }} />
             Klik op de kaart of kies uit de lijst
           </motion.div>
         )}
@@ -142,26 +142,26 @@ export default function SearchPanel({
             </div>
             {byFloor[floorId].map(poi => {
               const isOrigin = origin?.id === poi.id
-              const isDest   = destination?.id === poi.id
+              const isDest = destination?.id === poi.id
               return (
                 <button
                   key={poi.id}
                   className={`${styles.poiRow}
                     ${isOrigin ? styles.poiOrigin : ''}
-                    ${isDest   ? styles.poiDest   : ''}
+                    ${isDest ? styles.poiDest : ''}
                   `}
                   onClick={() => {
                     onPoiSelect(poi)
                     if (Number(floorId) !== floor) onFloorChange(Number(floorId))
                   }}
                 >
-                  <span className={styles.poiIcon}>{poi.icon}</span>
+                  <span className={styles.poiIcon}><img src={`/icons/${poi.icon}.webp`} alt="" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /></span>
                   <div className={styles.poiInfo}>
                     <span className={styles.poiLabel}>{poi.label}</span>
                     <span className={styles.poiDesc}>{poi.desc}</span>
                   </div>
                   {isOrigin && <span className={styles.poiTag} style={{ color: '#4caf50' }}>VAN</span>}
-                  {isDest   && <span className={styles.poiTag} style={{ color: '#f44336' }}>NAAR</span>}
+                  {isDest && <span className={styles.poiTag} style={{ color: '#f44336' }}>NAAR</span>}
                 </button>
               )
             })}

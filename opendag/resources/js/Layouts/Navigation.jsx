@@ -34,12 +34,12 @@ function Navigation() {
     return isSmaller ? (
         <header className="header">
             <span className="header__menu">
-                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
-                    <i className="fa-solid fa-bars header__menu--button-icon"/>
-                </button>
                 <a href="/" className="header__menu--logo">
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
                 </a>
+                <button onClick={() => setOpenMenu(!openMenu)} className="header__menu--button">
+                    <i className="fa-solid fa-bars header__menu--button-icon" />
+                </button>
             </span>
             {
                 openMenu ?
@@ -48,7 +48,7 @@ function Navigation() {
                         <nav className="header__sidebar">
                             <span className="header__sidebar--wrapper">
                                 <button onClick={() => setOpenMenu(!openMenu)} className="header__sidebar--button">
-                                    <i className="fa-solid fa-close header__sidebar--button-icon"/>
+                                    <i className="fa-solid fa-close header__sidebar--button-icon" />
                                 </button>
                             </span>
                             <ul className="header__sidebar--list">
@@ -77,10 +77,17 @@ function Navigation() {
                                         : null
                                 }
                                 {
-                                user != null ? 
-                                    <Button label="Dashboard" route={route('dashboard', 'courses')}/>
-                                : null
-                            }
+                                    user != null ?
+                                        <li className="header__sidebar--item">
+                                            <a href={route('nfc')} className={`header__sidebar--item-link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC</a>
+                                        </li>
+                                        : null
+                                }
+                                {
+                                    user != null ?
+                                        <Button label="Dashboard" route={route('dashboard', 'courses')} />
+                                        : null
+                                }
                             </ul>
                         </nav>
                     </>
@@ -88,7 +95,7 @@ function Navigation() {
             }
         </header>
     ) : (
-        <header className="header">
+        <header className="header wrapper">
             <a href="/" className="header__logo">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxGobTVE5BMJp30ofGiKWwKsfLzzDcZ5MQQQ&s" alt="MA logo" className="header__logo--image" />
             </a>
@@ -107,6 +114,11 @@ function Navigation() {
                 {
                     settings.activities ?
                         <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
+                        : null
+                }
+                {
+                    user != null ?
+                        <a href={route('nfc')} className={`header__navigation--link ${url == '/nfc' ? 'header__navigation--link-active' : null} `}>NFC</a>
                         : null
                 }
                 {

@@ -13,6 +13,8 @@ function Stories() {
         setFiltered(stories);
     }, []);
 
+    console.log(courses);
+
     const filterCourses = (event) => {
         if (event.target.value != "") {
             setFiltered(stories.filter((item) => item.course_id == event.target.value));
@@ -24,27 +26,29 @@ function Stories() {
 
     return (
         <GuestLayout>
-            <Head title="Verhalen van studenten" />
-            <PageTitle title="Verhalen van studenten" />
-            <section className="stories">
-                <div className="stories__dropdown">
-                    <select onChange={filterCourses} name="" id="" className="dropdown">
-                        <option value="" className="dropdown__option">Alle opleidingen</option>
+            <Head className="wrapper" title="Verhalen van studenten" />
+            <main className="main wrapper">
+                <PageTitle title="Verhalen van studenten" />
+                <section className="stories">
+                    <div className="stories__dropdown">
+                        <select onChange={filterCourses} name="" id="" className="dropdown">
+                            <option value="" className="dropdown__option">Alle opleidingen</option>
+                            {
+                                courses.map((item, index) =>
+                                    <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
+                                )
+                            }
+                        </select>
+                    </div>
+                    <div className="stories__students">
                         {
-                            courses.map((item, index) =>
-                                <option value={item.id} key={index} className="dropdown__option">{item.name}</option>
+                            filtered.map((item, index) =>
+                                <Student data={item} key={index} />
                             )
                         }
-                    </select>
-                </div>
-                <div className="stories__students">
-                    {
-                        filtered.map((item, index) =>
-                            <Student data={item} key={index} />
-                        )
-                    }
-                </div>
-            </section>
+                    </div>
+                </section>
+            </main>
         </GuestLayout>
     );
 }

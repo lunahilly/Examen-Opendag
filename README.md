@@ -8,14 +8,10 @@ Als je bezig bent met styling run dan het volgende command voor de scss
 sass resources/scss/style.scss resources/css/app.css --watch
 ```
 
-als je wat met git wilt doen, dit is de volgorde
+als je wat met git wilt doen zorg dat je altijd eerst alles pulled en dat je op development zit
 ```
-git add .
-git commit -m "message"
 git pull
-git add .
-git commit -m "merge"
-git push
+git switch development
 ```
 
 Als er changes op main staan ga niet ``git merge main`` doen. Laat het Luna weten en zij maakt een pull request aan.

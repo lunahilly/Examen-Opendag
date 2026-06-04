@@ -10,6 +10,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
         <!-- Scripts -->
         @routes
         @viteReactRefresh
@@ -18,5 +21,6 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        <script src={{ URL::to("src/js/tinymce_8.6.0/tinymce/js/tinymce/tinymce.min.js") }}></script>
     </body>
 </html>

@@ -3,4 +3,8 @@
 
 .head{
     font-size: 1.3em;
+    width: 100%;
+    @include mixins.flexBox(start, start);
+    margin-bottom: 1em;
+    gap: 0.4em;
 }

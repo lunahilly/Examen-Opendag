@@ -6,23 +6,23 @@
   left: 0;
   right: 0;
   background: rgba(17, 17, 17, 0.97);
-  border-top: 1px solid rgba(224, 64, 251, 0.2);
+  border-top: 1px solid rgba(255, 0, 230,0.2);
   backdrop-filter: blur(16px);
   max-height: 52%;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(224, 64, 251, 0.18) transparent;
+  scrollbar-color: rgba(255, 0, 230,0.18) transparent;
   z-index: 5;
 
   &::-webkit-scrollbar       { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(224, 64, 251, 0.18); border-radius: 2px; }
+  &::-webkit-scrollbar-thumb { background: rgba(255, 0, 230,0.18); border-radius: 2px; }
 }
 
 // ── Summary ──────────────────────────────────────────────────────────────────
 .summary {
   padding: $space-4 $space-6;
-  border-bottom: 1px solid rgba(224, 64, 251, 0.1);
+  border-bottom: 1px solid rgba(255, 0, 230,0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -57,11 +57,11 @@
 .metaTag {
   padding: 3px 10px;
   border-radius: 20px;
-  border: 1px solid rgba(224, 64, 251, 0.18);
+  border: 1px solid rgba(255, 0, 230,0.18);
   font-family: $font-mono;
   font-size: $fs-xs;
   color: $text-dim;
-  background: rgba(224, 64, 251, 0.07);
+  background: rgba(255, 0, 230,0.07);
 }
 
 // ── Floor tabs ───────────────────────────────────────────────────────────────
@@ -69,13 +69,13 @@
   display: flex;
   gap: $space-2;
   padding: $space-3 $space-6;
-  border-bottom: 1px solid rgba(224, 64, 251, 0.08);
+  border-bottom: 1px solid rgba(255, 0, 230,0.08);
 }
 
 .floorTab {
   padding: $space-1 $space-4;
   border-radius: 6px;
-  border: 1px solid rgba(224, 64, 251, 0.14);
+  border: 1px solid rgba(255, 0, 230,0.14);
   background: transparent;
   font-family: $font-mono;
   font-size: $fs-xs;
@@ -83,11 +83,11 @@
   cursor: pointer;
   transition: all $duration-fast $ease-smooth;
 
-  &:hover { border-color: rgba(224, 64, 251, 0.35); color: $pink; }
+  &:hover { border-color: rgba(255, 0, 230,0.35); color: $pink; }
 
   &.floorTabActive {
     border-color: $pink;
-    background: rgba(224, 64, 251, 0.12);
+    background: rgba(255, 0, 230,0.12);
     color: $pink;
   }
 }
@@ -127,7 +127,7 @@
   width: 1.5px;
   flex: 1;
   min-height: 14px;
-  background: rgba(224, 64, 251, 0.18);
+  background: rgba(255, 0, 230,0.18);
   margin: $space-1 0;
 }
 
