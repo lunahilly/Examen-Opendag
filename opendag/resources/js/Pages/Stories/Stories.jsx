@@ -24,7 +24,7 @@ function Stories() {
 
     return (
         <GuestLayout>
-            <Head title="Verhalen van studenten" />
+            <Head className="wrapper" title="Verhalen van studenten" />
             <PageTitle title="Verhalen van studenten" />
             <section className="stories">
                 <div className="stories__dropdown">

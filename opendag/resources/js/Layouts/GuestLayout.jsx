@@ -7,7 +7,7 @@ function GuestLayout({ children }) {
         <div className="layout">
             <Navigation />
 
-            <main className="main">
+            <main className="main wrapper">
                 {children}
             </main>
 

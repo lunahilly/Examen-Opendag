@@ -1,13 +1,15 @@
 // dit is een test
 
 import { usePage } from "@inertiajs/react";
+import { filter } from "jszip";
 
 function Course({ course }) {
 
-    const pois = usePage().props.pois || [];
-    console.log("pois: " + pois)
-    let value = pois.find((poi) => poi?.label == course.name);
-    console.log("value:" + value);
+    const pois = usePage().props.pois;
+    console.log("pois :", pois);
+    console.log("name :", course.name);
+    const poi = pois.find((poi) => poi?.label == course.name);
+    console.log("value :", poi.value);
 
     return (
         <div className="course">
@@ -51,7 +53,7 @@ function Course({ course }) {
                     <img src={course.image} alt="" className="course__image" />
                     <a
                         className="course__button"
-                        href={`/?naar=${course.name}`}
+                        href={`/?naar=${poi.value}`}
                     >
                         Bekijk <span className="course__button__highlighted">{course.name}</span> op de plattegrond!
                     </a>                </div>
