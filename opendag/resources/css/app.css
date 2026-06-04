@@ -1219,7 +1219,8 @@ body {
 }
 .course__button {
   width: 100%;
-  height: 2.5em;
+  display: block;
+  text-align: center;
   font-size: 1em;
   background-color: #FF00E3;
   border: 0.075em solid white;
@@ -1227,6 +1228,7 @@ body {
   color: white;
   font-weight: 600;
   padding: 0.5em;
+  text-decoration: none;
 }
 .course__button__highlighted {
   color: black;
