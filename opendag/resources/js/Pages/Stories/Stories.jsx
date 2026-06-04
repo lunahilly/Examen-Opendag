@@ -26,10 +26,10 @@ function Stories() {
 
     return (
         <GuestLayout>
-            <Head title="Verhalen van studenten" />
+            <Head className="wrapper" title="Verhalen van studenten" />
             <main className="main wrapper">
-            <PageTitle title="Verhalen van studenten" />
-                    <section className="stories">
+                <PageTitle title="Verhalen van studenten" />
+                <section className="stories">
                     <div className="stories__dropdown">
                         <select onChange={filterCourses} name="" id="" className="dropdown">
                             <option value="" className="dropdown__option">Alle opleidingen</option>
