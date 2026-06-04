@@ -69,17 +69,17 @@ function InformationForm() {
                     <InputField label="Code" value={data.code} onChange={(event) => setData('code', event.target.value)} error={errors.code} />
                     {/* <button className="form__submit">submit</button> */}
                     <span className="form__wrapper">
-                        {
-                            course !== null ? 
+                        {/* {
+                            course !== null ?
                                 <Button onClick={() => setOpenModal(true)} type="button" label="Voeg" />
-                            : null
-                        }
+                                : null
+                        } */}
                         <Button type="submit" label={course ? 'Update' : 'Save'} />
                     </span>
                 </form>
             </main>
             {
-                openModal ? <ActivityCourseModal course={course.id} onClick={() => setOpenModal(false)}/> : null
+                openModal && course ? <ActivityCourseModal course={course.id} onClick={() => setOpenModal(false)} /> : null
             }
         </AuthenticatedLayout>
     );

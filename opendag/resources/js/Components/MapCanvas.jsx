@@ -268,9 +268,9 @@ export default function MapCanvas({
                         <g key={i} transform={`translate(${m.x},${m.y})`} pointerEvents="none">
                             {m.type === 'exit' && (
                                 <g transform="translate(0,-20)">
-                                    <rect className={styles.stairMarkerBg} />
-                                    <text textAnchor="middle" y="1" fontSize="8" fill="#fff">
-                                        {floors.find(f => f.id === m.doelFloor)?.label}
+                                    <rect x="-65" y="-12" width="130" height="16" rx="3" style={{ fill: '#000' }} />
+                                    <text textAnchor="middle" y="1" fontSize="10" fill="#fff">
+                                        {`Ga naar de ${(floors.find(f => f.id === m.doelFloor)?.label ?? '').replace(/Verdieping (\d+)/, '$1e verdieping').toLowerCase()}`}
                                     </text>
                                 </g>
                             )}
