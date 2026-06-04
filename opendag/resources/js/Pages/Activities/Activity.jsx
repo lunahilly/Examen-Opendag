@@ -8,9 +8,10 @@ function Activity({ data, index }) {
                 <h2 className="activity__title">{data.title}</h2>
                 <p className="activity__description">{data.description}</p>
             </div>
-            <button className="activity__button">
+            {/* Dit is een knop om te linken naar de plattegrond, hiervoor moet eerst toegevoegd worden dat je ee plek op de map kan toevoegen. */}
+            {/* <button className="activity__button">
                 Bekijk <p>{data.title}</p> op de plattegrond!
-            </button>
+            </button> */}
         </article>
     )
 }
