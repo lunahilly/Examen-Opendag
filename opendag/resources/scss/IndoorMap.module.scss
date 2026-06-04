@@ -2253,7 +2253,11 @@ $green: #4caf50;
 
   // Shorter map on mobile
   .mapRow {
-    height: 18.75em;
+    height: 30em !important;
+  }
+
+  .mapWrap{
+    height: 30em !important;
   }
 
   // Legend wraps below the card on mobile
@@ -2266,6 +2270,16 @@ $green: #4caf50;
     flex-wrap: wrap;
     align-self: stretch;
     gap: 0.5em 1em;
+  }
+}
+
+@media (max-width: 25em) {
+    .mapRow {
+    height: 25em !important;
+  }
+
+  .mapWrap{
+    height: 25em !important;
   }
 }
 
