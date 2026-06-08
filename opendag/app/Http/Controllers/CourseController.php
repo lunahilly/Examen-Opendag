@@ -43,7 +43,15 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'image' => 'required'
+        ]);
+        $path = $request->file('image')->store('courses', 'public'); // public_html 4 live
+        // dd($path);
+        // $request['image'] = '/'.'uploads'.$path;
         $data = $this->validateData($request);
+        $data['image'] = '/' . 'storage/' . $path; // terug naar uploads als live is, zo not forget
+        // $data = $this->validateData($request);
         $course = new Course($data);
         $course->save();
         return redirect(route('information.index'));
@@ -75,7 +83,17 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $data = $this->validateData($request);
+        $request->validate([
+            'image' => ''
+        ]);
+        if ($request->file('image')) {
+            $path = $request->file('image')->store('courses', 'public'); // change to public_html 4 live, niet vergeten cuz anders not work:) x
+            $data = $this->validateData($request);
+            $data['image'] = '/' . 'storage/' . $path; // same thing here, uploads 4 live in plaats van storage. again niet vergeten cuz anders werkt het niet x
+        } else {
+            $data = $this->validateData($request);
+        }
+        // $data = $this->validateData($request);
         $course = Course::find($id);
         $course->update($data);
         return redirect(route('information.index'));
@@ -94,7 +112,7 @@ class CourseController extends Controller
         $data = $request->validate([
             'name' => 'required',
             'abbreviation' => 'required',
-            'image' => 'required',
+            'image' => '',
             'information' => 'required',
             'careers' => 'required',
             'duration' => 'required',
