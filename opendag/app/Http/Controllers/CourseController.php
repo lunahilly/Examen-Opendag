@@ -96,6 +96,12 @@ class CourseController extends Controller
         // $data = $this->validateData($request);
         $course = Course::find($id);
         $course->update($data);
+
+        $poi = Poi::where('value', $course->abbreviation)->first();
+        if($poi['label'] != $course->name){
+            $poi['label'] = $course->name;
+            $poi->update();
+        }
         return redirect(route('information.index'));
     }
 

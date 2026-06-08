@@ -8,7 +8,7 @@ function Course({ course }) {
     const pois = usePage().props.pois;
     console.log("pois :", pois);
     console.log("name :", course.name);
-    const poi = pois.find((poi) => poi?.label == course.name);
+    const poi = pois.find((poi) => poi?.value == course.abbreviation);
     console.log("value :", poi.value);
 
     return (

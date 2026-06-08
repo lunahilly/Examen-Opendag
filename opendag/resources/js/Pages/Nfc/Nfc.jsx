@@ -11,7 +11,7 @@ function NFC() {
     const [inputValue, setInputValue] = useState("");
 
     const { pois = [] } = usePage().props;
-    let filteredPois = pois.filter((poi) => poi?.category_id == 1);
+    let filteredPois = pois.filter((poi) => poi?.category_id == 2);
     console.log(filteredPois);
 
     var baseUrl = location.protocol + '//' + location.host + '/';

@@ -55,7 +55,7 @@ function InformationForm() {
                 {/* <form onSubmit={submit} className="form"> */}
                 <form onSubmit={submit} className="form" encType={'multipart/form-data'}>
                     <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name} />
-                    <InputField label="Abbreviation" value={data.abbreviation} onChange={(event) => setData('abbreviation', event.target.value)} error={errors.abbreviation} />
+                    <InputField readOnly={course != null} label="Abbreviation" value={data.abbreviation} onChange={(event) => setData('abbreviation', event.target.value)} error={errors.abbreviation} />
                     {/* <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image} /> */}
                     <input type="file" onChange={(event) => setData('image', event.target.files[0])} className="form__file" />
                     <InputField label="Information" value={data.information} onChange={(event) => setData('information', event.target.value)} error={errors.information} />
