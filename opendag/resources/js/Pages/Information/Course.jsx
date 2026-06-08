@@ -2,6 +2,8 @@
 
 import { usePage } from "@inertiajs/react";
 import { filter } from "jszip";
+import parse from "html-react-parser";
+
 
 function Course({ course }) {
 
@@ -18,7 +20,7 @@ function Course({ course }) {
 
                 <div className="course__info">
                     <p className="course__text">
-                        {course.information}
+                        {parse(course.information)}
                     </p>
                     <span>
                         <div className="course__details">

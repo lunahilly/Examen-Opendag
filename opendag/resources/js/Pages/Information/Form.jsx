@@ -3,7 +3,8 @@ import InputField from "@/Components/Input";
 import ActivityCourseModal from "@/Components/Modals/ActivityCourseModal";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm, usePage } from "@inertiajs/react";
-import { useEffect, useState } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import { useEffect, useRef, useState } from "react";
 
 function InformationForm() {
     const course = usePage().props.course;
@@ -22,10 +23,15 @@ function InformationForm() {
         internships: course ? course.internships : '',
         code: course ? course.code : 0
     });
+    const ref = useRef(null);
 
 
     const submit = (event) => {
         event.preventDefault();
+        if(ref.current){
+            const informationContent = ref.current.getContent();
+            setData('information', informationContent);
+        }
         if (course != null) {
             patch(route('course.update', course.id));
         }
@@ -58,7 +64,25 @@ function InformationForm() {
                     <InputField readOnly={course != null} label="Abbreviation" value={data.abbreviation} onChange={(event) => setData('abbreviation', event.target.value)} error={errors.abbreviation} />
                     {/* <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image} /> */}
                     <input type="file" onChange={(event) => setData('image', event.target.files[0])} className="form__file" />
-                    <InputField label="Information" value={data.information} onChange={(event) => setData('information', event.target.value)} error={errors.information} />
+                    {/* <InputField label="Information" value={data.information} onChange={(event) => setData('information', event.target.value)} error={errors.information} /> */}
+                    <Editor
+                        tinymceScriptSrc='public/src/js/tinymce_8.6.0/tinymce/js/tinymce/tinymce.min.js'
+                        licenseKey="gpl"
+                        value={data.information}
+                        onEditorChange={(value, editor) => setData('information', value)}
+                        onInit={(evt, editor) => {
+                            // console.log(editor);
+                            // console.log(ref.current);
+                            ref.current = editor;
+                        }}
+                        init={{
+                            menubar: false,
+                            width: '100%',
+                            plugins: ['link'],
+                            toolbar: 'blocks | bold italic link',
+                            content_style: 'body {font-family: aeonik, sans-serif}'
+                        }}
+                    />
                     <InputField label="Careers" value={value} onChange={(event) => setValue(event.target.value)} onClick={addCareers}>
                         <span className="input__data">
                             {
