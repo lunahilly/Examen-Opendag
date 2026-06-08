@@ -56,13 +56,6 @@ function Navigation() {
                                     <a href="/" className={`header__sidebar--item-link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                                 </li>
                                 {
-                                    settings.stories ?
-                                        <li className="header__sidebar--item">
-                                            <a href={route('stories.index')} className={`header__sidebar--item-link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
-                                        </li>
-                                        : null
-                                }
-                                {
                                     settings.courses ?
                                         <li className="header__sidebar--item">
                                             <a href={route('information.index')} className={`header__sidebar--item-link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
@@ -73,6 +66,13 @@ function Navigation() {
                                     settings.activities ?
                                         <li className="header__sidebar--item">
                                             <a href={route('activities.index')} className={`header__sidebar--item-link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
+                                        </li>
+                                        : null
+                                }
+                                {
+                                    settings.stories ?
+                                        <li className="header__sidebar--item">
+                                            <a href={route('stories.index')} className={`header__sidebar--item-link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                                         </li>
                                         : null
                                 }
@@ -102,11 +102,6 @@ function Navigation() {
             <nav className="header__navigation">
                 <a href="/" className={`header__navigation--link ${url == '/' ? 'header__navigation--link-active' : null} `}>Home</a>
                 {
-                    settings.stories ?
-                        <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
-                        : null
-                }
-                {
                     settings.courses ?
                         <a href={route('information.index')} className={`header__navigation--link ${url == '/information' ? 'header__navigation--link-active' : null} `}>Opleidingen</a>
                         : null
@@ -114,6 +109,11 @@ function Navigation() {
                 {
                     settings.activities ?
                         <a href={route('activities.index')} className={`header__navigation--link ${url == '/activities' ? 'header__navigation--link-active' : null} `}>Activiteiten</a>
+                        : null
+                }
+                {
+                    settings.stories ?
+                        <a href={route('stories.index')} className={`header__navigation--link ${url == '/stories' ? 'header__navigation--link-active' : null} `}>Verhalen van studenten</a>
                         : null
                 }
                 {

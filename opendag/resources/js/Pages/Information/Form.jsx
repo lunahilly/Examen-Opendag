@@ -7,13 +7,15 @@ import { useEffect, useState } from "react";
 
 function InformationForm() {
     const course = usePage().props.course;
+    const path = usePage().props.status;
     const [value, setValue] = useState('');
     const status = usePage().props.status;
     const [openModal, setOpenModal] = useState(status !== null ? true : false);
     const { data, setData, post, patch, processing, errors } = useForm({
         name: course ? course.name : '',
         abbreviation: course ? course.abbreviation : '',
-        image: course ? course.image : '',
+        // image: course ? course.image : '',
+        image: path != null ? `storage/${path}` : course ? course.image : '',
         information: course ? course.information : '',
         careers: course ? course.careers : [],
         duration: course ? course.duration : '',
@@ -50,10 +52,12 @@ function InformationForm() {
         <AuthenticatedLayout>
             <Head title="New course" />
             <main className="main">
-                <form onSubmit={submit} className="form">
+                {/* <form onSubmit={submit} className="form"> */}
+                <form onSubmit={submit} className="form" encType={'multipart/form-data'}>
                     <InputField label="Name" value={data.name} onChange={(event) => setData('name', event.target.value)} error={errors.name} />
                     <InputField label="Abbreviation" value={data.abbreviation} onChange={(event) => setData('abbreviation', event.target.value)} error={errors.abbreviation} />
-                    <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image} />
+                    {/* <InputField label="Image" value={data.image} onChange={(event) => setData('image', event.target.value)} error={errors.image} /> */}
+                    <input type="file" onChange={(event) => setData('image', event.target.files[0])} className="form__file" />
                     <InputField label="Information" value={data.information} onChange={(event) => setData('information', event.target.value)} error={errors.information} />
                     <InputField label="Careers" value={value} onChange={(event) => setValue(event.target.value)} onClick={addCareers}>
                         <span className="input__data">
