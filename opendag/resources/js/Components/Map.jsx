@@ -161,9 +161,18 @@ export default function IndoorMap() {
 
     const toggleMode = (mode) => setSelectionMode((m) => (m === mode ? null : mode));
 
-    // ── Filtered + sorted POIs ────────────────────────────────────────────────────
+// ── Filtered + sorted POIs ────────────────────────────────────────────────────
     const filteredPois = useMemo(() => {
         let pois = gridpois;
+
+        // Filtert POIs eruit die "Trap", "trap", "Lift" óf "lift" in de label hebben staan
+        pois = pois.filter(
+            (p) => 
+                !p.label.includes("Trap") && 
+                !p.label.includes("trap") &&
+                !p.label.includes("Lift") && 
+                !p.label.includes("lift")
+        );
 
         if (activeCategory !== "all") {
             pois = pois.filter((p) => p.category.name === activeCategory);
@@ -188,7 +197,7 @@ export default function IndoorMap() {
         });
 
         return pois;
-    }, [searchQuery, activeCategory, favorites]);
+    }, [gridpois, searchQuery, activeCategory, favorites]);
 
     const gridCategories = categories.filter((c) => c.value !== "transport");
 

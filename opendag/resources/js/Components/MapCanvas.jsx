@@ -238,7 +238,7 @@ export default function MapCanvas({
                                 className="rDots"
                                 d={routePath}
                                 fill="none"
-                                stroke="#e040fb"
+                                stroke="#CFFF04"
                                 strokeWidth="5"
                                 strokeLinecap="round"
                                 strokeDasharray="0 14"
